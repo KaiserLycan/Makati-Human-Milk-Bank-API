@@ -6,27 +6,40 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "jest --ci tests/units && jest --ci tests/integrations"
+    "test": "cross-env NODE_OPTIONS=--no-webstorage jest --ci __test__/units && cross-env NODE_OPTIONS=--no-webstorage jest --ci __test__/integrations --passWithNoTests"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@jest/globals": "^30.4.1",
+    "@prisma/adapter-neon": "^7.8.0",
+    "@prisma/client": "^7.8.0",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.0",
     "express-validator": "^7.3.2",
+    "joi": "^18.2.1",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.21.0",
     "superagent": "^10.3.0",
     "supertest": "^7.2.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "babel-jest": "^30.4.1",
     "jest": "^30.3.0",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "prisma": "^7.8.0",
+    "tsx": "^4.22.3"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

@@ -3,4 +3,4 @@
 
 # Node
 node_modules
-/generated/prisma
+db/generated/prisma
