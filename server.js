@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import {prisma} from "./src/db.ts";
 import dotenv from "dotenv";
 
 dotenv.config();
