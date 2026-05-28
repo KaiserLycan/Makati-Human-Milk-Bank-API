@@ -1,13 +1,195 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model User {
+  emp_id         String          @id @db.VarChar(50)
+  name           String          @db.VarChar(100)
+  email_add      String          @unique @db.VarChar(100)
+  phone_num      String          @unique @db.VarChar(20)
+  role           user_role?      @default(staff)
+  password_hash  String?         @db.VarChar(255)
+  account_status user_status?
+  audit_log      audit_log[]
+  incident_log   incident_log[]
+  milkinventory  milkinventory[]
+  milkpool       milkpool[]
+  rawmilk        rawmilk[]
+  request        request[]
+}
+
+model audit_log {
+  log_id           Int       @id @default(autoincrement())
+  emp_id           String    @db.VarChar(50)
+  action_performed String    @db.VarChar(50)
+  table_affected   String    @db.VarChar(50)
+  record_id_affect String    @db.VarChar(50)
+  datetime         DateTime? @default(now()) @db.Timestamp(6)
+  User             User      @relation(fields: [emp_id], references: [emp_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model beneficiary {
+  bid                   String          @id @db.VarChar(50)
+  mother_name           String          @db.VarChar(100)
+  infant_name           String          @db.VarChar(100)
+  infant_dob            DateTime        @db.Date
+  gestational_age       String          @db.VarChar(50)
+  weight_kg             Decimal         @default(0.0) @db.Decimal(5, 2)
+  med_diagnosis         String
+  hospital_name         String
+  feeding_req_ml        Int
+  address               String
+  phone_num             String          @unique @db.VarChar(20)
+  email_add             String          @unique @db.VarChar(100)
+  staus                 profile_status? @default(pending)
+  clinical_abstract_url String?         @default("") @db.VarChar
+  ped_prescription_url  String?         @default("") @db.VarChar
+  request               request[]
+}
+
+model donor {
+  dtn                    String          @id @db.VarChar(50)
+  name                   String          @db.VarChar(100)
+  address                String
+  phone_num              String          @unique @db.VarChar(20)
+  email_add              String          @unique @db.VarChar(100)
+  birthdate              DateTime        @db.Date
+  occupation             String          @db.VarChar(100)
+  civil_status           civil_status?   @default(single)
+  prenatal_checkup_place String
+  donor_type             String          @db.VarChar(50)
+  status                 profile_status? @default(pending)
+  health_profile_data    Json            @db.Json
+  rawmilk                rawmilk[]
+}
+
+model incident_log {
+  incident_id       String    @id @db.VarChar(50)
+  source_id         String    @db.VarChar(50)
+  emp_id            String    @db.VarChar(50)
+  has_leakage       Boolean?  @default(false)
+  source_type       String    @db.VarChar(20)
+  has_contamination Boolean?  @default(false)
+  incident_datetime DateTime? @default(now()) @db.Timestamp(6)
+  remarks           String?
+  User              User      @relation(fields: [emp_id], references: [emp_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model milkinventory {
+  bottle_id           String              @id @db.VarChar(50)
+  pool_id             String              @db.VarChar(50)
+  emp_id              String              @db.VarChar(50)
+  batch_num           String              @db.VarChar(50)
+  bottle_sequence_num Int
+  past_date           DateTime            @db.Date
+  volume_ml           Int
+  mbt_stats           test_status?        @default(pending)
+  exp_date            DateTime            @db.Date
+  is_discarded        Boolean?            @default(false)
+  status              dispensing_status?  @default(available)
+  User                User                @relation(fields: [emp_id], references: [emp_id], onDelete: NoAction, onUpdate: NoAction)
+  milkpool            milkpool            @relation(fields: [pool_id], references: [pool_id], onDelete: NoAction, onUpdate: NoAction)
+  requestallocation   requestallocation[]
+}
+
+model milkpool {
+  pool_id               String          @id @db.VarChar(50)
+  emp_id                String          @db.VarChar(50)
+  create_datetime       DateTime?       @default(dbgenerated("CURRENT_DATE")) @db.Date
+  total_expected_vol_ml Int
+  actual_vol_ml         Int
+  qat_status            test_status?    @default(pending)
+  is_discarded          Boolean?        @default(false)
+  milkinventory         milkinventory[]
+  User                  User            @relation(fields: [emp_id], references: [emp_id], onDelete: NoAction, onUpdate: NoAction)
+  rawmilk               rawmilk[]
+}
+
+model rawmilk {
+  ctn                 String       @id @db.VarChar(50)
+  dtn                 String       @db.VarChar(50)
+  pool_id             String?      @db.VarChar(50)
+  emp_id              String       @db.VarChar(50)
+  program_type        String       @db.VarChar(50)
+  location_src        String       @db.VarChar(150)
+  collection_datetime DateTime?    @default(dbgenerated("CURRENT_DATE")) @db.Date
+  pickup_datetime     DateTime?    @default(dbgenerated("CURRENT_DATE")) @db.Date
+  raw_vol_ml          Int
+  qat_status          test_status? @default(pending)
+  expiration_date     DateTime     @db.Date
+  is_discarded        Boolean?     @default(false)
+  donor               donor        @relation(fields: [dtn], references: [dtn], onDelete: NoAction, onUpdate: NoAction)
+  User                User         @relation(fields: [emp_id], references: [emp_id], onDelete: NoAction, onUpdate: NoAction)
+  milkpool            milkpool?    @relation(fields: [pool_id], references: [pool_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model request {
+  request_id        String              @id @db.VarChar(50)
+  bid               String              @db.VarChar(50)
+  emp_id            String              @db.VarChar(50)
+  requested_vol_ml  Int
+  request_datetime  DateTime?           @default(now()) @db.Timestamp(6)
+  pickup_date       DateTime?           @db.Date
+  sched_datetime    DateTime?           @db.Timestamp(6)
+  actual_datetime   DateTime?           @db.Timestamp(6)
+  status            request_status?     @default(pending)
+  beneficiary       beneficiary         @relation(fields: [bid], references: [bid], onDelete: NoAction, onUpdate: NoAction)
+  User              User                @relation(fields: [emp_id], references: [emp_id], onDelete: NoAction, onUpdate: NoAction)
+  requestallocation requestallocation[]
+}
+
+model requestallocation {
+  allocation_id       String        @id @db.VarChar(50)
+  request_id          String        @db.VarChar(50)
+  bottle_id           String        @db.VarChar(50)
+  allocation_datetime DateTime?     @default(now()) @db.Timestamp(6)
+  milkinventory       milkinventory @relation(fields: [bottle_id], references: [bottle_id], onDelete: NoAction, onUpdate: NoAction)
+  request             request       @relation(fields: [request_id], references: [request_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum civil_status {
+  single
+  married
+  widowed
+  separated
+}
+
+enum dispensing_status {
+  available
+  reserved
+  dispensed
+}
+
+enum profile_status {
+  active
+  pending
+  inactive
+}
+
+enum request_status {
+  pending
+  reserved
+  dispensed
+}
+
+enum test_status {
+  pass
+  pending
+  fail
+}
+
+enum user_role {
+  manager
+  staff
+}
+
+enum user_status {
+  active
+  deactivated
 }
