@@ -13,8 +13,6 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@prisma/adapter-pg": "^7.8.0",
-    "@prisma/client": "^7.8.0",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
@@ -28,10 +26,7 @@
     "supertest": "^7.2.2"
   },
   "devDependencies": {
-    "@types/pg": "^8.20.0",
     "jest": "^30.3.0",
-    "nodemon": "^3.1.14",
-    "prisma": "^7.8.0",
-    "tsx": "^4.22.3"
+    "nodemon": "^3.1.14"
   }
 }
