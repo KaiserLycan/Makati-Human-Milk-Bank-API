@@ -20,7 +20,17 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        uses: npm ci
+        run: npm ci
 
-      - name: Run __test__
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run Tests
+        env:
+          NODE_OPTIONS: "--no-webstorage"
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          JWT: ${{ secrets.JWT }}
+          RESEND_KEY: ${{ secrets.RESEND_KEY }}
         run: npm test
