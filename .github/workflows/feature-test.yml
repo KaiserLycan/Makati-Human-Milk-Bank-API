@@ -20,7 +20,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Generate Prisma Client
         env:
@@ -29,7 +29,6 @@ jobs:
 
       - name: Run Tests
         env:
-          NODE_OPTIONS: "--no-webstorage"
           TEST_ID : ${{ secrets.TEST_ID }}
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
           ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}

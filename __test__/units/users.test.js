@@ -147,9 +147,7 @@ describe("Authentication API Unit Tests", () => {
         it("should clear cookies and delete refresh token from Redis on logout", async () => {
             const mockUser = { user_id: "user123" };
 
-            // Mock verify sequence for ProtectRoute validation
             mockJwtVerify.mockImplementationOnce(() => ({ user_id: "user123" }));
-            // Mock DB fetch triggered inside ProtectRoute middleware
             mockFindUniqueOrThrow.mockResolvedValue(mockUser);
             mockRedisDel.mockResolvedValue(1);
 
@@ -160,12 +158,10 @@ describe("Authentication API Unit Tests", () => {
 
             expect(response.status).toBe(200);
 
-            // Validate that both cookie clear commands are present
             const cookieHeaders = response.headers["set-cookie"].join("; ");
             expect(cookieHeaders).toContain("access_token=;");
             expect(cookieHeaders).toContain("refresh_token=;");
 
-            // Validate actual implementation usage of redis.del()
             expect(mockRedisDel).toHaveBeenCalledWith("refresh_token_user123");
         });
     });
