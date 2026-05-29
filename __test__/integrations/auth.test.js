@@ -2,12 +2,22 @@ import request from "supertest";
 import app from "../../app.js";
 import { prisma } from "../../db/db.ts";
 import { expect } from "@jest/globals";
+import {redis} from "../../lib/redis.lib.js";
 
 const agent = request.agent(app);
 
 describe("Authentication API Integration Tests", () => {
     const user_id = process.env.TEST_ID;
     const password = process.env.TEST_PASSWORD;
+
+    afterAll(async () => {
+        try {
+            await prisma.$disconnect();
+            await redis.quit();
+        } catch (error) {
+            console.error("Error during integration teardown:", error);
+        }
+    });
 
     it("should authenticate user and return access and refresh tokens", async () => {
         const response = await agent
@@ -20,7 +30,7 @@ describe("Authentication API Integration Tests", () => {
         expect(response.body).toHaveProperty("role");
         expect(response.body).toHaveProperty("account_status");
         expect(response.headers["set-cookie"]).toBeDefined();
-    });
+    }, 10000);
 
     it("should refresh access token with valid refresh token", async () => {
         const response = await agent
@@ -29,14 +39,14 @@ describe("Authentication API Integration Tests", () => {
         expect(response.status).toBe(200);
         expect(response.headers["set-cookie"]).toBeDefined();
         expect(response.headers["set-cookie"][0]).toContain("access_token=");
-    })
+    }, 10000)
 
     it("should remove access token and refresh token locally and on redis when logged out.", async () => {
         const response = await agent
             .post("/api/auth/logout")
         
         expect(response.status).toBe(200);
-    })
+    }, 10000)
 
     it("should return an error for invalid credentials", async () => {
         const response = await agent
@@ -44,5 +54,5 @@ describe("Authentication API Integration Tests", () => {
             .send({ user_id, password: "wrongpassword" });
         expect(response.status).toBe(404);
         expect(response.body).toHaveProperty("error", "Invalid Credentials");
-    });
+    }, 10000);
 })

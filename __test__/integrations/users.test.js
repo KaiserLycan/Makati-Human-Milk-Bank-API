@@ -2,6 +2,7 @@ import request from 'supertest';
 import app from '../../app.js';
 import { prisma } from '../../db/db.ts';
 import dotenv from 'dotenv';
+import {redis} from "../../lib/redis.lib.js";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ describe("User Integration Tests", () => {
     afterAll(async () => {
         await cleanUpTestUsers();
         await prisma.$disconnect();
+        await redis.quit();
     }, 10000);
 
     it("should write a new user to the actual database and return 201", async () => {
