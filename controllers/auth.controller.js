@@ -58,3 +58,18 @@ export const RefreshAccessToken = async (req, res) => {
         return res.status(500).json({error: "Internal Server Error"});
     }
 }
+
+export const Logout = async (req, res) => {
+    try {
+        const {user} = req.user;
+        res.clearCookie("access_token");
+        res.clearCookie("refresh_token");
+        await redis.del(`refresh_token_${user.user_id}`);
+        return res.status(200).json({message: "Successfully logged out"});
+    }
+    catch(error) {
+        console.log("Error in Logout controller.");
+        console.log(error)
+        return res.status(500).json({error: "Internal Server Error"});
+    }
+}
