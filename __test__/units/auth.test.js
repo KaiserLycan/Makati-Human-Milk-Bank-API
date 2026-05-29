@@ -1,4 +1,4 @@
-import { jest } from "@jest/globals";
+import { describe, expect, jest } from "@jest/globals";
 import request from "supertest";
 import express from "express";
 import cookieParser from "cookie-parser";
@@ -7,6 +7,7 @@ import router from "../../routes/auth.router.js";
 const mockFindUniqueOrThrow = jest.fn();
 const mockRedisGet = jest.fn();
 const mockRedisSet = jest.fn();
+const mockRedisDel = jest.fn(); // Added missing mock tracking
 const mockRedisQuit = jest.fn();
 const mockComparePassword = jest.fn();
 const mockJwtSign = jest.fn();
@@ -26,6 +27,7 @@ jest.mock("../../lib/redis.lib.js", () => ({
     redis: {
         get: (...args) => mockRedisGet(...args),
         set: (...args) => mockRedisSet(...args),
+        del: (...args) => mockRedisDel(...args), // Added mapping here
         quit: (...args) => mockRedisQuit(...args),
     },
 }));
@@ -35,7 +37,6 @@ jest.mock("../../utils/password.util.js", () => ({
     ComparePassword: (...args) => mockComparePassword(...args),
 }));
 
-// Mock flat object keys to match application usage patterns
 jest.mock("jsonwebtoken", () => ({
     __esModule: true,
     default: {
@@ -46,7 +47,6 @@ jest.mock("jsonwebtoken", () => ({
     verify: (...args) => mockJwtVerify(...args),
 }));
 
-// Initialize Express App for testing
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -59,7 +59,6 @@ describe("Authentication API Unit Tests", () => {
         process.env.REFRESH_TOKEN_SECRET = "test_refresh_secret";
     });
 
-    // Closes open handle leaks cleanly
     afterAll(async () => {
         await mockRedisQuit();
     });
@@ -112,8 +111,8 @@ describe("Authentication API Unit Tests", () => {
             const mockUser = { user_id: "user123" };
 
             mockJwtVerify
-                .mockImplementationOnce(() => ({ user_id: "user123" })) // ProtectRoute access token
-                .mockImplementationOnce(() => ({ user_id: "user123" })); // RefreshAccessToken refresh token
+                .mockImplementationOnce(() => ({ user_id: "user123" })) 
+                .mockImplementationOnce(() => ({ user_id: "user123" })); 
 
             mockFindUniqueOrThrow.mockResolvedValue(mockUser);
             mockRedisGet.mockResolvedValue("valid_refresh_token");
@@ -127,7 +126,6 @@ describe("Authentication API Unit Tests", () => {
             expect(response.headers["set-cookie"][0]).toContain("access_token=new_access_token");
         });
 
-
         it("should return 401 if refresh token does not match the token in Redis", async () => {
             mockJwtVerify
                 .mockImplementationOnce(() => ({ user_id: "user123" }))
@@ -140,10 +138,35 @@ describe("Authentication API Unit Tests", () => {
                 .post("/refresh-token")
                 .set("Cookie", ["access_token=valid_access_token", "refresh_token=mismatched_token"]);
 
-            console.log(response.body);
-
             expect(response.status).toBe(401);
             expect(response.body.error).toBe("Invalid refresh token");
+        });
+    });
+
+    describe("POST /logout", () => {
+        it("should clear cookies and delete refresh token from Redis on logout", async () => {
+            const mockUser = { user_id: "user123" };
+
+            // Mock verify sequence for ProtectRoute validation
+            mockJwtVerify.mockImplementationOnce(() => ({ user_id: "user123" }));
+            // Mock DB fetch triggered inside ProtectRoute middleware
+            mockFindUniqueOrThrow.mockResolvedValue(mockUser);
+            mockRedisDel.mockResolvedValue(1);
+
+            const response = await request(app)
+                .post("/logout")
+                .set("Cookie", ["access_token=valid_access_token", "refresh_token=valid_refresh_token"])
+                .set("user", { user_id: "user123" }); 
+
+            expect(response.status).toBe(200);
+            
+            // Validate that both cookie clear commands are present
+            const cookieHeaders = response.headers["set-cookie"].join("; ");
+            expect(cookieHeaders).toContain("access_token=;");
+            expect(cookieHeaders).toContain("refresh_token=;");
+            
+            // Validate actual implementation usage of redis.del()
+            expect(mockRedisDel).toHaveBeenCalledWith("refresh_token_user123");
         });
     });
 });

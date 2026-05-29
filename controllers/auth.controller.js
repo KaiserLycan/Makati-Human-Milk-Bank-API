@@ -61,7 +61,7 @@ export const RefreshAccessToken = async (req, res) => {
 
 export const Logout = async (req, res) => {
     try {
-        const {user} = req.user;
+        const user = req.user;
         res.clearCookie("access_token");
         res.clearCookie("refresh_token");
         await redis.del(`refresh_token_${user.user_id}`);

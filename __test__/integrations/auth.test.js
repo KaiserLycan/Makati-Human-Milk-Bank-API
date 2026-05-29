@@ -31,6 +31,13 @@ describe("Authentication API Integration Tests", () => {
         expect(response.headers["set-cookie"][0]).toContain("access_token=");
     })
 
+    it("should remove access token and refresh token locally and on redis when logged out.", async () => {
+        const response = await agent
+            .post("/api/auth/logout")
+        
+        expect(response.status).toBe(200);
+    })
+
     it("should return an error for invalid credentials", async () => {
         const response = await agent
             .post("/api/auth/login")
