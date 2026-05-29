@@ -1,6 +1,6 @@
 import { describe, it, expect, jest } from '@jest/globals';
 import { authenticate } from '../../middleware/authenticate.js';
-import { authorize } from '../../middleware/authorize.js';
+import { Authorize } from '../../middleware/authorize.middleware.js';
 
 // Helper to create mock req, res, next
 const mockRes = () => {
@@ -68,7 +68,7 @@ describe('authorize middleware', () => {
         const res = mockRes();
         const next = jest.fn();
 
-        authorize('staff')(req, res, next);
+        Authorize('staff')(req, res, next);
 
         expect(next).toHaveBeenCalled();
         expect(res.status).not.toHaveBeenCalled();
@@ -79,7 +79,7 @@ describe('authorize middleware', () => {
         const res = mockRes();
         const next = jest.fn();
 
-        authorize('manager')(req, res, next);
+        Authorize('manager')(req, res, next);
 
         expect(next).toHaveBeenCalled();
         expect(res.status).not.toHaveBeenCalled();
@@ -90,7 +90,7 @@ describe('authorize middleware', () => {
         const res = mockRes();
         const next = jest.fn();
 
-        authorize('manager', 'staff')(req, res, next);
+        Authorize('manager', 'staff')(req, res, next);
 
         expect(next).toHaveBeenCalled();
         expect(res.status).not.toHaveBeenCalled();
@@ -101,7 +101,7 @@ describe('authorize middleware', () => {
         const res = mockRes();
         const next = jest.fn();
 
-        authorize('manager')(req, res, next);
+        Authorize('manager')(req, res, next);
 
         expect(res.status).toHaveBeenCalledWith(403);
         expect(res.json).toHaveBeenCalledWith({
@@ -116,7 +116,7 @@ describe('authorize middleware', () => {
         const res = mockRes();
         const next = jest.fn();
 
-        authorize('manager')(req, res, next);
+        Authorize('manager')(req, res, next);
 
         expect(res.status).toHaveBeenCalledWith(401);
         expect(res.json).toHaveBeenCalledWith({
@@ -131,7 +131,7 @@ describe('authorize middleware', () => {
         const res = mockRes();
         const next = jest.fn();
 
-        authorize('manager')(req, res, next);
+        Authorize('manager')(req, res, next);
 
         expect(res.status).toHaveBeenCalledWith(401);
         expect(res.json).toHaveBeenCalledWith({

@@ -1,4 +1,4 @@
-export const authorize = (...roles) => {
+export const Authorize = (...roles) => {
     return (req, res, next) => {
         if (!req.session || !req.session.user) {
             return res.status(401).json({

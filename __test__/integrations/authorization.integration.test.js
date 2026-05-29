@@ -2,7 +2,7 @@ import { describe, it, expect } from '@jest/globals';
 import express from 'express';
 import request from 'supertest';
 import { authenticate } from '../../middleware/authenticate.js';
-import { authorize } from '../../middleware/authorize.js';
+import { Authorize } from '../../middleware/authorize.middleware.js';
 
 // Helper to create a test app with a mock session
 const createApp = (sessionUser = null) => {
@@ -20,15 +20,15 @@ const createApp = (sessionUser = null) => {
         res.status(200).json({ success: true, message: 'Access granted' });
     });
 
-    app.get('/manager-only', authenticate, authorize('manager'), (req, res) => {
+    app.get('/manager-only', authenticate, Authorize('manager'), (req, res) => {
         res.status(200).json({ success: true, message: 'Manager access granted' });
     });
 
-    app.get('/staff-only', authenticate, authorize('staff'), (req, res) => {
+    app.get('/staff-only', authenticate, Authorize('staff'), (req, res) => {
         res.status(200).json({ success: true, message: 'Staff access granted' });
     });
 
-    app.get('/both-roles', authenticate, authorize('manager', 'staff'), (req, res) => {
+    app.get('/both-roles', authenticate, Authorize('manager', 'staff'), (req, res) => {
         res.status(200).json({ success: true, message: 'Access granted for both roles' });
     });
 
