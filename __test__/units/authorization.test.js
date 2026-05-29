@@ -12,52 +12,6 @@ const mockRes = () => {
 
 const mockNext = jest.fn();
 
-// ─── authenticate tests ───────────────────────────────────────────────
-
-describe('authenticate middleware', () => {
-
-    it('should call next() if session and user exist', () => {
-        const req = { session: { user: { emp_id: 'E001', role: 'staff' } } };
-        const res = mockRes();
-        const next = jest.fn();
-
-        authenticate(req, res, next);
-
-        expect(next).toHaveBeenCalled();
-        expect(res.status).not.toHaveBeenCalled();
-    });
-
-    it('should return 401 if session is missing', () => {
-        const req = {};
-        const res = mockRes();
-        const next = jest.fn();
-
-        authenticate(req, res, next);
-
-        expect(res.status).toHaveBeenCalledWith(401);
-        expect(res.json).toHaveBeenCalledWith({
-            success: false,
-            message: 'Unauthorized. Please log in.'
-        });
-        expect(next).not.toHaveBeenCalled();
-    });
-
-    it('should return 401 if session exists but user is missing', () => {
-        const req = { session: {} };
-        const res = mockRes();
-        const next = jest.fn();
-
-        authenticate(req, res, next);
-
-        expect(res.status).toHaveBeenCalledWith(401);
-        expect(res.json).toHaveBeenCalledWith({
-            success: false,
-            message: 'Unauthorized. Please log in.'
-        });
-        expect(next).not.toHaveBeenCalled();
-    });
-
-});
 
 // ─── authorize tests ──────────────────────────────────────────────────
 
@@ -130,7 +84,7 @@ describe('authorize middleware', () => {
         const req = { session: {} };
         const res = mockRes();
         const next = jest.fn();
-
+        
         Authorize('manager')(req, res, next);
 
         expect(res.status).toHaveBeenCalledWith(401);

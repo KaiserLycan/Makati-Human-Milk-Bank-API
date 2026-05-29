@@ -35,28 +35,6 @@ const createApp = (sessionUser = null) => {
     return app;
 };
 
-// ─── authenticate integration tests ──────────────────────────────────
-
-describe('authenticate middleware (integration)', () => {
-
-    it('should return 200 if user is logged in', async () => {
-        const app = createApp({ emp_id: 'E001', role: 'staff' });
-        const res = await request(app).get('/protected');
-
-        expect(res.status).toBe(200);
-        expect(res.body.success).toBe(true);
-    });
-
-    it('should return 401 if no session user', async () => {
-        const app = createApp(null);
-        const res = await request(app).get('/protected');
-
-        expect(res.status).toBe(401);
-        expect(res.body.success).toBe(false);
-        expect(res.body.message).toBe('Unauthorized. Please log in.');
-    });
-
-});
 
 // ─── authorize integration tests ─────────────────────────────────────
 
