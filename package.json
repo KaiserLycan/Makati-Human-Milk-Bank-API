@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "cross-env NODE_OPTIONS=--no-webstorage jest --ci __test__/units && cross-env NODE_OPTIONS=--no-webstorage jest --ci __test__/integrations --passWithNoTests"
+    "test:unit": "cross-env NODE_OPTIONS=--no-webstorage jest --ci __test__/units --passWithNoTests --verbose",
+    "test:integration": "cross-env NODE_OPTIONS=--no-webstorage jest --ci __test__/integrations --passWithNoTests --verbose",
+    "test": "npm run test:unit && npm run test:integration"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +26,7 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.0",
     "express-validator": "^7.3.2",
+    "ioredis": "^5.11.0",
     "joi": "^18.2.1",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.21.0",
@@ -40,6 +43,7 @@
     "tsx": "^4.22.3"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testTimeout" : 10000
   }
 }

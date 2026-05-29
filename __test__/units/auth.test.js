@@ -111,8 +111,8 @@ describe("Authentication API Unit Tests", () => {
             const mockUser = { user_id: "user123" };
 
             mockJwtVerify
-                .mockImplementationOnce(() => ({ user_id: "user123" }))
-                .mockImplementationOnce(() => ({ user_id: "user123" }));
+                .mockImplementationOnce(() => ({ user_id: "user123" })) 
+                .mockImplementationOnce(() => ({ user_id: "user123" })); 
 
             mockFindUniqueOrThrow.mockResolvedValue(mockUser);
             mockRedisGet.mockResolvedValue("valid_refresh_token");
@@ -156,15 +156,15 @@ describe("Authentication API Unit Tests", () => {
             const response = await request(app)
                 .post("/logout")
                 .set("Cookie", ["access_token=valid_access_token", "refresh_token=valid_refresh_token"])
-                .set("user", { user_id: "user123" });
+                .set("user", { user_id: "user123" }); 
 
             expect(response.status).toBe(200);
-
+            
             // Validate that both cookie clear commands are present
             const cookieHeaders = response.headers["set-cookie"].join("; ");
             expect(cookieHeaders).toContain("access_token=;");
             expect(cookieHeaders).toContain("refresh_token=;");
-
+            
             // Validate actual implementation usage of redis.del()
             expect(mockRedisDel).toHaveBeenCalledWith("refresh_token_user123");
         });
