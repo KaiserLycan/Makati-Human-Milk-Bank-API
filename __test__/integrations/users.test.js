@@ -1,6 +1,11 @@
 import request from 'supertest';
 import app from '../../app.js';
 import { prisma } from '../../db/db.ts';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const admin = request.agent(app);
 
 describe("User Integration Tests (POST /api/users)", () => {
 
@@ -25,7 +30,7 @@ describe("User Integration Tests (POST /api/users)", () => {
     afterAll(async () => {
         await cleanUpTestUsers();
         await prisma.$disconnect();
-    });
+    }, 10000);
 
     it("should write a new user to the actual database and return 201", async () => {
         const userData = {
@@ -35,10 +40,16 @@ describe("User Integration Tests (POST /api/users)", () => {
             password: "SecurePassword123"
         };
 
-        const response = await request(app)
+        const loginRes = await admin.post("/api/auth/login").send({
+            user_id: process.env.TEST_ID,
+            password: process.env.TEST_PASSWORD
+        });
+
+        const response = await admin
             .post("/api/users")
             .send(userData);
 
         expect(response.status).toBe(201);
+        
     });
 });

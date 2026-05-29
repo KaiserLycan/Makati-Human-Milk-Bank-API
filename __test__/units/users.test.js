@@ -13,6 +13,16 @@ jest.mock('../../db/db.ts', () => {
     };
 });
 
+jest.mock("../../middleware/auth.middleware.js", () => {
+    return {
+        __esModule: true,
+        ProtectRoute: jest.fn((req, res, next) => {
+            req.user = {user_id: "admin-uuid", role: "admin"};
+            next()
+        }),
+    }
+})
+
 import { prisma } from '../../db/db.ts';
 
 describe("POST /api/users", () => {

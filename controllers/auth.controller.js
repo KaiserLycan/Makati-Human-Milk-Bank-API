@@ -23,6 +23,7 @@ export const Authenticate = async (req, res) => {
             user_name: user.name,
             email_add: user.email_add,
             phone_num: user.phone_num,
+            role: user.role,
             account_status: user.account_status
         })
 
