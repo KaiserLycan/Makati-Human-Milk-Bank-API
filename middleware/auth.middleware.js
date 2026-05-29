@@ -12,7 +12,7 @@ export const ProtectRoute = async (req, res, next) => {
 
         if(!decoded_token) return res.status(401).json({error: "Missing token."});
 
-        const user = prisma.user.findUniqueOrThrow({
+        const user = await prisma.user.findUniqueOrThrow({
             where: {user_id: decoded_token.user_id},
         })
 

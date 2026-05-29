@@ -7,7 +7,7 @@ dotenv.config();
 
 const admin = request.agent(app);
 
-describe("User Integration Tests (POST /api/users)", () => {
+describe("User Integration Tests", () => {
 
     const testEmails = ["integration@example.com", "duplicate@example.com"];
     const testPhones = ["+1234567890", "+1111111111"];
