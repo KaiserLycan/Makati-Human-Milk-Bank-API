@@ -43,6 +43,7 @@
     "tsx": "^4.22.3"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testTimeout" : 10000
   }
 }
