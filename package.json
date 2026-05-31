@@ -29,7 +29,9 @@
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.21.0",
     "superagent": "^10.3.0",
-    "supertest": "^7.2.2"
+    "supertest": "^7.2.2",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
@@ -42,6 +44,6 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "testTimeout" : 10000
+    "testTimeout": 10000
   }
 }
