@@ -12,7 +12,6 @@ export const Authenticate = async (req, res) => {
         })
 
         const is_valid_password = await ComparePassword(password, user.password);
-
         if(!is_valid_password) throw new Error("Invalid password");
 
         await GenerateAccessToken(res, user.user_id);
