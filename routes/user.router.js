@@ -1,5 +1,5 @@
 import express from 'express';
-import {ChangePassword, CreateUser} from "../controllers/user.controller.js";
+import {ChangePassword, CreateUser, ResetPassword} from "../controllers/user.controller.js";
 import Validate from "../utils/validate.util.js";
 import {UserSchemaValidator} from "../utils/validators/user.validate.js";
 import {ProtectRoute} from "../middleware/auth.middleware.js";
@@ -44,7 +44,6 @@ const router = express.Router();
  *         description: Unauthorized.
  */
 router.post("/create", ProtectRoute, Authorize, Validate(UserSchemaValidator), CreateUser)
-router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator), ChangePassword)
 
 /**
  * @openapi
@@ -55,7 +54,7 @@ router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator)
  *      - User Management
  *     description: Allows an authenticated user to change their password.
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -82,4 +81,49 @@ router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator)
  */
 router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator), ChangePassword)
 
+/**
+ * @openapi
+ * /api/users/{user_id}/reset-password:
+ *   patch:
+ *     summary: Reset user password.
+ *     tags:
+ *       - User Management
+ *     description: Managers can set user password to default/any, when user forgets their password. They are not required to input the old/current password.
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         description: The unique identifier of the user whose password needs resetting.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - new_password
+ *             properties:
+ *               new_password:
+ *                 type: string
+ *                 format: password
+ *                 example: "NewSecurePassword123"
+ *     responses:
+ *       200:
+ *         description: Password updated successfully.
+ *       400:
+ *         description: User and password is not specified.
+ *       401:
+ *         description: Missing Token or Invalid Token.
+ *       403:
+ *         description: Forbidden. You do not have permission to access this resource.
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal Server Error or Cannot update user.
+ */
+router.patch("/:user_id/reset-password", ProtectRoute, Authorize, ResetPassword);
 export default router;
