@@ -6,7 +6,7 @@ export const UserSchemaValidator = Joi.object({
         "any.required": "Name is required.",
     }),
     email: Joi.string().email().required().messages({
-        "string.email": "Please enter a valid email address.",
+        "string.email": "Invalid email address.",
         "any.required": "Email is required.",
     }),
     phone: Joi.string().required().messages({

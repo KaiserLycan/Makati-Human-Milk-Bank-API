@@ -6,11 +6,11 @@ dotenv.config();
 export const ProtectRoute = async (req, res, next) => {
     try {
         const access_token = req.cookies.access_token;
-        if (!access_token) return res.status(401).json({error: "No token provided"});
+        if (!access_token) return res.status(401).json({error: "Missing token"});
 
         const decoded_token = jwt.verify(access_token, process.env.ACCESS_TOKEN_SECRET);
 
-        if(!decoded_token) return res.status(401).json({error: "Missing token."});
+        if(!decoded_token) return res.status(401).json({error: "Invalid token"});
 
         const user = await prisma.user.findUniqueOrThrow({
             where: {user_id: decoded_token.user_id},

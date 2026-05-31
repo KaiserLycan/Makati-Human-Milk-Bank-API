@@ -5,7 +5,7 @@ import {ProtectRoute} from "../middleware/auth.middleware.js";
 const router = express.Router();
 
 router.post("/login", Authenticate)
-router.post("/logout", ProtectRoute, Logout)
 router.post("/refresh-token", RefreshAccessToken)
+router.post("/logout", ProtectRoute, Logout)
 
 export default router;
