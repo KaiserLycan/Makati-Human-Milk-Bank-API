@@ -45,6 +45,7 @@ export const ChangePassword = async (req, res) => {
         await prisma.user.update({
             data: {
                 password: hashed_password,
+                modified_by: req.user.user_id,
             },
             where: {
                 user_id: req.user.user_id,
@@ -55,6 +56,45 @@ export const ChangePassword = async (req, res) => {
     }
     catch(error) {
         if (error.code === "P2025") return res.status(404).json({error: "Cannot find user."});
+        console.log("Error in ResetPasswordController");
+        console.log(error);
+        return res.status(500).json({error: "Internal Server Error"})
+    }
+}
+
+export const ResetPassword = async (req, res) => {
+    try {
+        const {new_password} = req.body;
+        const {user_id} = req.params;
+
+
+        if (!user_id || !new_password) return res.status(400).json({error: "User and password is not specified"});
+
+        const user = await prisma.user.findUniqueOrThrow({
+            where: {
+                user_id: user_id,
+            }
+        })
+
+
+        const new_hash_password = await HashPassword(new_password);
+
+        const updated_user = await prisma.user.update({
+            data: {
+                password: new_hash_password,
+                modified_by: req.user.user_id,
+            },
+            where: {
+                user_id: user.user_id,
+            }
+        })
+
+        if (!updated_user) return res.status(500).json({error: "Cannot update user."});
+
+        return res.status(200).json({message: "Password updated successfully."});
+    }
+    catch (error) {
+        if (error.code === "P2025") return res.status(404).json({error: "User does not exist."});
         console.log("Error in ResetPasswordController");
         console.log(error);
         return res.status(500).json({error: "Internal Server Error"})
