@@ -86,12 +86,15 @@ export const ResetPassword = async (req, res) => {
             },
             where: {
                 user_id: user.user_id,
+            },
+            select: {
+                password: false
             }
         })
 
         if (!updated_user) return res.status(500).json({error: "Cannot update user."});
 
-        return res.status(200).json({message: "Password updated successfully."});
+        return res.status(200).json({message: "Password reset successfully."});
     }
     catch (error) {
         if (error.code === "P2025") return res.status(404).json({error: "User does not exist."});

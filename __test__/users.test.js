@@ -191,7 +191,8 @@ describe("User API Unit Tests", () => {
             expect(res.body.message).toBe("Password updated successfully.");
             expect(mockUpdateUser).toHaveBeenCalledWith({
                 data: {
-                    password: "hashed_new_password"
+                    password: "hashed_new_password",
+                    modified_by: "123"
                 },
                 where: {
                     user_id: "123"
@@ -263,5 +264,54 @@ describe("User API Unit Tests", () => {
             expect(res.status).toBe(401);
             expect(res.body.error).toBe("Old password does not match current password.");
         });
+    })
+
+    describe("PATCH /reset-password", () => {
+        it ("should allow managers to reset specific user's password.", async () => {
+            const mockManager = {
+                user_id: "123",
+                role: "manager",
+                password: "hashed_password"
+            }
+
+            const mockUser = {
+                user_id: "456",
+                password: "hashed_password"
+            }
+
+            mockJwtVerify.mockImplementationOnce(() => ({user_id: "123"}));
+            mockFindUniqueOrThrow
+                .mockImplementationOnce(() => Promise.resolve(mockManager))
+                .mockImplementationOnce(() => Promise.resolve(mockUser));
+            mockHashPassword.mockResolvedValue("new_hashed_password");
+            mockUpdateUser.mockResolvedValue({ user_id: "456", password: "new_hashed_password"});
+
+            const res = await request(app)
+                .patch("/456/reset-password")
+                .send({
+                    new_password: "new_password"
+                })
+                .set("Cookie", ["access_token=valaid_access_token"]);
+
+            expect(res.status).toBe(200);
+            expect(res.body.message).toBe("Password reset successfully.");
+            expect(mockUpdateUser).toHaveBeenCalledWith({
+                data: {
+                    password: "new_hashed_password",
+                    modified_by: "123",
+                },
+                where: {
+                    user_id: "456",
+                },
+                select: {
+                    password: false
+                }
+            });
+
+        })
+    })
+
+    describe("PATCH /deactivate", () => {
+
     })
 })
