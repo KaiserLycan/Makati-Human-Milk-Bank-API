@@ -3,13 +3,14 @@ import request from "supertest";
 import express from "express";
 import cookieParser from "cookie-parser";
 import UserRouter from "../routes/user.router.js";
-import {HashPassword} from "../utils/password.util.js";
 
 const mockJwtSign = jest.fn();
 const mockJwtVerify = jest.fn();
 const mockFindUniqueOrThrow = jest.fn();
 const mockCreateUser = jest.fn();
+const mockUpdateUser = jest.fn();
 const mockHashPassword = jest.fn();
+const mockComparePassword = jest.fn();
 
 jest.mock("jsonwebtoken", () => {
     return {
@@ -30,6 +31,7 @@ jest.mock("../db/db.ts", () => {
             user: {
                 findUniqueOrThrow: (...args) => mockFindUniqueOrThrow(...args),
                 create: (...args) => mockCreateUser(...args),
+                update: (...args) => mockUpdateUser(...args),
             }
         }
     }
@@ -38,7 +40,12 @@ jest.mock("../db/db.ts", () => {
 jest.mock("../utils/password.util.js", () => {
     return {
         __esModule: true,
+        default: {
+            HashPassword: (...args) => mockHashPassword(...args),
+            ComparePassword: (...args) => mockComparePassword(...args),
+        },
         HashPassword: (...args) => mockHashPassword(...args),
+        ComparePassword: (...args) => mockComparePassword(...args),
     }
 })
 
@@ -155,5 +162,106 @@ describe("User API Unit Tests", () => {
             expect(res.body.error[1]).toBe("Invalid email address.");
             expect(res.body.error[2]).toBe("Password must be at least 8 characters long.");
         })
+    })
+
+    describe("PATCH /change-password", () => {
+        it("Should change password", async () => {
+            const mockUser = {
+                user_id: "123",
+                password: "hashed_password"
+            }
+
+            mockJwtVerify.mockImplementationOnce(() => ({user_id: "123"}));
+            mockFindUniqueOrThrow
+                .mockImplementationOnce(() => Promise.resolve(mockUser))
+                .mockImplementationOnce(() => Promise.resolve(mockUser));
+            mockComparePassword.mockResolvedValue(true);
+            mockHashPassword.mockResolvedValue("hashed_new_password")
+            mockUpdateUser.mockResolvedValue({...mockUser, password: "hashed_new_password"});
+
+            const res = await request(app)
+                .patch("/change-password")
+                .send({
+                    old_password: "old_password",
+                    new_password: "new_password"
+                })
+                .set("Cookie", ["access_token=valaid_access_token"]);
+
+            expect(res.status).toBe(200);
+            expect(res.body.message).toBe("Password updated successfully.");
+            expect(mockUpdateUser).toHaveBeenCalledWith({
+                data: {
+                    password: "hashed_new_password"
+                },
+                where: {
+                    user_id: "123"
+                }
+            })
+
+
+
+        });
+
+        it ("Should return 400 for missing inputs", async () => {
+            const mockUser = {
+                user_id: "123"
+            }
+
+            mockJwtVerify.mockImplementationOnce(() => ({user_id: "123"}));
+            mockFindUniqueOrThrow.mockImplementationOnce(() => Promise.resolve(mockUser));
+
+            const res = await request(app)
+                .patch("/change-password")
+                .send({})
+                .set("Cookie", ["access_token=valaid_access_token"]);
+
+            expect(res.status).toBe(400);
+            expect(res.body.error[0]).toBe("Old password is required");
+            expect(res.body.error[1]).toBe("New Password is required.");
+        });
+
+        it ( "Should return 400 if old password and new password are the same", async () => {
+            const mockUser = {
+                user_id: "123"
+            }
+
+            mockJwtVerify.mockImplementationOnce(() => ({user_id: "123"}));
+            mockFindUniqueOrThrow.mockImplementationOnce(() => Promise.resolve(mockUser));
+
+            const res = await request(app)
+                .patch("/change-password")
+                .send({
+                    old_password: "same_password",
+                    new_password: "same_password"
+                })
+                .set("Cookie", ["access_token=valaid_access_token"]);
+
+            expect(res.status).toBe(400);
+            expect(res.body.error[0]).toBe("New password cannot be the same as the old password");
+        });
+
+        it ( "Should return 401 if old password is not current password", async () => {
+            const mockUser = {
+                user_id: "123",
+                password: "current_password"
+            }
+
+            mockJwtVerify.mockImplementationOnce(() => ({user_id: "123"}));
+            mockFindUniqueOrThrow
+                .mockImplementationOnce(() => Promise.resolve(mockUser))
+                .mockImplementationOnce(() => Promise.resolve(mockUser));
+            mockComparePassword.mockResolvedValue(false);
+
+            const res = await request(app)
+                .patch("/change-password")
+                .send({
+                    old_password: "diff_password",
+                    new_password: "new_password"
+                })
+                .set("Cookie", ["access_token=valaid_access_token"]);
+
+            expect(res.status).toBe(401);
+            expect(res.body.error).toBe("Old password does not match current password.");
+        });
     })
 })
