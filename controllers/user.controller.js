@@ -17,10 +17,10 @@ export const CreateUser = async (req, res) => {
             }
         })
 
-        return res.status(201).json({id: user.user_id, name: user.name, email: user.email, phone_num: user.phone, role: user.role, account_status: user.status})
+        return res.status(201).json({user_id: user.user_id, name: user.name, email: user.email, phone: user.phone, role: user.role, status: user.status})
     }
     catch(error) {
-        if (error.code === "P2002") return res.status(400).json({ error: "Email or Phone Number already exists." });
+        if (error.code === "P2002") return res.status(400).json({ error: "Email already exists." });
         console.log("Error in CreateUser controller");
         console.log(error)
         return res.status(500).json({error: "Internal Server Error"})

@@ -1,4 +1,4 @@
-import jwt, {decode} from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import {redis} from "../lib/redis.lib.js";
 

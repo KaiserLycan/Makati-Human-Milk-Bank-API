@@ -7,6 +7,6 @@ import {Authorize} from "../middleware/authorize.middleware.js";
 
 const router = express.Router();
 
-router.post("/", ProtectRoute, Authorize, Validate(UserSchemaValidator), CreateUser)
+router.post("/create", ProtectRoute, Authorize, Validate(UserSchemaValidator), CreateUser)
 
 export default router;
