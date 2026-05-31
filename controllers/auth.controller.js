@@ -6,12 +6,12 @@ import {redis} from "../lib/redis.lib.js";
 
 export const Authenticate = async (req, res) => {
     try {
-        const { user_id, password } = req.body;
+        const { email, password } = req.body;
         const user = await prisma.user.findUniqueOrThrow({
-            where: { user_id },
+            where: { email },
         })
 
-        const is_valid_password = await ComparePassword(password, user.password_hash);
+        const is_valid_password = await ComparePassword(password, user.password);
 
         if(!is_valid_password) throw new Error("Invalid password");
 
@@ -21,10 +21,10 @@ export const Authenticate = async (req, res) => {
         return res.status(200).json({
             user_id: user.user_id,
             user_name: user.name,
-            email_add: user.email_add,
-            phone_num: user.phone_num,
+            email_add: user.email,
+            phone_num: user.phone,
             role: user.role,
-            account_status: user.account_status
+            account_status: user.status
         })
 
 
