@@ -15,6 +15,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+
 Swagger(app, port)
 
 app.use("/api/auth", AuthRouter);
