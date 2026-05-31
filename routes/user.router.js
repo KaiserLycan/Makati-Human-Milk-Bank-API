@@ -127,6 +127,34 @@ router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator)
  */
 router.patch("/:user_id/reset-password", ProtectRoute, Authorize, ResetPassword);
 
-
+/**
+ * @openapi
+ * /api/users/{user_id}/deactivate:
+ *   patch:
+ *     summary: Deactivate a user account.
+ *     tags:
+ *       - User Management
+ *     description: Allows authorized users (e.g., managers) to deactivate a user's account, preventing them from logging in.
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         description: The unique identifier of the user to deactivate.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User deactivated successfully.
+ *       401:
+ *         description: Missing Token or Invalid Token.
+ *       403:
+ *         description: Forbidden. You do not have permission to access this resource.
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal Server Error or Cannot deactivate user.
+ */
 router.patch("/:user_id/deactivate", ProtectRoute, Authorize, DeactivateUser);
 export default router;
