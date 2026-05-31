@@ -100,3 +100,47 @@ export const ResetPassword = async (req, res) => {
         return res.status(500).json({error: "Internal Server Error"})
     }
 }
+
+export const DeactivateUser = async (req, res) => {
+    try {
+        const {user_id} = req.params;
+
+        const user = await prisma.user.findUniqueOrThrow({
+            where: {
+                user_id: user_id,
+            }
+        })
+
+        if (user.status === 'inactive') return res.status(400).json({error: "User account is already deactivated."});
+
+        const updated_user = await prisma.user.update({
+            data: {
+                status: "inactive",
+                modified_by: req.user.user_id,
+            },
+            where: {
+                user_id: user_id,
+            },
+            select: {
+                user_id: true,
+                name: true,
+                role: true,
+                email: true,
+                phone: true,
+                status: true,
+                password: false,
+            }
+        })
+
+
+        if (!updated_user) return res.status(500).json({error: "Cannot update user status."});
+
+        return res.status(200).json(updated_user);
+    }
+    catch(error) {
+        if (error.code === "P2025") return res.status(404).json({error: "User not found"});
+        console.log("Error in DeactivateUserController");
+        console.log(error);
+        return res.status(500).json({error: "Internal Server Error"})
+    }
+}

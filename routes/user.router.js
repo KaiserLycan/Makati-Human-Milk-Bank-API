@@ -1,5 +1,5 @@
 import express from 'express';
-import {ChangePassword, CreateUser, ResetPassword} from "../controllers/user.controller.js";
+import {ChangePassword, CreateUser, DeactivateUser, ResetPassword} from "../controllers/user.controller.js";
 import Validate from "../utils/validate.util.js";
 import {UserSchemaValidator} from "../utils/validators/user.validate.js";
 import {ProtectRoute} from "../middleware/auth.middleware.js";
@@ -126,4 +126,7 @@ router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator)
  *         description: Internal Server Error or Cannot update user.
  */
 router.patch("/:user_id/reset-password", ProtectRoute, Authorize, ResetPassword);
+
+
+router.patch("/:user_id/deactivate", ProtectRoute, Authorize, DeactivateUser);
 export default router;
