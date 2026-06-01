@@ -312,6 +312,44 @@ describe("User API Unit Tests", () => {
     })
 
     describe("PATCH /deactivate", () => {
+        it ("should allow managers to deactivate a specific user account", async () => {
+            const mockManager = {
+                user_id: "123",
+                role: "manager",
+            }
 
+            const mockUser = {
+                user_id: "456",
+                status: "active",
+                email: "sample@example.com",
+                phone: "000000",
+                role: "staff",
+            }
+
+            mockJwtVerify.mockImplementationOnce(() => ({user_id: "123"}));
+            mockFindUniqueOrThrow
+                .mockImplementationOnce(() => Promise.resolve(mockManager))
+                .mockImplementationOnce(() => Promise.resolve(mockUser));
+            mockUpdateUser.mockResolvedValue({...mockUser, status: "inactive"});
+
+            const res = await request(app)
+                .patch("/456/deactivate")
+                .set("Cookie", ["access_token=valaid_access_token"]);
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({...mockUser, status: "inactive"});
+            expect(mockUpdateUser).toHaveBeenCalledWith({
+                data: {
+                    status: "inactive",
+                    modified_by: "123",
+                },
+                where: {
+                    user_id: "456",
+                },
+                select: {
+                    password: false,
+                }
+            })
+        })
     })
 })
