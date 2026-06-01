@@ -125,12 +125,6 @@ export const DeactivateUser = async (req, res) => {
                 user_id: user_id,
             },
             select: {
-                user_id: true,
-                name: true,
-                role: true,
-                email: true,
-                phone: true,
-                status: true,
                 password: false,
             }
         })
