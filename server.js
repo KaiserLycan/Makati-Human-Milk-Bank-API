@@ -7,6 +7,7 @@ dotenv.config();
 
 import UserRouter from "./routes/user.router.js";
 import AuthRouter from "./routes/auth.router.js";
+import AuditLogRouter from "./routes/auditLog.router.js";
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -15,11 +16,11 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-
 Swagger(app, port)
 
 app.use("/api/auth", AuthRouter);
 app.use("/api/users", UserRouter);
+app.use("/api/audit-logs", AuditLogRouter);
 
 app.listen(port, () => {
     console.log(`Server started on http://localhost:${port}`);
