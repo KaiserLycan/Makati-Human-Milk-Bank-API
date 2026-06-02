@@ -3,11 +3,11 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import Swagger from "./lib/swagger.lib.js"
 
-
 dotenv.config();
 
 import UserRouter from "./routes/user.router.js";
 import AuthRouter from "./routes/auth.router.js";
+import DonorRouter from "./routes/donor.router.js";
 import PrePoolRouter from "./routes/prepool.router.js";
 import CollectionRouter from "./routes/collection.router.js";
 
@@ -23,6 +23,7 @@ Swagger(app, port)
 
 app.use("/api/auth", AuthRouter);
 app.use("/api/users", UserRouter);
+app.use("/api/donors", DonorRouter);
 app.use("/api/prepool", PrePoolRouter);
 app.use("/api/collections", CollectionRouter);
 
