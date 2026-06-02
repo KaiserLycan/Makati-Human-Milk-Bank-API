@@ -67,6 +67,7 @@ export const GetDonor = async (req, res) => {
 }
 
 export const RegisterDonor = async (req, res) => {
+
     try {
         const {application} = req.body;
 
@@ -101,6 +102,7 @@ export const RegisterDonor = async (req, res) => {
 }
 
 export const UpdateApplicationStatus = async (req, res) => {
+
     try {
         const {application_status} = req.body;
         const {dtn} = req.params;
@@ -167,6 +169,7 @@ export const DeleteDonor = async (req, res) => {
 
 export const UpdateDonor = async (req, res) => {
     try {
+
         const {dtn} = req.params;
         const {donor} = req.body;
 
