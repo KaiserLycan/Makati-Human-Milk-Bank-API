@@ -43,7 +43,7 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized.
  */
-router.post("/create", ProtectRoute, Authorize, Validate(UserSchemaValidator), CreateUser)
+router.post("/create", ProtectRoute, Authorize('manager'), Validate(UserSchemaValidator), CreateUser)
 
 /**
  * @openapi
@@ -125,7 +125,7 @@ router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator)
  *       500:
  *         description: Internal Server Error or Cannot update user.
  */
-router.patch("/:user_id/reset-password", ProtectRoute, Authorize, ResetPassword);
+router.patch("/:user_id/reset-password", ProtectRoute, Authorize('manager'), ResetPassword);
 
 /**
  * @openapi
@@ -156,5 +156,5 @@ router.patch("/:user_id/reset-password", ProtectRoute, Authorize, ResetPassword)
  *       500:
  *         description: Internal Server Error or Cannot deactivate user.
  */
-router.patch("/:user_id/deactivate", ProtectRoute, Authorize, DeactivateUser);
+router.patch("/:user_id/deactivate", ProtectRoute, Authorize('manager'), DeactivateUser);
 export default router;
