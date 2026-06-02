@@ -139,7 +139,7 @@ model raw_milk {
   modified_at                      DateTime?           @default(now()) @db.Timestamp(6)
   modified_by                      String              @db.Uuid
   user_raw_milk_collected_byTouser user?               @relation("raw_milk_collected_byTouser", fields: [collected_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
-  donor                            donor               @relation(fields: [dtn], references: [dtn], onDelete: NoAction, onUpdate: NoAction)
+  donor                            donor               @relation(fields: [dtn], references: [dtn], onDelete: Cascade, onUpdate: NoAction)
   user_raw_milk_modified_byTouser  user                @relation("raw_milk_modified_byTouser", fields: [modified_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   pool_milk                        pool_milk?          @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction)
 }
