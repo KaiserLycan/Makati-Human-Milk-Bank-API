@@ -20,38 +20,25 @@ export const UpdateRawMilkQAT = async (req, res) => {
 
         const newMilkStatus = qat_status === 'fail' ? 'discarded' : 'good';
 
-        const [updatedMilk, audit] = await prisma.$transaction([
-            prisma.raw_milk.update({
-                where: { ctn },
-                data: {
-                    qat_status: qat_status,
-                    milk_status: newMilkStatus,
-                    remarks: remarks || oldMilkData.remarks,
-                    modified_by: user_id,
-                    modified_at: new Date()
-                }
-            }),
-            prisma.audit_log.create({
-                data: {
-                    modified_by: user_id,
-                    action_performed: 'UPDATE_QAT_STATUS',
-                    table_name: 'raw_milk',
-                    old_data: oldMilkData,
-                    new_data: { qat_status, milk_status: newMilkStatus, remarks }
-                }
-            })
-        ]);
-
-        return res.status(200).json({
-            message: "QAT status updated successfully",
-            data: updatedMilk
+        const updatedMilk = await prisma.raw_milk.update({
+            where: { ctn },
+            data: {
+                qat_status: qat_status,
+                milk_status: newMilkStatus,
+                remarks: remarks || oldMilkData.remarks,
+                modified_by: user_id,
+                modified_at: new Date()
+            }
         });
+
+        return res.status(200).json(updatedMilk);
 
     } catch (error) {
         console.error("Error in UpdateRawMilkQAT Controller:", error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 }
+
 export const LogPrePoolIncident = async (req, res) => {
     try {
         const ctn = parseInt(req.params.ctn);
@@ -80,36 +67,18 @@ export const LogPrePoolIncident = async (req, res) => {
             return res.status(400).json({ error: "Invalid incident_type. Must be 'contamination' or 'leakage'." });
         }
 
-        const [updatedMilk, audit] = await prisma.$transaction([
-            prisma.raw_milk.update({
-                where: { ctn },
-                data: {
-                    milk_status: newStatus,
-                    volume_ml: newVolume,
-                    remarks: remarks ? `${oldMilkData.remarks ? oldMilkData.remarks + ' | ' : ''}Incident: ${remarks}` : oldMilkData.remarks,
-                    modified_by: user_id,
-                    modified_at: new Date()
-                }
-            }),
-            prisma.audit_log.create({
-                data: {
-                    modified_by: user_id,
-                    action_performed: `RECORD_INCIDENT_${incident_type.toUpperCase()}`,
-                    table_name: 'raw_milk',
-                    old_data: oldMilkData,
-                    new_data: { 
-                        milk_status: newStatus, 
-                        volume_ml: newVolume, 
-                        remarks 
-                    }
-                }
-            })
-        ]);
-
-        return res.status(200).json({
-            message: `Pre-pooling ${incident_type} recorded successfully.`,
-            data: updatedMilk
+        const updatedMilk = await prisma.raw_milk.update({
+            where: { ctn },
+            data: {
+                milk_status: newStatus,
+                volume_ml: newVolume,
+                remarks: remarks ? `${oldMilkData.remarks ? oldMilkData.remarks + ' | ' : ''}Incident: ${remarks}` : oldMilkData.remarks,
+                modified_by: user_id,
+                modified_at: new Date()
+            }
         });
+
+        return res.status(200).json(updatedMilk);
 
     } catch (error) {
         console.error("Error in LogPrePoolIncident Controller:", error);
