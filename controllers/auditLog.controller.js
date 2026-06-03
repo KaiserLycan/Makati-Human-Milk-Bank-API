@@ -1,8 +1,22 @@
-import { GetAuditLogs } from '../services/auditLog.service.js';
+import { prisma } from '../db/db.ts';
 
 export const FetchAuditLogs = async (req, res) => {
     try {
-        const logs = await GetAuditLogs();
+        const logs = await prisma.audit_log.findMany({
+            orderBy: {
+                performed_at: 'desc'
+            },
+            include: {
+                user: {
+                    select: {
+                        user_id: true,
+                        name: true,
+                        role: true,
+                        email: true
+                    }
+                }
+            }
+        });
 
         return res.status(200).json({
             success: true,

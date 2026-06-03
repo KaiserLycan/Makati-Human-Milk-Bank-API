@@ -1,9 +1,13 @@
 const { describe, it, expect, beforeEach } = require('@jest/globals');
 
-const mockGetAuditLogs = jest.fn();
+const mockFindMany = jest.fn();
 
-jest.mock('../services/auditLog.service.js', () => ({
-    GetAuditLogs: (...args) => mockGetAuditLogs(...args)
+jest.mock('../db/db.ts', () => ({
+    prisma: {
+        audit_log: {
+            findMany: (...args) => mockFindMany(...args)
+        }
+    }
 }));
 
 const { FetchAuditLogs } = require('../controllers/auditLog.controller.js');
@@ -18,7 +22,7 @@ const mockRes = () => {
 describe('FetchAuditLogs controller', () => {
 
     beforeEach(() => {
-        mockGetAuditLogs.mockReset();
+        mockFindMany.mockReset();
     });
 
     it('should return 200 with audit logs', async () => {
@@ -35,7 +39,7 @@ describe('FetchAuditLogs controller', () => {
             }
         ];
 
-        mockGetAuditLogs.mockResolvedValue(mockLogs);
+        mockFindMany.mockResolvedValue(mockLogs);
 
         const req = {};
         const res = mockRes();
@@ -43,11 +47,14 @@ describe('FetchAuditLogs controller', () => {
         await FetchAuditLogs(req, res);
 
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ success: true, data: mockLogs });
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            data: mockLogs
+        });
     });
 
     it('should return 200 with empty array if no logs', async () => {
-        mockGetAuditLogs.mockResolvedValue([]);
+        mockFindMany.mockResolvedValue([]);
 
         const req = {};
         const res = mockRes();
@@ -55,11 +62,14 @@ describe('FetchAuditLogs controller', () => {
         await FetchAuditLogs(req, res);
 
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ success: true, data: [] });
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            data: []
+        });
     });
 
     it('should return 500 if service throws an error', async () => {
-        mockGetAuditLogs.mockRejectedValue(new Error('Database error'));
+        mockFindMany.mockRejectedValue(new Error('Database error'));
 
         const req = {};
         const res = mockRes();
@@ -72,4 +82,5 @@ describe('FetchAuditLogs controller', () => {
             message: 'Internal server error'
         });
     });
+
 });
