@@ -71,10 +71,7 @@ describe('FetchAuditLogs controller', () => {
         await FetchAuditLogs(req, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.json).toHaveBeenCalledWith({
-            success: false,
-            message: 'Internal server error'
-        });
+        expect(res.json).toHaveBeenCalledWith({error: 'Internal server error'});
     });
 
 });

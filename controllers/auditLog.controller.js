@@ -21,10 +21,8 @@ export const FetchAuditLogs = async (req, res) => {
         return res.status(200).json(logs);
 
     } catch (error) {
-        console.error('Error fetching audit logs:', error);
-        return res.status(500).json({
-            success: false,
-            message: 'Internal server error'
-        });
+        console.log('Error fetching audit logs');
+        console.log( error)
+        return res.status(500).json({error: 'Internal server error'});
     }
 };
