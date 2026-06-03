@@ -85,7 +85,7 @@ describe('User API Unit Tests', () => {
                 .set('Cookie', ['access_token=valid_access_token']);
 
             expect(res.status).toBe(403);
-            expect(res.body.message).toEqual('Forbidden. You do not have permission to access this resource.');
+            expect(res.body.error).toEqual('Forbidden. You do not have permission to access this resource.');
         });
 
         it('Should return 401 if unauthenticated user tries to create user', async () => {

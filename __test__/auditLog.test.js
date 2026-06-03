@@ -47,10 +47,7 @@ describe('FetchAuditLogs controller', () => {
         await FetchAuditLogs(req, res);
 
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({
-            success: true,
-            data: mockLogs
-        });
+        expect(res.json).toHaveBeenCalledWith(mockLogs);
     });
 
     it('should return 200 with empty array if no logs', async () => {
@@ -62,10 +59,7 @@ describe('FetchAuditLogs controller', () => {
         await FetchAuditLogs(req, res);
 
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({
-            success: true,
-            data: []
-        });
+        expect(res.json).toHaveBeenCalledWith([]);
     });
 
     it('should return 500 if service throws an error', async () => {

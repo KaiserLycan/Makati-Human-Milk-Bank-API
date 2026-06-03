@@ -18,10 +18,7 @@ export const FetchAuditLogs = async (req, res) => {
             }
         });
 
-        return res.status(200).json({
-            success: true,
-            data: logs
-        });
+        return res.status(200).json(logs);
 
     } catch (error) {
         console.error('Error fetching audit logs:', error);
