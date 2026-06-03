@@ -11,6 +11,11 @@ export const Authenticate = async (req, res) => {
             where: { email },
         })
 
+        if (user.status !== "active") res.status(401).json({
+            error: "Authentication failed",
+            description: "User account is no longer active."
+        });
+
         const is_valid_password = await ComparePassword(password, user.password);
         if(!is_valid_password) throw new Error("Invalid password");
 
