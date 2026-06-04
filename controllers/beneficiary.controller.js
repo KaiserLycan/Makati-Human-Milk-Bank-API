@@ -145,5 +145,41 @@ export const DeleteBeneficiary = async (req, res) => {
 }
 
 export const UpdateBeneficiary = async (req, res) => {
+    try {
+        const {bid} = req.params;
+        const {beneficiary} = req.body;
 
+        if(!beneficiary) return res.status(400).json({error: "Beneficiary property is not defined."});
+
+        const updated_beneficiary = await prisma.beneficiary.update({
+            data: {
+                name: beneficiary.name,
+                caregiver: beneficiary.caregiver,
+                caregiver_email: beneficiary.caregiver_email,
+                caregiver_phone: beneficiary.caregiver_phone,
+                birth_date: new Date(beneficiary.birth_date),
+                weight_kg: beneficiary.weight_kg,
+                feeding_requirement_ml: beneficiary.feeding_requirement_ml,
+                profile: beneficiary.profile,
+                modified_by: req?.user?.user_id
+            },
+            omit: {
+                created_at: true,
+                modified_at: true,
+                modified_by: true
+            },
+            where: {
+                bid: parseInt(bid),
+            }
+        })
+
+        return res.status(200).json(updated_beneficiary);
+    }
+    catch (error) {
+        if(error.code === "P2025") return res.status(404).json({error:"No records found."});
+        if(error.code === "P2002") return res.status(400).json({error:"Email already exists"});
+        console.log("Error in updateBeneficiary");
+        console.log(error);
+        return res.status(500).json({error:"Internal Server Error"});
+    }
 }
