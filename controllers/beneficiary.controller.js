@@ -51,7 +51,38 @@ export const GetBeneficiary = async (req, res) => {
 }
 
 export const RegisterBeneficiary = async (req, res) => {
+    try {
+        const {application} = req.body;
 
+        if(!application) return res.status(400).json({error: "Application property is not defined."});
+
+        const beneficiary = await prisma.beneficiary.create({
+            data: {
+                name: application.name,
+                caregiver: application.caregiver,
+                caregiver_email: application.caregiver_email,
+                caregiver_phone: application.caregiver_phone,
+                birth_date: new Date(application.birth_date),
+                weight_kg: application.weight_kg,
+                feeding_requirement_ml: application.feeding_requirement_ml,
+                profile: application.profile,
+                modified_by: req?.user?.user_id || "00000000-0000-0000-0000-000000000000"
+            },
+            omit: {
+                created_at: true,
+                modified_at: true,
+                modified_by: true
+            }
+        })
+
+        if(!beneficiary) return res.status(400).json({error: "Cannot register beneficiary."});
+        return res.status(201).json(beneficiary);
+    }
+    catch (error) {
+        console.log("Error in registerBeneficiary");
+        console.log(error);
+        return res.status(500).json({error:"Internal Server Error"});
+    }
 }
 
 export const UpdateApplicationStatus = async (req, res) => {
