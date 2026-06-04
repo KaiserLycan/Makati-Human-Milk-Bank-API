@@ -25,7 +25,29 @@ export const GetBeneficiaries = async (req, res) => {
 }
 
 export const GetBeneficiary = async (req, res) => {
+    try {
+        const {bid} = req.params;
 
+        const beneficiary = await prisma.beneficiary.findUnique({
+            where: {
+                bid: parseInt(bid),
+
+            },
+            omit: {
+                created_at: true,
+                modified_at: true,
+                modified_by: true
+            }
+        })
+
+        if(!beneficiary) return res.status(404).json({error: "No records found."});
+        return res.status(200).json(beneficiary);
+    }
+    catch (error) {
+        console.log("Error in getBeneficiary");
+        console.log(error);
+        return res.status(500).json({error:"Internal Server Error"});
+    }
 }
 
 export const RegisterBeneficiary = async (req, res) => {
