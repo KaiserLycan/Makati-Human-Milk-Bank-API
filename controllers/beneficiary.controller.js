@@ -86,7 +86,34 @@ export const RegisterBeneficiary = async (req, res) => {
 }
 
 export const UpdateApplicationStatus = async (req, res) => {
+    try {
+        const {application_status} = req.body;
+        const {bid} = req.params;
 
+        if (!application_status) return res.status(400).json({error: "application_status property is not defined."});
+
+        const beneficiary = await prisma.beneficiary.update({
+            data: {
+                application_status
+            },
+            where: {
+                bid: parseInt(bid),
+            },
+            omit: {
+                created_at: true,
+                modified_at: true,
+                modified_by: true
+            }
+        })
+
+        if(!beneficiary) return res.status(404).json({error: "Cannot update missing record"});
+        return res.status(200).json(beneficiary);
+    }
+    catch (error) {
+        console.log("Error in updateApplicationStatus");
+        console.log(error);
+        return res.status(500).json({error:"Internal Server Error"});
+    }
 }
 
 export const DeleteBeneficiary = async (req, res) => {
