@@ -117,7 +117,31 @@ export const UpdateApplicationStatus = async (req, res) => {
 }
 
 export const DeleteBeneficiary = async (req, res) => {
+    try {
+        const {bid} = req.params;
 
+        await prisma.beneficiary.update({
+            data: {
+                modified_by: req?.user?.user_id
+            },
+            where: {
+                bid: parseInt(bid),
+            }
+        })
+
+        await prisma.beneficiary.delete({
+            where: {
+                bid: parseInt(bid),
+            }
+        })
+
+        return res.status(204).send();
+    }
+    catch (error) {
+        console.log("Error in deleteBeneficiary");
+        console.log(error);
+        return res.status(500).json({error:"Internal Server Error"});
+    }
 }
 
 export const UpdateBeneficiary = async (req, res) => {
