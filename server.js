@@ -13,8 +13,6 @@ import PrePoolRouter from "./routes/prepool.router.js";
 import CollectionRouter from "./routes/collection.router.js";
 import BeneficiaryRouter from "./routes/beneficiary.router.js";
 
-import EmailService from "./lib/nodemailer.lib.js";
-
 const port = process.env.PORT || 5000;
 const app = express();
 
