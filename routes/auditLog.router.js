@@ -6,15 +6,61 @@ import { Authorize } from '../middleware/authorize.middleware.js';
 const router = express.Router();
 
 /**
- * @openapi
+ * @swagger
+ * tags:
+ *   name: Audit Logs
+ *   description: API for retrieving audit logs
+ */
+
+/**
+ * @swagger
  * /api/audit-logs:
  *   get:
  *     summary: Get all audit logs
- *     tags:
- *       - Audit Logs
- *     description: Returns all audit logs. Accessible by managers only.
+ *     tags: [Audit Logs]
+ *     description: Returns a paginated list of audit logs. Accessible by managers only.
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: modified_by
+ *         schema:
+ *           type: string
+ *         description: Filter logs by the name of the user who performed the action
+ *       - in: query
+ *         name: action_performed
+ *         schema:
+ *           type: string
+ *         description: Filter logs by the type of action performed (e.g., CREATE, UPDATE, DELETE)
+ *       - in: query
+ *         name: table_name
+ *         schema:
+ *           type: string
+ *         description: Filter logs by the name of the affected table
+ *       - in: query
+ *         name: start_date
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         description: Filter logs performed after this date and time
+ *       - in: query
+ *         name: end_date
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         description: Filter logs performed before this date and time
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: The page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 15
+ *         description: The number of items to return per page
  *     responses:
  *       200:
  *         description: Audit logs retrieved successfully.
