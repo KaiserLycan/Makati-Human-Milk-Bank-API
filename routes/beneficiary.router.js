@@ -104,7 +104,9 @@ router.get("/:bid", ProtectRoute, GetBeneficiary);
  *                   profile:
  *                     type: object
  *                     properties:
- *                       more_info:
+ *                       prescription_details:
+ *                         type: string
+ *                       clinical_abstract:
  *                         type: string
  *     responses:
  *       201:
@@ -151,7 +153,9 @@ router.post("/register", ProtectRoute, RegisterBeneficiary);
  *                   profile:
  *                     type: object
  *                     properties:
- *                       more_info:
+ *                       prescription_details:
+ *                         type: string
+ *                       clinical_abstract:
  *                         type: string
  *     responses:
  *       201:
@@ -267,7 +271,9 @@ router.delete("/:bid", ProtectRoute, DeleteBeneficiary);
  *                   profile:
  *                     type: object
  *                     properties:
- *                       more_info:
+ *                       prescription_details:
+ *                         type: string
+ *                       clinical_abstract:
  *                         type: string
  *     responses:
  *       200:
