@@ -341,6 +341,7 @@ describe("Donor API Unit Tests", () => {
                     application_status: "approved",
                 },
                 where: {
+                    application_status: "pending",
                     dtn: 1
                 },
                 omit: {
@@ -380,6 +381,7 @@ describe("Donor API Unit Tests", () => {
                     application_status: "rejected",
                 },
                 where: {
+                    application_status: "pending",
                     dtn: 1
                 },
                 omit: {

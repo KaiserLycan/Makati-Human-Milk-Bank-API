@@ -114,7 +114,7 @@ export const UpdateApplicationStatus = async (req, res) => {
                 application_status: "pending",
             },
             data: {
-                application_status: application_status
+                application_status
             },
             omit: {
                 modified_at: true,
