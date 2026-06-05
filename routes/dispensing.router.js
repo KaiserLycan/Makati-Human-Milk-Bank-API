@@ -8,7 +8,7 @@ import {
 const router = express.Router();
 
 /**
- * @openapi
+ * @swagger
  * /api/dispensing:
  *   get:
  *     summary: Get dispensing queue
@@ -26,7 +26,7 @@ const router = express.Router();
 router.get("/", ProtectRoute, GetDispensingQueue);
 
 /**
- * @openapi
+ * @swagger
  * /api/dispensing/{rid}/dispense:
  *   patch:
  *     summary: Dispense milk for a request

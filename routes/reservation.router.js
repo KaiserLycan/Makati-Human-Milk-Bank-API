@@ -35,7 +35,7 @@ const router = express.Router();
 router.get("/", ProtectRoute, GetRequests);
 
 /**
- * @openapi
+ * @swagger
  * /api/reservations/{rid}:
  *   get:
  *     summary: Get a specific milk request
@@ -61,7 +61,7 @@ router.get("/", ProtectRoute, GetRequests);
 router.get("/:rid", ProtectRoute, GetRequest);
 
 /**
- * @openapi
+ * @swagger
  * /api/reservations:
  *   post:
  *     summary: Create a new milk request
@@ -98,7 +98,7 @@ router.get("/:rid", ProtectRoute, GetRequest);
 router.post("/", ProtectRoute, CreateRequest);
 
 /**
- * @openapi
+ * @swagger
  * /api/reservations/{rid}/cancel:
  *   patch:
  *     summary: Cancel a milk request
