@@ -21,8 +21,6 @@ import NotificationRouter from "./routes/notification.router.js";
 import PasteurizationRouter from "./routes/pasteurization.router.js";
 >>>>>>> development
 
-import EmailService from "./lib/nodemailer.lib.js";
-
 const port = process.env.PORT || 5000;
 const app = express();
 
