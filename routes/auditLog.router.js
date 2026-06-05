@@ -18,7 +18,7 @@ const router = express.Router();
  *   get:
  *     summary: Get all audit logs
  *     tags: [Audit Logs]
- *     description: Returns a paginated list of audit logs. Accessible by managers only.
+ *     description: Returns a paginated list of audit logs with a total count. Accessible by managers only.
  *     security:
  *       - cookieAuth: []
  *     parameters:
@@ -26,12 +26,12 @@ const router = express.Router();
  *         name: modified_by
  *         schema:
  *           type: string
- *         description: Filter logs by the name of the user who performed the action
+ *         description: Filter logs by the name of the user who performed the action (case-insensitive, partial match)
  *       - in: query
  *         name: action_performed
  *         schema:
  *           type: string
- *         description: Filter logs by the type of action performed (e.g., CREATE, UPDATE, DELETE)
+ *         description: Filter logs by the type of action performed (e.g., INSERT, UPDATE, DELETE)
  *       - in: query
  *         name: table_name
  *         schema:
@@ -42,13 +42,13 @@ const router = express.Router();
  *         schema:
  *           type: string
  *           format: date-time
- *         description: Filter logs performed after this date and time
+ *         description: Filter logs performed after this date and time (inclusive)
  *       - in: query
  *         name: end_date
  *         schema:
  *           type: string
  *           format: date-time
- *         description: Filter logs performed before this date and time
+ *         description: Filter logs performed before this date and time (inclusive)
  *       - in: query
  *         name: page
  *         schema:
@@ -64,6 +64,21 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: Audit logs retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 logs:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 total:
+ *                   type: integer
+ *                 page:
+ *                   type: integer
+ *                 limit:
+ *                   type: integer
  *       401:
  *         description: Unauthorized.
  *       403:
