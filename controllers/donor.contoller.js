@@ -67,7 +67,6 @@ export const GetDonor = async (req, res) => {
 }
 
 export const RegisterDonor = async (req, res) => {
-
     try {
         const {application} = req.body;
 
@@ -102,19 +101,20 @@ export const RegisterDonor = async (req, res) => {
 }
 
 export const UpdateApplicationStatus = async (req, res) => {
-
     try {
         const {application_status} = req.body;
         const {dtn} = req.params;
 
-        if(!application_status) return res.status(400).json({message:"No status provided."});
+        if(!application_status) return res.status(400).json({error: "application_status property is not defined."});
+        if(application_status !== "approved" && application_status !== "rejected") return res.status(400).json({error: "Invalid request. application status must be approved or rejected only."});
 
         const donor = await prisma.donor.update({
-            data: {
-                application_status,
-            },
             where: {
-                dtn: Number(dtn)
+                dtn: parseInt(dtn),
+                application_status: "pending",
+            },
+            data: {
+                application_status: application_status
             },
             omit: {
                 modified_at: true,
@@ -126,6 +126,8 @@ export const UpdateApplicationStatus = async (req, res) => {
         return res.status(200).json(donor);
     }
     catch (error) {
+        if (error.code === "P2025") return res.status(400).json({error: "Cannot find application record with a pending status."})
+
         console.log("Error in updateApplication");
         console.log(error);
         return res.status(500).send("Internal Server Error");
