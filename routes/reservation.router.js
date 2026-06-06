@@ -11,14 +11,14 @@ import {
 const router = express.Router();
 
 /**
- * @openapi
+ * @swagger
  * /api/reservations:
  *   get:
  *     summary: Get all milk requests
  *     tags:
  *       - Reservation
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: query
  *         name: request_status
@@ -26,6 +26,18 @@ const router = express.Router();
  *           type: string
  *           enum: [waiting, allocated, completed, canceled]
  *         description: Filter requests by status
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of results per page
  *     responses:
  *       200:
  *         description: List of requests retrieved successfully.
@@ -42,7 +54,7 @@ router.get("/", ProtectRoute, GetRequests);
  *     tags:
  *       - Reservation
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: rid
@@ -68,7 +80,7 @@ router.get("/:rid", ProtectRoute, GetRequest);
  *     tags:
  *       - Reservation
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -105,7 +117,7 @@ router.post("/", ProtectRoute, CreateRequest);
  *     tags:
  *       - Reservation
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: rid

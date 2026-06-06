@@ -8,6 +8,7 @@ const mockUserFindUniqueOrThrow = jest.fn();
 const mockRequestFindMany = jest.fn();
 const mockRequestFindUniqueOrThrow = jest.fn();
 const mockRequestUpdate = jest.fn();
+const mockRequestCount = jest.fn();
 const mockPasteurizedMilkUpdateMany = jest.fn();
 
 jest.mock("jsonwebtoken", () => ({
@@ -28,6 +29,7 @@ jest.mock("../db/db.ts", () => ({
             findMany: (...args) => mockRequestFindMany(...args),
             findUniqueOrThrow: (...args) => mockRequestFindUniqueOrThrow(...args),
             update: (...args) => mockRequestUpdate(...args),
+            count: (...args) => mockRequestCount(...args),
         },
         pasteurized_milk: {
             updateMany: (...args) => mockPasteurizedMilkUpdateMany(...args),
@@ -67,28 +69,38 @@ describe("Dispensing API Unit Tests", () => {
                 }
             ];
             mockRequestFindMany.mockResolvedValue(mockQueue);
+            mockRequestCount.mockResolvedValue(1);
 
             const res = await request(app)
                 .get("/api/dispensing")
                 .set("Cookie", ["access_token=valid_token"]);
 
             expect(res.status).toBe(200);
-            expect(res.body).toEqual(mockQueue);
+            expect(res.body.data).toEqual(mockQueue);
+            expect(res.body.meta).toEqual({
+                total: 1,
+                page: 1,
+                limit: 10,
+                total_pages: 1
+            });
         });
 
         it("Should return empty array if no allocated requests", async () => {
             mockRequestFindMany.mockResolvedValue([]);
+            mockRequestCount.mockResolvedValue(0);
 
             const res = await request(app)
                 .get("/api/dispensing")
                 .set("Cookie", ["access_token=valid_token"]);
 
             expect(res.status).toBe(200);
-            expect(res.body).toEqual([]);
+            expect(res.body.data).toEqual([]);
+            expect(res.body.meta.total).toBe(0);
         });
 
         it("Should return 500 on database error", async () => {
             mockRequestFindMany.mockRejectedValue(new Error("Database error"));
+            mockRequestCount.mockRejectedValue(new Error("Database error"));
 
             const res = await request(app)
                 .get("/api/dispensing")
