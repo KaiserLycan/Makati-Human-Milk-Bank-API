@@ -88,7 +88,7 @@ export const CreateRequest = async (req, res) => {
         const user_id = req.user.user_id;
 
         if (!bid) return res.status(400).json({ error: "Beneficiary ID is required." });
-        if (!requested_vol_ml) return res.status(400).json({ error: "Requested volume is required." });
+        if (requested_vol_ml === undefined || requested_vol_ml === null) return res.status(400).json({ error: "Requested volume is required." });
         if (requested_vol_ml <= 0) return res.status(400).json({ error: "Requested volume must be greater than 0." });
 
         // Verify beneficiary exists and is approved
