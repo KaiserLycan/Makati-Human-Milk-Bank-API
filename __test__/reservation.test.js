@@ -9,6 +9,7 @@ const mockRequestFindMany = jest.fn();
 const mockRequestFindUniqueOrThrow = jest.fn();
 const mockRequestCreate = jest.fn();
 const mockRequestUpdate = jest.fn();
+const mockRequestCount = jest.fn();
 const mockBeneficiaryFindUniqueOrThrow = jest.fn();
 
 jest.mock("jsonwebtoken", () => ({
@@ -30,6 +31,7 @@ jest.mock("../db/db.ts", () => ({
             findUniqueOrThrow: (...args) => mockRequestFindUniqueOrThrow(...args),
             create: (...args) => mockRequestCreate(...args),
             update: (...args) => mockRequestUpdate(...args),
+            count: (...args) => mockRequestCount(...args),
         },
         beneficiary: {
             findUniqueOrThrow: (...args) => mockBeneficiaryFindUniqueOrThrow(...args),
@@ -62,27 +64,36 @@ describe("Reservation API Unit Tests", () => {
                 { rid: 2, request_status: "allocated", requested_vol_ml: 200 },
             ];
             mockRequestFindMany.mockResolvedValue(mockRequests);
+            mockRequestCount.mockResolvedValue(2);
 
             const res = await request(app)
                 .get("/api/reservations")
                 .set("Cookie", ["access_token=valid_token"]);
 
             expect(res.status).toBe(200);
-            expect(res.body).toEqual(mockRequests);
+            expect(res.body.data).toEqual(mockRequests);
+            expect(res.body.meta).toEqual({
+                total: 2,
+                page: 1,
+                limit: 10,
+                total_pages: 1
+            });
         });
 
-        it("Should fetch requests filtered by status", async () => {
-            const mockRequests = [{ rid: 1, request_status: "waiting" }];
-            mockRequestFindMany.mockResolvedValue(mockRequests);
+    it("Should fetch requests filtered by status", async () => {
+        const mockRequests = [{ rid: 1, request_status: "waiting" }];
+        mockRequestFindMany.mockResolvedValue(mockRequests);
+        mockRequestCount.mockResolvedValue(1);
 
-            const res = await request(app)
-                .get("/api/reservations?request_status=waiting")
-                .set("Cookie", ["access_token=valid_token"]);
+        const res = await request(app)
+            .get("/api/reservations?request_status=waiting")
+            .set("Cookie", ["access_token=valid_token"]);
 
-            expect(res.status).toBe(200);
-            expect(res.body).toEqual(mockRequests);
-        });
+        expect(res.status).toBe(200);
+        expect(res.body.data).toEqual(mockRequests);
+        expect(res.body.meta.total).toBe(1);
     });
+});
 
     describe("GET /api/reservations/:rid", () => {
         it("Should fetch a specific request", async () => {

@@ -15,7 +15,20 @@ const router = express.Router();
  *     tags:
  *       - Dispensing
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of results per page
  *     description: Returns all allocated requests ready for dispensing, ordered by requested date (FCFS).
  *     responses:
  *       200:
@@ -33,7 +46,7 @@ router.get("/", ProtectRoute, GetDispensingQueue);
  *     tags:
  *       - Dispensing
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: rid

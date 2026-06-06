@@ -13,7 +13,6 @@ import PrePoolRouter from "./routes/prepool.router.js";
 import CollectionRouter from "./routes/collection.router.js";
 import ReservationRouter from "./routes/reservation.router.js";
 import DispensingRouter from "./routes/dispensing.router.js";
-
 import BeneficiaryRouter from "./routes/beneficiary.router.js";
 
 const port = process.env.PORT || 5000;
@@ -31,6 +30,8 @@ app.use("/api/audit-logs", AuditLogRouter);
 app.use("/api/donors", DonorRouter);
 app.use("/api/prepool", PrePoolRouter);
 app.use("/api/collections", CollectionRouter);
+app.use("/api/reservations", ReservationRouter);
+app.use("/api/dispensing", DispensingRouter);
 app.use("/api/beneficiaries", BeneficiaryRouter)
 app.use("/api/reservations", ReservationRouter);
 app.use("/api/dispensing", DispensingRouter);
