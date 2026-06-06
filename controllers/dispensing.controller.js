@@ -2,35 +2,54 @@ import { prisma } from "../db/db.ts";
 
 export const GetDispensingQueue = async (req, res) => {
     try {
-        const queue = await prisma.request.findMany({
-            where: { request_status: 'allocated' },
-            orderBy: { requested_date: 'asc' },
-            include: {
-                beneficiary: {
-                    select: {
-                        bid: true,
-                        name: true,
-                        caregiver: true,
-                        caregiver_email: true,
-                        caregiver_phone: true,
-                    }
-                },
-                request_bottles: {
-                    include: {
-                        pasteurized_milk: {
-                            select: {
-                                btl_id: true,
-                                volume_ml: true,
-                                expiration_date: true,
-                                bottle: true,
+        const { page = 1, limit = 10 } = req.query;
+
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const skip = (pageNum - 1) * limitNum;
+
+        const [queue, total] = await Promise.all([
+            prisma.request.findMany({
+                where: { request_status: 'allocated' },
+                orderBy: { requested_date: 'asc' },
+                skip,
+                take: limitNum,
+                include: {
+                    beneficiary: {
+                        select: {
+                            bid: true,
+                            name: true,
+                            caregiver: true,
+                            caregiver_email: true,
+                            caregiver_phone: true,
+                        }
+                    },
+                    request_bottles: {
+                        include: {
+                            pasteurized_milk: {
+                                select: {
+                                    btl_id: true,
+                                    volume_ml: true,
+                                    expiration_date: true,
+                                    bottle: true,
+                                }
                             }
                         }
                     }
                 }
+            }),
+            prisma.request.count({ where: { request_status: 'allocated' } })
+        ]);
+
+        return res.status(200).json({
+            data: queue,
+            meta: {
+                total,
+                page: pageNum,
+                limit: limitNum,
+                total_pages: Math.ceil(total / limitNum)
             }
         });
-
-        return res.status(200).json(queue);
     } catch (error) {
         console.log("Error in GetDispensingQueue Controller:");
         console.log(error);
@@ -74,7 +93,6 @@ export const DispenseMilk = async (req, res) => {
             where: { rid: parseInt(rid) },
             data: {
                 request_status: 'completed',
-                actual_datetime: new Date(),
                 modified_by: user_id,
             },
             include: {
