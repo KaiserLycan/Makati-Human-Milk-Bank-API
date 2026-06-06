@@ -1,46 +1,5 @@
 import { prisma } from "../db/db.ts";
 
-export const GetRequests = async (req, res) => {
-    try {
-        const { request_status } = req.query;
-
-        const requests = await prisma.request.findMany({
-            where: request_status ? { request_status } : undefined,
-            orderBy: { created_at: 'asc' },
-            include: {
-                beneficiary: {
-                    select: {
-                        bid: true,
-                        name: true,
-                        caregiver: true,
-                        caregiver_email: true,
-                        caregiver_phone: true,
-                        feeding_requirement_ml: true,
-                    }
-                },
-                request_bottles: {
-                    include: {
-                        pasteurized_milk: {
-                            select: {
-                                btl_id: true,
-                                volume_ml: true,
-                                expiration_date: true,
-                                dispense_status: true,
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        return res.status(200).json(requests);
-    } catch (error) {
-        console.log("Error in GetRequests Controller:");
-        console.log(error);
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
-};
-
 export const GetRequest = async (req, res) => {
     try {
         const { rid } = req.params;
@@ -77,6 +36,66 @@ export const GetRequest = async (req, res) => {
     } catch (error) {
         if (error.code === "P2025") return res.status(404).json({ error: "Request not found." });
         console.log("Error in GetRequest Controller:");
+        console.log(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+export const GetRequests = async (req, res) => {
+    try {
+        const { request_status, page = 1, limit = 10 } = req.query;
+
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const skip = (pageNum - 1) * limitNum;
+
+        const where = request_status ? { request_status } : undefined;
+
+        const [requests, total] = await Promise.all([
+            prisma.request.findMany({
+                where,
+                orderBy: { created_at: 'asc' },
+                skip,
+                take: limitNum,
+                include: {
+                    beneficiary: {
+                        select: {
+                            bid: true,
+                            name: true,
+                            caregiver: true,
+                            caregiver_email: true,
+                            caregiver_phone: true,
+                            feeding_requirement_ml: true,
+                        }
+                    },
+                    request_bottles: {
+                        include: {
+                            pasteurized_milk: {
+                                select: {
+                                    btl_id: true,
+                                    volume_ml: true,
+                                    expiration_date: true,
+                                    dispense_status: true,
+                                }
+                            }
+                        }
+                    }
+                }
+            }),
+            prisma.request.count({ where })
+        ]);
+
+        return res.status(200).json({
+            data: requests,
+            meta: {
+                total,
+                page: pageNum,
+                limit: limitNum,
+                total_pages: Math.ceil(total / limitNum)
+            }
+        });
+    } catch (error) {
+        console.log("Error in GetRequests Controller:");
         console.log(error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
