@@ -34,7 +34,6 @@ app.use("/api/reservations", ReservationRouter);
 app.use("/api/dispensing", DispensingRouter);
 app.use("/api/beneficiaries", BeneficiaryRouter)
 app.use("/api/reservations", ReservationRouter);
-app.use("/api/dispensing", DispensingRouter);
 
 app.listen(port, () => {
     console.log(`Server started on http://localhost:${port}`);
