@@ -24,7 +24,7 @@ const router = express.Router();
  *     summary: Get all donors
  *     tags: [Donors]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: query
  *         name: application_status
@@ -49,7 +49,7 @@ router.get("/", ProtectRoute, GetDonors);
  *     summary: Get a donor by DTN
  *     tags: [Donors]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: dtn
@@ -74,7 +74,7 @@ router.get("/:dtn", ProtectRoute, GetDonor);
  *     summary: Register a new donor (Protected)
  *     tags: [Donors]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -95,7 +95,107 @@ router.get("/:dtn", ProtectRoute, GetDonor);
  *                     type: string
  *                     format: date
  *                   profile:
- *                     type: string
+ *                     type: object
+ *                     properties:
+ *                       personal_information:
+ *                         type: object
+ *                         properties:
+ *                           occupation:
+ *                             type: string
+ *                           marital_status:
+ *                             type: string
+ *                           home_address:
+ *                             type: string
+ *                       traveling_information:
+ *                         type: object
+ *                         properties:
+ *                           traveled_recently:
+ *                             type: string
+ *                           country_visited:
+ *                             type: string
+ *                           purpose:
+ *                             type: string
+ *                       donation_information:
+ *                         type: object
+ *                         properties:
+ *                           reason:
+ *                             type: string
+ *                           spouse_consent:
+ *                             type: string
+ *                           previously_donated:
+ *                             type: string
+ *                           last_donation:
+ *                             type: string
+ *                             format: date-time
+ *                           place_donated:
+ *                             type: string
+ *                           reason_for_stopping:
+ *                             type: string
+ *                       medical_information:
+ *                         type: object
+ *                         properties:
+ *                           infectious_medical_illness:
+ *                             type: object
+ *                             properties:
+ *                               tuberculosis:
+ *                                 type: string
+ *                               hepatitis_b:
+ *                                 type: string
+ *                               mastitis:
+ *                                 type: string
+ *                               syphilis:
+ *                                 type: string
+ *                               herpes:
+ *                                 type: string
+ *                               std:
+ *                                 type: string
+ *                           substance_user_habits:
+ *                             type: object
+ *                             properties:
+ *                               consumed_alcohol:
+ *                                 type: string
+ *                               smoke:
+ *                                 type: string
+ *                               illegal_drugs:
+ *                                 type: string
+ *                               intravenous_drug_use:
+ *                                 type: string
+ *                           diet_supplement_tracking:
+ *                             type: object
+ *                             properties:
+ *                               vegetarian:
+ *                                 type: string
+ *                               multivitamins:
+ *                                 type: string
+ *                               herbal_drugs:
+ *                                 type: string
+ *                           blood_exposure_transfusion:
+ *                             type: object
+ *                             properties:
+ *                               received_blood:
+ *                                 type: string
+ *                               needle_contact:
+ *                                 type: string
+ *                               repeated_blood_transfusion:
+ *                                 type: string
+ *                           surgical_specialized_medical_history:
+ *                             type: object
+ *                             properties:
+ *                               hormone_control:
+ *                                 type: string
+ *                               breast_surgery:
+ *                                 type: string
+ *                               breast_implant:
+ *                                 type: string
+ *                           exposure_behavior:
+ *                             type: object
+ *                             properties:
+ *                               tattoos:
+ *                                 type: string
+ *                               polygamy:
+ *                                 type: string
+ *                               std:
+ *                                 type: string
  *     responses:
  *       201:
  *         description: Donor registered successfully
@@ -132,7 +232,107 @@ router.post("/register", ProtectRoute, RegisterDonor);
  *                     type: string
  *                     format: date
  *                   profile:
- *                     type: string
+ *                     type: object
+ *                     properties:
+ *                       personal_information:
+ *                         type: object
+ *                         properties:
+ *                           occupation:
+ *                             type: string
+ *                           marital_status:
+ *                             type: string
+ *                           home_address:
+ *                             type: string
+ *                       traveling_information:
+ *                         type: object
+ *                         properties:
+ *                           traveled_recently:
+ *                             type: string
+ *                           country_visited:
+ *                             type: string
+ *                           purpose:
+ *                             type: string
+ *                       donation_information:
+ *                         type: object
+ *                         properties:
+ *                           reason:
+ *                             type: string
+ *                           spouse_consent:
+ *                             type: string
+ *                           previously_donated:
+ *                             type: string
+ *                           last_donation:
+ *                             type: string
+ *                             format: date-time
+ *                           place_donated:
+ *                             type: string
+ *                           reason_for_stopping:
+ *                             type: string
+ *                       medical_information:
+ *                         type: object
+ *                         properties:
+ *                           infectious_medical_illness:
+ *                             type: object
+ *                             properties:
+ *                               tuberculosis:
+ *                                 type: string
+ *                               hepatitis_b:
+ *                                 type: string
+ *                               mastitis:
+ *                                 type: string
+ *                               syphilis:
+ *                                 type: string
+ *                               herpes:
+ *                                 type: string
+ *                               std:
+ *                                 type: string
+ *                           substance_user_habits:
+ *                             type: object
+ *                             properties:
+ *                               consumed_alcohol:
+ *                                 type: string
+ *                               smoke:
+ *                                 type: string
+ *                               illegal_drugs:
+ *                                 type: string
+ *                               intravenous_drug_use:
+ *                                 type: string
+ *                           diet_supplement_tracking:
+ *                             type: object
+ *                             properties:
+ *                               vegetarian:
+ *                                 type: string
+ *                               multivitamins:
+ *                                 type: string
+ *                               herbal_drugs:
+ *                                 type: string
+ *                           blood_exposure_transfusion:
+ *                             type: object
+ *                             properties:
+ *                               received_blood:
+ *                                 type: string
+ *                               needle_contact:
+ *                                 type: string
+ *                               repeated_blood_transfusion:
+ *                                 type: string
+ *                           surgical_specialized_medical_history:
+ *                             type: object
+ *                             properties:
+ *                               hormone_control:
+ *                                 type: string
+ *                               breast_surgery:
+ *                                 type: string
+ *                               breast_implant:
+ *                                 type: string
+ *                           exposure_behavior:
+ *                             type: object
+ *                             properties:
+ *                               tattoos:
+ *                                 type: string
+ *                               polygamy:
+ *                                 type: string
+ *                               std:
+ *                                 type: string
  *     responses:
  *       201:
  *         description: Donor registered successfully
@@ -150,7 +350,7 @@ router.post("/public-register", RegisterDonor);
  *     summary: Update donor application status
  *     tags: [Donors]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: dtn
@@ -185,7 +385,7 @@ router.patch("/:dtn", ProtectRoute, UpdateApplicationStatus)
  *     summary: Delete a donor by DTN
  *     tags: [Donors]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: dtn
@@ -210,7 +410,7 @@ router.delete("/:dtn", ProtectRoute, DeleteDonor);
  *     summary: Update a donor by DTN
  *     tags: [Donors]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: dtn
@@ -238,7 +438,107 @@ router.delete("/:dtn", ProtectRoute, DeleteDonor);
  *                     type: string
  *                     format: date
  *                   profile:
- *                     type: string
+ *                     type: object
+ *                     properties:
+ *                       personal_information:
+ *                         type: object
+ *                         properties:
+ *                           occupation:
+ *                             type: string
+ *                           marital_status:
+ *                             type: string
+ *                           home_address:
+ *                             type: string
+ *                       traveling_information:
+ *                         type: object
+ *                         properties:
+ *                           traveled_recently:
+ *                             type: string
+ *                           country_visited:
+ *                             type: string
+ *                           purpose:
+ *                             type: string
+ *                       donation_information:
+ *                         type: object
+ *                         properties:
+ *                           reason:
+ *                             type: string
+ *                           spouse_consent:
+ *                             type: string
+ *                           previously_donated:
+ *                             type: string
+ *                           last_donation:
+ *                             type: string
+ *                             format: date-time
+ *                           place_donated:
+ *                             type: string
+ *                           reason_for_stopping:
+ *                             type: string
+ *                       medical_information:
+ *                         type: object
+ *                         properties:
+ *                           infectious_medical_illness:
+ *                             type: object
+ *                             properties:
+ *                               tuberculosis:
+ *                                 type: string
+ *                               hepatitis_b:
+ *                                 type: string
+ *                               mastitis:
+ *                                 type: string
+ *                               syphilis:
+ *                                 type: string
+ *                               herpes:
+ *                                 type: string
+ *                               std:
+ *                                 type: string
+ *                           substance_user_habits:
+ *                             type: object
+ *                             properties:
+ *                               consumed_alcohol:
+ *                                 type: string
+ *                               smoke:
+ *                                 type: string
+ *                               illegal_drugs:
+ *                                 type: string
+ *                               intravenous_drug_use:
+ *                                 type: string
+ *                           diet_supplement_tracking:
+ *                             type: object
+ *                             properties:
+ *                               vegetarian:
+ *                                 type: string
+ *                               multivitamins:
+ *                                 type: string
+ *                               herbal_drugs:
+ *                                 type: string
+ *                           blood_exposure_transfusion:
+ *                             type: object
+ *                             properties:
+ *                               received_blood:
+ *                                 type: string
+ *                               needle_contact:
+ *                                 type: string
+ *                               repeated_blood_transfusion:
+ *                                 type: string
+ *                           surgical_specialized_medical_history:
+ *                             type: object
+ *                             properties:
+ *                               hormone_control:
+ *                                 type: string
+ *                               breast_surgery:
+ *                                 type: string
+ *                               breast_implant:
+ *                                 type: string
+ *                           exposure_behavior:
+ *                             type: object
+ *                             properties:
+ *                               tattoos:
+ *                                 type: string
+ *                               polygamy:
+ *                                 type: string
+ *                               std:
+ *                                 type: string
  *     responses:
  *       200:
  *         description: Donor updated successfully
