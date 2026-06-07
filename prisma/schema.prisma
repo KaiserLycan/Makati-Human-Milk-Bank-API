@@ -178,6 +178,24 @@ model user {
   other_user                                           user[]             @relation("userTouser")
 }
 
+model notification {
+  nid                Int       @id @default(autoincrement())
+  recipient_id       String    @db.Uuid
+  recipient          user      @relation(fields: [recipient_id], references: [user_id], onDelete: Cascade)
+  entity_type        String    // 'donor', 'beneficiary'
+  entity_id          Int
+  notification_type  String    // 'new_application', 'application_approved'
+  title              String
+  message            String    @db.VarChar(500)
+  is_read            Boolean   @default(false)
+  read_at            DateTime?
+  created_at         DateTime  @default(now())
+  modified_at        DateTime  @updatedAt
+  modified_by        String?   @db.Uuid
+  modifier           user      @relation("NotificationModifier", fields: [modified_by], references: [user_id], onDelete: SetNull)?
+  @@index([recipient_id, is_read])
+}
+
 enum request_status {
   waiting
   allocated

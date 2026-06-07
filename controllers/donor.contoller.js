@@ -1,4 +1,6 @@
 import {prisma} from "../db/db.ts";
+import { SendApproval, SendRejection } from "../service/email.service.js";
+import { NotifyStaffNewApplication } from "../service/notification.service.js";
 
 export const GetDonors = async (req, res) => {
     try {
@@ -67,6 +69,7 @@ export const GetDonor = async (req, res) => {
 }
 
 export const RegisterDonor = async (req, res) => {
+    
     try {
         const {application} = req.body;
 
@@ -90,6 +93,17 @@ export const RegisterDonor = async (req, res) => {
 
         if(!donor) return res.status(400).json({message:"Cannot register donor. Check for missing values."});
 
+        try {
+            await NotifyStaffNewApplication(
+                donor.name, 
+                'donor', 
+                donor.dtn, 
+                req?.user?.user_id || "00000000-0000-0000-0000-000000000000"
+            );
+        } catch (notificationError) {
+            console.log("Warning: Notification failed for new donor application", donor.dtn);
+        }
+
         return res.status(201).json(donor);
     }
     catch (error) {
@@ -98,6 +112,8 @@ export const RegisterDonor = async (req, res) => {
         console.log(error);
         return res.status(500).send("Internal Server Error");
     }
+
+    
 }
 
 export const UpdateApplicationStatus = async (req, res) => {
@@ -122,6 +138,19 @@ export const UpdateApplicationStatus = async (req, res) => {
                 modified_by: true,
             }
         })
+
+        // Send notification email to donor
+        try {
+            if (application_status === "approved") {
+                await SendApproval(donor, "donor");
+            } else if (application_status === "rejected") {
+                await SendRejection(donor, "donor");
+            }
+        } catch (emailError) {
+            console.log("Warning: Email notification failed for donor", dtn);
+            console.log(emailError);
+            // Don't fail the API call if email fails - still return success
+        }
 
         return res.status(200).json(donor);
     }

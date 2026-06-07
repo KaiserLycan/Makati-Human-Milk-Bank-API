@@ -14,6 +14,7 @@ import CollectionRouter from "./routes/collection.router.js";
 import ReservationRouter from "./routes/reservation.router.js";
 import DispensingRouter from "./routes/dispensing.router.js";
 import BeneficiaryRouter from "./routes/beneficiary.router.js";
+import NotificationRouter from "./routes/notification.router.js";
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -34,6 +35,7 @@ app.use("/api/reservations", ReservationRouter);
 app.use("/api/dispensing", DispensingRouter);
 app.use("/api/beneficiaries", BeneficiaryRouter)
 app.use("/api/reservations", ReservationRouter);
+app.use("/api/notifications", NotificationRouter);
 
 app.listen(port, () => {
     console.log(`Server started on http://localhost:${port}`);

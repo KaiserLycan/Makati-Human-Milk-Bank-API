@@ -11,6 +11,13 @@ const mockFindUniqueBeneficiary = jest.fn();
 const mockCreateBeneficiary = jest.fn();
 const mockUpdateBeneficiary = jest.fn();
 const mockDeleteBeneficiary = jest.fn();
+const mockSendApproval = jest.fn();
+const mockSendRejection = jest.fn();
+
+jest.mock("../service/email.service.js", () => ({
+    SendApproval: (...args) => mockSendApproval(...args),
+    SendRejection: (...args) => mockSendRejection(...args),
+}));
 
 jest.mock('jsonwebtoken', () => ({
     verify: (...args) => mockJwtVerify(...args),
@@ -133,11 +140,22 @@ describe('Beneficiary API Unit Tests', () => {
     });
 
     describe('PATCH /:bid', () => {
-        it('should update application status', async () => {
-            const updatedBeneficiary = { bid: 1, application_status: 'approved' };
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+
+        it('should approve beneficiary and send approval email', async () => {
+            const updatedBeneficiary = { 
+                bid: 1, 
+                name: "Baby Cruz",
+                caregiver_email: "maria@example.com",
+                application_status: 'approved' 
+            };
+            
             mockJwtVerify.mockImplementation(() => ({ user_id: '123' }));
             mockFindUniqueUser.mockResolvedValue({ user_id: '123', role: 'manager' });
             mockUpdateBeneficiary.mockResolvedValue(updatedBeneficiary);
+            mockSendApproval.mockResolvedValue(undefined);
 
             const res = await request(app)
                 .patch('/1')
@@ -145,7 +163,53 @@ describe('Beneficiary API Unit Tests', () => {
                 .set('Cookie', ['access_token=valid_token']);
 
             expect(res.status).toBe(200);
-            expect(res.body).toEqual(updatedBeneficiary);
+            expect(res.body.application_status).toBe('approved');
+            
+            expect(mockSendApproval).toHaveBeenCalledWith(updatedBeneficiary, "beneficiary");
+        });
+
+        it('should reject beneficiary and send rejection email', async () => {
+            const updatedBeneficiary = { 
+                bid: 1, 
+                name: "Baby Cruz",
+                caregiver_email: "maria@example.com",
+                application_status: 'rejected' 
+            };
+            
+            mockJwtVerify.mockImplementation(() => ({ user_id: '123' }));
+            mockFindUniqueUser.mockResolvedValue({ user_id: '123', role: 'manager' });
+            mockUpdateBeneficiary.mockResolvedValue(updatedBeneficiary);
+            mockSendRejection.mockResolvedValue(undefined);
+
+            const res = await request(app)
+                .patch('/1')
+                .send({ application_status: 'rejected' })
+                .set('Cookie', ['access_token=valid_token']);
+
+            expect(res.status).toBe(200);
+            expect(res.body.application_status).toBe('rejected');
+            
+            expect(mockSendRejection).toHaveBeenCalledWith(updatedBeneficiary, "beneficiary");
+        });
+
+        it('should still approve beneficiary even if email fails', async () => {
+            const updatedBeneficiary = { 
+                bid: 1, 
+                application_status: 'approved' 
+            };
+            
+            mockJwtVerify.mockImplementation(() => ({ user_id: '123' }));
+            mockFindUniqueUser.mockResolvedValue({ user_id: '123', role: 'manager' });
+            mockUpdateBeneficiary.mockResolvedValue(updatedBeneficiary);
+            mockSendApproval.mockRejectedValue(new Error("Email service error"));
+
+            const res = await request(app)
+                .patch('/1')
+                .send({ application_status: 'approved' })
+                .set('Cookie', ['access_token=valid_token']);
+
+            expect(res.status).toBe(200);
+            expect(res.body.application_status).toBe('approved');
         });
     });
 
