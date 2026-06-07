@@ -5,12 +5,18 @@ import {ProtectRoute} from "../middleware/auth.middleware.js";
 const router = express.Router();
 
 /**
- * @openapi
+ * @swagger
+ * tags:
+ *   name: Authentication
+ *   description: API for user authentication
+ */
+
+/**
+ * @swagger
  * /api/auth/login:
  *   post:
  *     summary: Authenticate users
- *     tags:
- *      - Authentication
+ *     tags: [Authentication]
  *     description: Returns an access token, refresh token, and user profile information.
  *     requestBody:
  *       required: true
@@ -39,12 +45,11 @@ const router = express.Router();
 router.post("/login", Authenticate)
 
 /**
- * @openapi
+ * @swagger
  * /api/auth/refresh-token:
  *   post:
  *     summary: Refresh access token
- *     tags:
- *      - Authentication
+ *     tags: [Authentication]
  *     description: Obtains a new access token using a refresh token.
  *     responses:
  *       200:
@@ -55,15 +60,14 @@ router.post("/login", Authenticate)
 router.post("/refresh-token", RefreshAccessToken)
 
 /**
- * @openapi
+ * @swagger
  * /api/auth/logout:
  *   post:
  *     summary: Logout user
- *     tags:
- *      - Authentication
+ *     tags: [Authentication]
  *     description: Invalidates the user's refresh token.
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     responses:
  *       200:
  *         description: Logout successful.
