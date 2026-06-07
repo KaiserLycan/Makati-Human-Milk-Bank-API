@@ -101,3 +101,48 @@ export const CreateMilkPool = async (req, res) => {
     }
 };
 
+export const UpdatePoolQAT = async (req, res) =>{
+    try{
+        const {pid} = req.params;
+        const {qat_status, remarks} = req.body; 
+
+        // fetch existing pool 
+        const existing_pool = await prisma.pool_milk.findUnique({
+            where: {pid: Number(pid)    }
+        });
+        
+        if (!existing_pool) {
+            return res.status(404).json({error: "Pool not found."});
+        }
+
+        if (existing_pool.qat_status === "discarded"){
+            return res.status(400).json({error: "This pool has already been discarded and cannot be updated."});
+        }
+
+        // 2. Determine the new milk status based on the qat_status
+        const new_milk_status = qat_status === "fail" ? "discarded" : existing_pool.milk_status;
+
+        // 3. Update the pool record with the new QAT status and milk status
+        const updated_pool = await prisma.pool_milk.update({
+            where: { pid: Number(pid) },
+            data: {
+                qat_status: qat_status,
+                milk_status: new_milk_status,
+                remarks: remarks || existing_pool.remarks,
+                modified_at: new Date(),
+                modified_by: req.user.user_id 
+            }
+        });
+
+        return res.status(200).json({
+            message: "Pool QAT status updated successfully.",
+            data: updated_pool
+        }); 
+
+    } catch(error){
+        console.log("Error in UpdatePoolQAT controller.");
+        console.log(error);
+        return res.status(500).json({error: "Internal Server Error."});
+    }
+}
+
