@@ -244,7 +244,7 @@ export const PatchQATStatus = async (req, res) => {
 
         // Ensure we are checking against the exact new database enums
         if (!['pending', 'pass', 'fail'].includes(qat_status)) {
-            return res.status(400).json({ error: "Invalid QAT status. Allowed values are: pending, passed, failed." });
+            return res.status(400).json({ error: "Invalid QAT status. Allowed values are: pending, pass, fail." });
         }
 
         const updatedCollection = await prisma.raw_milk.update({
