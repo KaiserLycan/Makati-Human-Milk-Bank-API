@@ -5,7 +5,11 @@ import {
     LogMilkyWayCollection, 
     LogSupsupTodoCollection, 
     LogMomsActCollection, 
-    LogWalkInCollection 
+    LogWalkInCollection,
+    UpdateCollection,
+    DeleteCollection,
+    PatchMilkStatus,
+    PatchQATStatus
 } from "../controllers/collection.controller.js"
 
 const router = express.Router();
@@ -169,4 +173,8 @@ router.post("/moms-act", ProtectRoute, LogMomsActCollection);
  */
 router.post("/walkin", ProtectRoute, LogWalkInCollection);
 
+router.put("/:ctn", ProtectRoute, UpdateCollection);
+router.delete("/:ctn", ProtectRoute, DeleteCollection);
+router.patch("/:ctn/milk-status", ProtectRoute, PatchMilkStatus);
+router.patch("/:ctn/qat-status", ProtectRoute, PatchQATStatus);
 export default router;
