@@ -307,17 +307,16 @@ describe("Collection API Unit Tests", () => {
 
     describe("PATCH /api/collections/:ctn/qat-status", () => {
         it("Should successfully update qat_status", async () => {
-            // Updated "pass" to "passed" to match your DB enum
-            const updatedRecord = { ctn: 1, qat_status: "passed" };
+            const updatedRecord = { ctn: 1, qat_status: "pass" };
             mockRawMilkUpdate.mockResolvedValue(updatedRecord);
 
             const res = await request(app)
                 .patch("/api/collections/1/qat-status")
                 .set("Cookie", ["access_token=valid_token"])
-                .send({ qat_status: "passed" });
+                .send({ qat_status: "pass" }); // Sending 'pass'
 
             expect(res.status).toBe(200);
-            expect(res.body.qat_status).toBe("passed");
+            expect(res.body.qat_status).toBe("pass"); // Expecting 'pass'
         });
 
         it("Should return 400 for invalid qat_status enum", async () => {
@@ -327,7 +326,6 @@ describe("Collection API Unit Tests", () => {
                 .send({ qat_status: "maybe" });
 
             expect(res.status).toBe(400);
-            // Updated to match your server's actual response
             expect(res.body.error).toBe("Invalid QAT status. Allowed values are: pending, pass, fail.");
         });
     });
