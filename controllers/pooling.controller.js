@@ -1,6 +1,8 @@
 import {prisma} from "../db/db.ts";
 
 export const CreateMilkPool = async (req, res) => {
+    
+
     // This controller creates a new milk pool (R41) by taking an array of raw milk CTNs, validating them, and then creating a new pool_milk record while updating the corresponding raw_milk records to link them to the new pool.
     try {
         const {raw_milk_ctns, actual_volume_ml, remarks} = req.body;
@@ -16,6 +18,9 @@ export const CreateMilkPool = async (req, res) => {
                 }
             }
         });
+
+        const earliest_expiration = new Date(Math.min(...raw_milks.map(m => new Date(m.expiration_date))));
+
 // Validation checks
         if(raw_milks.length !== raw_milk_ctns.length){
             return res.status(400).json({error: "One or more raw milk CTNs were not found."});
@@ -41,13 +46,22 @@ export const CreateMilkPool = async (req, res) => {
         const new_pool = await prisma.$transaction(async (tx) => {
             const created_pool = await tx.pool_milk.create({
                 data: {
-                    expected_volume_ml: expected_volume_ml,
-                    actual_volume_ml: final_actual_volume, 
-                    pooled_by: req.user.user_id, 
+                    expected_volume_ml: parseFloat(expected_volume_ml.toFixed(2)),
+                    actual_volume_ml: parseFloat(final_actual_volume.toFixed(2)),
+                    
+                    // Connect both relationships
+                    user_pool_milk_pooled_byTouser: {
+                        connect: { user_id: req.user.user_id }
+                    },
+                    user_pool_milk_modified_byTouser: {
+                        connect: { user_id: req.user.user_id }
+                    },
+
                     pooled_date: new Date(),
                     created_at: new Date(),
-                    qat_status: 'pending', 
-                    milk_status: 'pooled',
+                    expiration_date: earliest_expiration,
+                    qat_status: 'pending',
+                    milk_status: 'good',
                     remarks: remarks || null
                 }
             });
@@ -75,7 +89,11 @@ export const CreateMilkPool = async (req, res) => {
     catch(error) {
         console.log("Error in CreateMilkPool controller.");
         console.log(error);
-        return res.status(500).json({error: "Internal Server Error."})
+        return res.status(500).json({
+            error: "Internal Server Error.",
+            message: error.message,
+            stack: error.stack
+        })
     }
 };
 
