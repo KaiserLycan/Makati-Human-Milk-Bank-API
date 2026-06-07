@@ -12,12 +12,12 @@ router.get("/", ProtectRoute, async (req, res) => {
         
         const where = { recipient_id: user_id };
         if (is_read !== undefined) {
-            where.is_read = is_read === 'true';
+            where.is_read = is_read === "true";
         }
 
         const notifications = await prisma.notification.findMany({
             where,
-            orderBy: { created_at: 'desc' }
+            orderBy: { created_at: "desc" }
         });
 
         return res.status(200).json(notifications);
