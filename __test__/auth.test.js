@@ -104,7 +104,7 @@ describe("Authentication API Unit Tests", () => {
         })
 
         it("should return 400 error if password validation fails", async () => {
-            mockFindUniqueOrThrow.mockResolvedValue({password: "hash"});
+            mockFindUniqueOrThrow.mockResolvedValue({password: "hash", status: "active"});
             mockComparePassword.mockResolvedValue(false);
 
             const res = await request(app)
