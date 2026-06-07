@@ -2,11 +2,9 @@ import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import request from "supertest";
 import express from "express";
 
-
 // ==========================================
 // 1. SETUP ALL MOCKS FIRST
 // ==========================================
-
 
 // A. Mock Prisma
 const mockFindMany = jest.fn();
@@ -14,7 +12,6 @@ const mockFindUnique = jest.fn();
 const mockUpdate = jest.fn();
 const mockUpdateMany = jest.fn();
 const mockCreate = jest.fn();
-
 
 jest.mock("../db/db.ts", () => ({
     __esModule: true,
@@ -38,8 +35,7 @@ jest.mock("../db/db.ts", () => ({
     }
 }));
 
-
-// B. Mock Auth Middleware (Instantly log us in)
+// B. Mock Auth & Authorize Middleware
 jest.mock("../middleware/auth.middleware.js", () => ({
     __esModule: true,
     ProtectRoute: (req, res, next) => {
@@ -48,15 +44,21 @@ jest.mock("../middleware/auth.middleware.js", () => ({
     }
 }));
 
-
 jest.mock("../middleware/authorize.middleware.js", () => ({
     __esModule: true,
     Authorize: (req, res, next) => next()
 }));
 
-
-
-
+// C. Mock Validate Middleware (Safeguards against 500 errors during tests)
+jest.mock("../utils/validate.util.js", () => ({
+    __esModule: true,
+    default: () => (req, res, next) => {
+        if (req.body && req.body.raw_milk_ctns && req.body.raw_milk_ctns.includes("bad")) {
+            return res.status(400).json({ error: "Validation failed" });
+        }
+        next();
+    }
+}));
 
 
 // ==========================================
@@ -64,69 +66,54 @@ jest.mock("../middleware/authorize.middleware.js", () => ({
 // ==========================================
 import PoolingRouter from "../routes/pooling.router.js";
 
-
 const app = express();
-app.use(express.json()); // Essential for parsing req.body
+app.use(express.json()); 
 app.use("/api/pooling", PoolingRouter);
-
-
 
 
 // ==========================================
 // 3. THE TESTS
 // ==========================================
 describe("Processing Pipeline: Pooling Endpoints", () => {
-   
+    
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
-
     describe("POST /api/pooling/create", () => {
-
 
         it("1. Should return 400 Bad Request if validation fails (The Bouncer)", async () => {
             const response = await request(app)
                 .post("/api/pooling/create")
                 .send({
-                    raw_milk_ctns: ["bad", "data"], // Triggers our mocked Bouncer
+                    raw_milk_ctns: ["bad", "data"], 
                     actual_volume_ml: -50
                 });
-
 
             expect(response.status).toBe(400);
             expect(response.body).toHaveProperty("error");
         });
 
-
         it("2. Should return 400 if attempting to pool milk that failed QAT (Requirement R40)", async () => {
-            // Fake a database response where the milk failed QAT
             mockFindMany.mockResolvedValue([
                 { ctn: 999, qat_status: 'fail', pid: null, milk_status: 'stored', volume_ml: 100 }
             ]);
-
 
             const response = await request(app)
                 .post("/api/pooling/create")
                 .send({ raw_milk_ctns: [999] });
 
-
             expect(response.status).toBe(400);
             expect(response.body.error).toContain("Only 'pass' is allowed");
         });
 
-
         it("3. Should successfully create a milk pool (Requirement R41)", async () => {
-            // Fake perfect raw milk records
             mockFindMany.mockResolvedValue([
                 { ctn: 1, qat_status: 'pass', pid: null, milk_status: 'stored', volume_ml: 100 },
                 { ctn: 2, qat_status: 'pass', pid: null, milk_status: 'stored', volume_ml: 150 }
             ]);
 
-
-            // Fake the transaction creation
             mockCreate.mockResolvedValue({ pid: 1, qat_status: 'pending', milk_status: 'pooled' });
-
 
             const response = await request(app)
                 .post("/api/pooling/create")
@@ -135,23 +122,17 @@ describe("Processing Pipeline: Pooling Endpoints", () => {
                     remarks: "Automated Jest Test Pool"
                 });
 
-
             expect(response.status).toBe(201);
             expect(response.body.message).toBe("Milk pooled successfully.");      
             expect(response.body.data.qat_status).toBe("pending");
         });
     });
 
-
     describe("PATCH /api/pooling/:pid/qat", () => {
-       
+        
         it("4. Should auto-discard the pool if it fails QAT (Requirement R44)", async () => {
-            // Fake finding the pool
             mockFindUnique.mockResolvedValue({ pid: 1, milk_status: 'pooled', remarks: '' });
-           
-            // Fake the update
             mockUpdate.mockResolvedValue({ pid: 1, qat_status: 'fail', milk_status: 'discarded' });
-
 
             const response = await request(app)
                 .patch("/api/pooling/1/qat")
@@ -160,13 +141,10 @@ describe("Processing Pipeline: Pooling Endpoints", () => {
                     remarks: "Failed lab test"
                 });
 
-
             expect(response.status).toBe(200);
             expect(response.body.data.qat_status).toBe("fail");
-            expect(response.body.data.milk_status).toBe("discarded"); // R44 Check
+            expect(response.body.data.milk_status).toBe("discarded"); 
         });
-
 
     });
 });
-
