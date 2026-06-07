@@ -1,6 +1,7 @@
 import {prisma} from "../db/db.ts";
 
 export const CreateMilkPool = async (req, res) => {
+    // This controller creates a new milk pool (R41) by taking an array of raw milk CTNs, validating them, and then creating a new pool_milk record while updating the corresponding raw_milk records to link them to the new pool.
     try {
         const {raw_milk_ctns, actual_volume_ml, remarks} = req.body;
 
@@ -15,11 +16,11 @@ export const CreateMilkPool = async (req, res) => {
                 }
             }
         });
-
+// Validation checks
         if(raw_milks.length !== raw_milk_ctns.length){
             return res.status(400).json({error: "One or more raw milk CTNs were not found."});
         }
-
+// Additional validation checks for each raw milk record
         let expected_volume_ml = 0;
 
         for(const milk of raw_milks){
