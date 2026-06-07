@@ -43,7 +43,7 @@ const router = express.Router();
  * 201:
  * description: Milk pool successfully created and volumes calculated.
  * 400:
- * description: Validation failed (e.g., attempting to pool milk that failed QAT, or CTN already pooled).
+ * description: Validation failed.
  * 500:
  * description: Internal Server Error.
  */
@@ -90,7 +90,7 @@ router.post(
  * 200:
  * description: QAT status updated successfully.
  * 400:
- * description: Validation failed (e.g., invalid status, or pool already discarded).
+ * description: Validation failed.
  * 404:
  * description: Pool not found.
  * 500:
