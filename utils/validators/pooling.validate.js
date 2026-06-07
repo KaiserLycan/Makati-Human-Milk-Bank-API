@@ -12,3 +12,17 @@ export const CreatePoolSchemaValidator = z.object({
 })
 
 });
+
+export const UpdatePoolQATSchemaValidator = z.object({
+  // qat_status must be either 'pass' or 'fail', and is required
+    body: z.object({
+        qat_status: z.enum(['pass', 'fail'], {
+            errorMap: () => ({ message: "qat_status must be either 'pass' or 'fail'." })
+        }),
+        remarks: z.string().max(255).optional()
+    }),
+    // pid must be a string that represents a positive integer, and is required
+    params: z.object({
+        pid: z.string().regex(/^\d+$/, "Pool ID must be a valid number.") // URL params come in as strings
+    })
+});
