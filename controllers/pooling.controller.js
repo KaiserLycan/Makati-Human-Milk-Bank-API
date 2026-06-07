@@ -78,7 +78,7 @@ export const CreateMilkPool = async (req, res) => {
                     },
                 },
                 data: {
-                    pid: pool.pid,
+                    pid: created_pool.pid,
                     modified_at: new Date(),
                     modified_by: req.user.user_id,
                 },
