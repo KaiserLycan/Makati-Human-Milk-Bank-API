@@ -1,21 +1,17 @@
 import express from "express";
-
-// 1. Import Middleware (The Bouncers)
 import { ProtectRoute } from "../middleware/auth.middleware.js";
 import { Authorize } from "../middleware/authorize.middleware.js";
 import Validate from "../utils/validate.util.js";
 import { CreatePoolSchemaValidator, UpdatePoolQATSchemaValidator } from "../utils/validators/pooling.validate.js";
-
-// 2. Import Controllers (The Chefs)
 import { CreateMilkPool, UpdatePoolQAT } from "../controllers/pooling.controller.js";
 
 const router = express.Router();
 
 /**
- * @openapi
+ * @swagger
  * /api/pooling/create:
  * post:
- * summary: Create a Milk Pool
+ * summary: Create a milk pool
  * tags:
  * - Pooling
  * description: Combines multiple passed raw milk records into a single pool (R41). Automatically rejects milk that failed QAT (R40).
@@ -38,7 +34,7 @@ const router = express.Router();
  * example: [1, 2, 3]
  * actual_volume_ml:
  * type: number
- * description: The final volume after pooling. Use this if leakage occurred during transfer. If omitted, defaults to the expected sum.
+ * description: The final volume after pooling. Use this if leakage occurred during transfer.
  * example: 340.5
  * remarks:
  * type: string
@@ -60,10 +56,10 @@ router.post(
 );
 
 /**
- * @openapi
+ * @swagger
  * /api/pooling/{pid}/qat:
  * patch:
- * summary: Update Post-Pooling QAT Status
+ * summary: Update post-pooling QAT status
  * tags:
  * - Pooling
  * description: Updates the QAT status of a milk pool (R42). If the pool fails, it is automatically discarded (R44).
