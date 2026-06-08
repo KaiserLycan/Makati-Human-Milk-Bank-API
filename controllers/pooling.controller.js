@@ -110,7 +110,7 @@ export const UpdatePoolQAT = async (req, res) =>{
             return res.status(404).json({error: "Pool not found."});
         }
 
-        if (existing_pool.qat_status === "discarded"){
+        if (existing_pool.milk_status === "discarded"){
             return res.status(400).json({error: "This pool has already been discarded and cannot be updated."});
         }
 
