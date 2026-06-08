@@ -96,7 +96,7 @@ describe("Processing Pipeline: Pooling Endpoints", () => {
 
         it("2. Should return 400 if attempting to pool milk that failed QAT (Requirement R40)", async () => {
             mockFindMany.mockResolvedValue([
-                { ctn: 999, qat_status: 'fail', pid: null, milk_status: 'stored', volume_ml: 100 }
+                { ctn: 999, qat_status: 'fail', pid: null, milk_status: 'good', volume_ml: 100 }
             ]);
 
             const response = await request(app)
@@ -109,11 +109,11 @@ describe("Processing Pipeline: Pooling Endpoints", () => {
 
         it("3. Should successfully create a milk pool (Requirement R41)", async () => {
             mockFindMany.mockResolvedValue([
-                { ctn: 1, qat_status: 'pass', pid: null, milk_status: 'stored', volume_ml: 100 },
-                { ctn: 2, qat_status: 'pass', pid: null, milk_status: 'stored', volume_ml: 150 }
+                { ctn: 1, qat_status: 'pass', pid: null, milk_status: 'good', volume_ml: 100 },
+                { ctn: 2, qat_status: 'pass', pid: null, milk_status: 'good', volume_ml: 150 }
             ]);
 
-            mockCreate.mockResolvedValue({ pid: 1, qat_status: 'pending', milk_status: 'pooled' });
+            mockCreate.mockResolvedValue({ pid: 1, qat_status: 'pending', milk_status: 'good' });
 
             const response = await request(app)
                 .post("/api/pooling/create")
@@ -131,7 +131,7 @@ describe("Processing Pipeline: Pooling Endpoints", () => {
     describe("PATCH /api/pooling/:pid/qat", () => {
         
         it("4. Should auto-discard the pool if it fails QAT (Requirement R44)", async () => {
-            mockFindUnique.mockResolvedValue({ pid: 1, milk_status: 'pooled', remarks: '' });
+            mockFindUnique.mockResolvedValue({ pid: 1, milk_status: 'good', remarks: '' });
             mockUpdate.mockResolvedValue({ pid: 1, qat_status: 'fail', milk_status: 'discarded' });
 
             const response = await request(app)
