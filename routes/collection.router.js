@@ -15,7 +15,7 @@ import {
 const router = express.Router();
 
 /**
- * @openapi
+ * @swagger
  * /api/collections:
  *   get:
  *     summary: Get all raw milk collections
@@ -32,8 +32,8 @@ const router = express.Router();
 router.get("/", ProtectRoute, GetCollections);
 
 /**
- * @openapi
- * /api/collections/milky-way:
+ * @swagger
+ * /api/collections/milkyway:
  *   post:
  *     summary: Log a Milky Way hospital collection
  *     tags:
@@ -75,7 +75,7 @@ router.get("/", ProtectRoute, GetCollections);
 router.post("/milkyway", ProtectRoute, LogMilkyWayCollection);
 
 /**
- * @openapi
+ * @swagger
  * /api/collections/supsup-todo:
  *   post:
  *     summary: Log a SUPSUP TODO community collection
@@ -115,7 +115,7 @@ router.post("/milkyway", ProtectRoute, LogMilkyWayCollection);
 router.post("/supsup-todo", ProtectRoute, LogSupsupTodoCollection);
 
 /**
- * @openapi
+ * @swagger
  * /api/collections/moms-act:
  *   post:
  *     summary: Log a Moms ACT remote collection
@@ -153,8 +153,8 @@ router.post("/supsup-todo", ProtectRoute, LogSupsupTodoCollection);
 router.post("/moms-act", ProtectRoute, LogMomsActCollection);
 
 /**
- * @openapi
- * /api/collections/walk-in:
+ * @swagger
+ * /api/collections/walkin:
  *   post:
  *     summary: Log a walk-in milk collection
  *     tags:
@@ -190,7 +190,7 @@ router.post("/moms-act", ProtectRoute, LogMomsActCollection);
 router.post("/walkin", ProtectRoute, LogWalkInCollection);
 
 /**
- * @openapi
+ * @swagger
  * /api/collections/{ctn}:
  *   put:
  *     summary: Update a raw milk collection record
@@ -237,7 +237,7 @@ router.post("/walkin", ProtectRoute, LogWalkInCollection);
 router.put("/:ctn", ProtectRoute, UpdateCollection);
 
 /**
- * @openapi
+ * @swagger
  * /api/collections/{ctn}:
  *   delete:
  *     summary: Delete a raw milk collection record
@@ -263,7 +263,7 @@ router.put("/:ctn", ProtectRoute, UpdateCollection);
 router.delete("/:ctn", ProtectRoute, DeleteCollection);
 
 /**
- * @openapi
+ * @swagger
  * /api/collections/{ctn}/milk-status:
  *   patch:
  *     summary: Update the milk status of a collection
@@ -303,7 +303,7 @@ router.delete("/:ctn", ProtectRoute, DeleteCollection);
 router.patch("/:ctn/milk-status", ProtectRoute, PatchMilkStatus);
 
 /**
- * @openapi
+ * @swagger
  * /api/collections/{ctn}/qat-status:
  *   patch:
  *     summary: Update the QAT status of a collection
