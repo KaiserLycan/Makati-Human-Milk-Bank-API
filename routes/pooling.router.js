@@ -15,6 +15,13 @@ const router = express.Router();
 
 /**
  * @swagger
+ * tags:
+ * - name: Pooling
+ * description: Endpoints related to pooling of raw milk into pool milk.
+ */
+
+/**
+ * @swagger
  * /api/pooling/create:
  *   post:
  *     summary: Create a milk pool
