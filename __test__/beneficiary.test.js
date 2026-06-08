@@ -165,7 +165,7 @@ describe('Beneficiary API Unit Tests', () => {
             expect(res.status).toBe(200);
             expect(res.body.application_status).toBe('approved');
             
-            expect(mockSendApproval).toHaveBeenCalledWith(updatedBeneficiary, "beneficiary");
+            expect(mockSendApproval).toHaveBeenCalledWith({name: updatedBeneficiary.name, email: updatedBeneficiary.caregiver_email}, "beneficiary");
         });
 
         it('should reject beneficiary and send rejection email', async () => {
@@ -189,7 +189,7 @@ describe('Beneficiary API Unit Tests', () => {
             expect(res.status).toBe(200);
             expect(res.body.application_status).toBe('rejected');
             
-            expect(mockSendRejection).toHaveBeenCalledWith(updatedBeneficiary, "beneficiary");
+            expect(mockSendRejection).toHaveBeenCalledWith({name: updatedBeneficiary.name, email: updatedBeneficiary.caregiver_email}, "beneficiary");
         });
 
         it('should still approve beneficiary even if email fails', async () => {
