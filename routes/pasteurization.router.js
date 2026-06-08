@@ -1,7 +1,8 @@
 import express from "express";
 import { ProtectRoute } from "../middleware/auth.middleware.js";
-import { LogPasteurizationBatch, ReportPasteurizationIncident, 
-    UpdateMBTStatus } from "../controllers/pasteurization.controller.js";
+import { LogPasteurizationBatch, 
+        ReportPasteurizationIncident, 
+        UpdateMBTStatus } from "../controllers/pasteurization.controller.js";
 
 
 const router = express.Router();
