@@ -86,14 +86,10 @@ export const CreateMilkPool = async (req, res) => {
             data: new_pool
         })
     }
-    catch(error) {
+    catch (error) {
         console.log("Error in CreateMilkPool controller.");
         console.log(error);
-        return res.status(500).json({
-            error: "Internal Server Error.",
-            message: error.message,
-            stack: error.stack
-        })
+        return res.status(500).send("Internal Server Error");
     }
 };
 
@@ -132,9 +128,9 @@ export const UpdatePoolQAT = async (req, res) =>{
             data: updated_pool
         }); 
 
-    } catch(error){
+    } catch (error) {
         console.log("Error in UpdatePoolQAT controller.");
         console.log(error);
-        return res.status(500).json({error: "Internal Server Error."});
+     return res.status(500).send("Internal Server Error");
     }
 }
