@@ -2,7 +2,6 @@ import { prisma } from "../db/db.ts";
 
 export const GetCollections = async (req, res) => {
     try {
-
         const collections = await prisma.raw_milk.findMany();
         return res.status(200).json(collections);
 
@@ -153,3 +152,117 @@ export const LogWalkInCollection = async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });
     }
 }
+
+export const UpdateCollection = async (req, res) => {
+    try {
+        const ctn = parseInt(req.params.ctn);
+        const { volume_ml, expiration_date, pickup_date, hospital, health_center, remarks } = req.body;
+        const user_id = req.user.user_id;
+
+
+        const updatedCollection = await prisma.raw_milk.update({
+            where: { ctn },
+            data: {
+                // Conditionally add fields to the update object only if they exist
+                ...(volume_ml !== undefined && { volume_ml }),
+                ...(expiration_date && { expiration_date: new Date(expiration_date) }),
+                ...(pickup_date && { pickup_date: new Date(pickup_date) }),
+                ...(hospital !== undefined && { hospital }),
+                ...(health_center !== undefined && { health_center }),
+                ...(remarks !== undefined && { remarks }),
+                modified_by: user_id,
+                modified_at: new Date()
+            }
+        });
+
+        return res.status(200).json(updatedCollection);
+
+    } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({ error: "Collection record not found." });
+        }
+        console.log("Error in UpdateCollection Controller:");
+        console.log(error)
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+export const DeleteCollection = async (req, res) => {
+    try {
+        const ctn = parseInt(req.params.ctn);
+
+        await prisma.raw_milk.delete({ where: { ctn } });
+        return res.status(200).json({ message: "Collection record deleted successfully." });
+
+    } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({ error: "Collection record not found." });
+        }
+        console.log("Error in DeleteCollection Controller:");
+        console.log(error)
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+export const PatchMilkStatus = async (req, res) => {
+    try {
+        const ctn = parseInt(req.params.ctn);
+        const {milk_status} = req.body;
+        const user_id = req.user.user_id;
+
+        if (!['good', 'contaminated', 'discarded', 'expired'].includes(milk_status)) {
+            return res.status(400).json({ error: "Invalid milk status. Allowed values are: good, contaminated, discarded, expired." });
+        }
+
+        const updatedCollection = await prisma.raw_milk.update({
+            where: { ctn },
+            data: {
+                milk_status: milk_status,
+                modified_by: user_id,
+                modified_at: new Date()
+            }
+        });
+
+        return res.status(200).json(updatedCollection);
+
+    } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({ error: "Collection record not found." });
+        }
+        console.log("Error in PatchMilkStatus Controller:");
+        console.log(error)
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+export const PatchQATStatus = async (req, res) => {
+    try {
+        const ctn = parseInt(req.params.ctn);
+        const { qat_status } = req.body;
+        const user_id = req.user.user_id;
+
+        if (!['pending', 'pass', 'fail'].includes(qat_status)) {
+            return res.status(400).json({ error: "Invalid QAT status. Allowed values are: pending, pass, fail." });
+        }
+
+        const updatedCollection = await prisma.raw_milk.update({
+            where: { ctn },
+            data: {
+                qat_status: qat_status,
+                modified_by: user_id,
+                modified_at: new Date()
+            }
+        });
+
+        return res.status(200).json(updatedCollection);
+
+    } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({ error: "Collection record not found." });
+        }
+        console.log("Error in PatchQATStatus Controller:");
+        console.log(error); 
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+

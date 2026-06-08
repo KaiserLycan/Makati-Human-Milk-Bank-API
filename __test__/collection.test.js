@@ -9,6 +9,9 @@ const mockRawMilkFindMany = jest.fn();
 const mockRawMilkCreate = jest.fn();
 const mockRawMilkAggregate = jest.fn();
 const mockUserFindUniqueOrThrow = jest.fn();
+const mockRawMilkFindUnique = jest.fn(); // NEW
+const mockRawMilkUpdate = jest.fn();     // NEW
+const mockRawMilkDelete = jest.fn();     // NEW
 
 jest.mock("../db/db.ts", () => ({
     __esModule: true,
@@ -16,7 +19,10 @@ jest.mock("../db/db.ts", () => ({
         raw_milk: {
             findMany: (...args) => mockRawMilkFindMany(...args),
             create: (...args) => mockRawMilkCreate(...args),
-            aggregate: (...args) => mockRawMilkAggregate(...args)
+            aggregate: (...args) => mockRawMilkAggregate(...args),
+            findUnique: (...args) => mockRawMilkFindUnique(...args), // NEW
+            update: (...args) => mockRawMilkUpdate(...args),         // NEW
+            delete: (...args) => mockRawMilkDelete(...args)          // NEW
         },
         user: {
             findUniqueOrThrow: (...args) => mockUserFindUniqueOrThrow(...args)
@@ -210,6 +216,115 @@ describe("Collection API Unit Tests", () => {
 
             expect(res.status).toBe(400);
             expect(res.body.error).toBe("Collection exceeds daily limit. Current total today is 700 ml.");
+        });
+    });
+
+describe("PUT /api/collections/:ctn", () => {
+        it("Should successfully update collection data", async () => {
+            const updatedRecord = { ctn: 1, volume_ml: 150, hospital: "New Hospital" };
+            
+            // We only need to mock the update now
+            mockRawMilkUpdate.mockResolvedValue(updatedRecord);
+
+            const res = await request(app)
+                .put("/api/collections/1")
+                .set("Cookie", ["access_token=valid_token"])
+                .send({ volume_ml: 150, hospital: "New Hospital" });
+
+            expect(res.status).toBe(200);
+            expect(res.body.volume_ml).toBe(150);
+            expect(res.body.hospital).toBe("New Hospital");
+            expect(mockRawMilkUpdate).toHaveBeenCalled();
+        });
+
+        it("Should return 404 if the collection to update doesn't exist", async () => {
+            mockRawMilkUpdate.mockRejectedValue({ code: 'P2025' });
+
+            const res = await request(app)
+                .put("/api/collections/999")
+                .set("Cookie", ["access_token=valid_token"])
+                .send({ volume_ml: 200 });
+
+            expect(res.status).toBe(404);
+            expect(res.body.error).toBe("Collection record not found.");
+        });
+    });
+
+    describe("DELETE /api/collections/:ctn", () => {
+        it("Should successfully delete a collection", async () => {
+            mockRawMilkDelete.mockResolvedValue({ ctn: 1 });
+
+            const res = await request(app)
+                .delete("/api/collections/1")
+                .set("Cookie", ["access_token=valid_token"]);
+
+            expect(res.status).toBe(200);
+            // Updated to match your server's actual response
+            expect(res.body.message).toBe("Collection record deleted successfully.");
+            expect(mockRawMilkDelete).toHaveBeenCalledWith({ where: { ctn: 1 } });
+        });
+
+        it("Should return 404 if the collection to delete doesn't exist", async () => {
+            mockRawMilkDelete.mockRejectedValue({ code: 'P2025' });
+
+            const res = await request(app)
+                .delete("/api/collections/999")
+                .set("Cookie", ["access_token=valid_token"]);
+
+            expect(res.status).toBe(404);
+            // Updated to match your server's actual response
+            expect(res.body.error).toBe("Collection record not found.");
+        });
+    });
+
+    describe("PATCH /api/collections/:ctn/milk-status", () => {
+        it("Should successfully update milk_status", async () => {
+            const updatedRecord = { ctn: 1, milk_status: "discarded" };
+            mockRawMilkUpdate.mockResolvedValue(updatedRecord);
+
+            const res = await request(app)
+                .patch("/api/collections/1/milk-status")
+                .set("Cookie", ["access_token=valid_token"])
+                .send({ milk_status: "discarded" });
+
+            expect(res.status).toBe(200);
+            expect(res.body.milk_status).toBe("discarded");
+        });
+
+        it("Should return 400 for invalid milk_status enum", async () => {
+            const res = await request(app)
+                .patch("/api/collections/1/milk-status")
+                .set("Cookie", ["access_token=valid_token"])
+                .send({ milk_status: "sour" });
+
+            expect(res.status).toBe(400);
+            // Updated to match your server's actual response
+            expect(res.body.error).toBe("Invalid milk status. Allowed values are: good, contaminated, discarded, expired.");
+        });
+    });
+
+    describe("PATCH /api/collections/:ctn/qat-status", () => {
+        it("Should successfully update qat_status", async () => {
+            const updatedRecord = { ctn: 1, qat_status: "pass" };
+            mockRawMilkUpdate.mockResolvedValue(updatedRecord);
+
+            const res = await request(app)
+                .patch("/api/collections/1/qat-status")
+                .set("Cookie", ["access_token=valid_token"])
+                .send({ qat_status: "pass" }); // Sending 'pass'
+
+            expect(res.status).toBe(200);
+            expect(res.body.qat_status).toBe("pass"); // Expecting 'pass'
+        });
+
+        it("Should return 400 for invalid qat_status enum", async () => {
+            const res = await request(app)
+                .patch("/api/collections/1/qat-status")
+                .set("Cookie", ["access_token=valid_token"])
+                .send({ qat_status: "maybe" });
+
+            expect(res.status).toBe(400);
+            expect(res.body.error).toBe("Invalid QAT status. Allowed values are: pending, pass, fail.");
         });
     });
 });
