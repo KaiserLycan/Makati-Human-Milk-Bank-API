@@ -367,7 +367,7 @@ router.post("/public-register", RegisterDonor);
  *             properties:
  *               application_status:
  *                 type: string
- *                 enum: [pending, rejected, approved]
+ *                 enum: [rejected, approved]
  *     responses:
  *       200:
  *         description: Application status updated successfully
@@ -376,7 +376,7 @@ router.post("/public-register", RegisterDonor);
  *       500:
  *         description: Internal Server Error
  */
-router.patch("/:dtn", ProtectRoute, UpdateApplicationStatus)
+router.patch("/:dtn", ProtectRoute, UpdateApplicationStatus);
 
 /**
  * @swagger

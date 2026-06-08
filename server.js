@@ -34,7 +34,6 @@ app.use("/api/collections", CollectionRouter);
 app.use("/api/reservations", ReservationRouter);
 app.use("/api/dispensing", DispensingRouter);
 app.use("/api/beneficiaries", BeneficiaryRouter)
-app.use("/api/reservations", ReservationRouter);
 app.use("/api/notifications", NotificationRouter);
 
 app.listen(port, () => {

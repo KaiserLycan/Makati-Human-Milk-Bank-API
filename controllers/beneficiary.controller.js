@@ -106,8 +106,10 @@ export const UpdateApplicationStatus = async (req, res) => {
         const {application_status} = req.body;
         const {bid} = req.params;
 
-        if (!application_status) return res.status(400).json({error: "application_status property is not defined."});
-        if(application_status !== "approved" && application_status !== "rejected") return res.status(400).json({error: "Invalid request. application status must be approved or rejected only."});
+        if (!application_status) 
+            return res.status(400).json({error: "application_status property is not defined."});
+        if(application_status !== "approved" && application_status !== "rejected") 
+            return res.status(400).json({error: "Invalid request. application status must be approved or rejected only."});
 
         const beneficiary = await prisma.beneficiary.update({
             where: {
@@ -127,9 +129,9 @@ export const UpdateApplicationStatus = async (req, res) => {
         // send notification email to beneficiary
         try {
             if (application_status === "approved") {
-                await SendApproval(beneficiary, "beneficiary");
+                await SendApproval({name: beneficiary.name, email: beneficiary.caregiver_email}, "beneficiary");
             } else if (application_status === "rejected") {
-                await SendRejection(beneficiary, "beneficiary");
+                await SendRejection({name: beneficiary.name, email: beneficiary.caregiver_email}, "beneficiary");
             }
         } catch (emailError) {
             console.log("Warning: Email notification failed for beneficiary", bid);

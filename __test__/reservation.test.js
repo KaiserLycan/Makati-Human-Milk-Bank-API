@@ -11,9 +11,6 @@ const mockRequestCreate = jest.fn();
 const mockRequestUpdate = jest.fn();
 const mockRequestCount = jest.fn();
 const mockBeneficiaryFindUniqueOrThrow = jest.fn();
-const mockPasteurizedMilkFindMany = jest.fn();
-const mockRequestBottlesCreateMany = jest.fn();
-const mockSendAllocationNotification = jest.fn();
 
 jest.mock("jsonwebtoken", () => ({
     __esModule: true,
@@ -38,19 +35,8 @@ jest.mock("../db/db.ts", () => ({
         },
         beneficiary: {
             findUniqueOrThrow: (...args) => mockBeneficiaryFindUniqueOrThrow(...args),
-        },
-        pasteurized_milk: {
-            findMany: (...args) => mockPasteurizedMilkFindMany(...args),
-        },
-        request_bottles: {
-            createMany: (...args) => mockRequestBottlesCreateMany(...args),
         }
     }
-}));
-
-jest.mock("../service/email.service.js", () => ({
-    __esModule: true,
-    SendAllocationNotification: (...args) => mockSendAllocationNotification(...args),
 }));
 
 import ReservationRouter from "../routes/reservation.router.js";
@@ -69,7 +55,6 @@ describe("Reservation API Unit Tests", () => {
         jest.clearAllMocks();
         mockJwtVerify.mockReturnValue({ user_id: "test-staff-uuid" });
         mockUserFindUniqueOrThrow.mockResolvedValue({ user_id: "test-staff-uuid", role: "staff" });
-        mockSendAllocationNotification.mockResolvedValue(undefined);
     });
 
     describe("GET /api/reservations", () => {
@@ -266,64 +251,4 @@ describe("Reservation API Unit Tests", () => {
             expect(res.body.error).toBe("Request not found.");
         });
     });
-
-    //allocation notification 
-    describe("POST /api/reservations/:rid/allocate", () => {
-    it("Should allocate milk bottles and send notification", async () => {
-        const mockRequest = {
-            rid: 1,
-            bid: 1,
-            request_status: "waiting",
-            beneficiary: {
-                bid: 1,
-                name: "Baby Cruz",
-                caregiver: "Maria Cruz",
-                caregiver_email: "maria@example.com"
-            }
-        };
-
-        const mockBottles = [
-            { btl_id: 10, volume_ml: 75 },
-            { btl_id: 11, volume_ml: 75 }
-        ];
-
-        const mockUpdatedRequest = {
-            ...mockRequest,
-            request_status: "allocated"
-        };
-
-        mockRequestFindUniqueOrThrow.mockResolvedValueOnce(mockRequest);
-        mockPasteurizedMilkFindMany.mockResolvedValueOnce(mockBottles);
-        mockRequestBottlesCreateMany.mockResolvedValueOnce({ count: 2 });
-        mockRequestUpdate.mockResolvedValueOnce(mockUpdatedRequest);
-
-        const res = await request(app)
-            .post("/api/reservations/1/allocate")
-            .set("Cookie", ["access_token=valid_token"])
-            .send({ bottleIds: [10, 11] });
-
-        expect(res.status).toBe(200);
-        expect(res.body.request_status).toBe("allocated");
-    });
-
-    it("Should return 400 if bottle not found", async () => {
-        const mockRequest = {
-            rid: 1,
-            request_status: "waiting",
-            beneficiary: { bid: 1 }
-        };
-
-        mockRequestFindUniqueOrThrow.mockResolvedValueOnce(mockRequest);
-        mockPasteurizedMilkFindMany.mockResolvedValueOnce([]); // Empty array - no bottles found
-
-        const res = await request(app)
-            .post("/api/reservations/1/allocate")
-            .set("Cookie", ["access_token=valid_token"])
-            .send({ bottleIds: [999] });
-
-        expect(res.status).toBe(400);
-        expect(res.body.error).toContain("One or more bottles not found");
-    });
-});
-    
 });

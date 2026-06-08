@@ -121,8 +121,10 @@ export const UpdateApplicationStatus = async (req, res) => {
         const {application_status} = req.body;
         const {dtn} = req.params;
 
-        if(!application_status) return res.status(400).json({error: "application_status property is not defined."});
-        if(application_status !== "approved" && application_status !== "rejected") return res.status(400).json({error: "Invalid request. application status must be approved or rejected only."});
+        if(!application_status) 
+            return res.status(400).json({error: "application_status property is not defined."});
+        if(application_status !== "approved" && application_status !== "rejected") 
+            return res.status(400).json({error: "Invalid request. application status must be approved or rejected only."});
 
         const donor = await prisma.donor.update({
             where: {

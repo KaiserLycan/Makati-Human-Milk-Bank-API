@@ -39,7 +39,7 @@ export const NotifyStaffNewApplication = async (
     const staffUsers = await prisma.user.findMany({
       where: {
         role: "staff",
-        is_active: true,
+        status: "active",
       },
     });
 

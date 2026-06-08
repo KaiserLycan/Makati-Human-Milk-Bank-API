@@ -6,7 +6,6 @@ import {
     GetRequest,
     CreateRequest,
     CancelRequest,
-    AllocateRequestMilk,
 } from "../controllers/reservation.controller.js";
 
 const router = express.Router();
@@ -139,41 +138,3 @@ router.post("/", ProtectRoute, CreateRequest);
 router.patch("/:rid/cancel", ProtectRoute, CancelRequest);
 
 export default router;
-
-// for allocate request, the user must be an admin or a milk bank staff
-/**
- * @swagger
- * /api/requests/{rid}/allocate:
- *   post:
- *     summary: Allocate milk bottles to a request
- *     tags: [Requests]
- *     security:
- *       - cookieAuth: []
- *     parameters:
- *       - in: path
- *         name: rid
- *         required: true
- *         schema:
- *           type: integer
- *         description: Request ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               bottleIds:
- *                 type: array
- *                 items:
- *                   type: integer
- *                 description: Array of bottle IDs to allocate
- *     responses:
- *       200:
- *         description: Request allocated successfully
- *       400:
- *         description: Invalid request or bottles not found
- *       404:
- *         description: Request not found
- */
-router.post("/:rid/allocate", ProtectRoute, AllocateRequestMilk);
