@@ -219,12 +219,11 @@ describe("Collection API Unit Tests", () => {
         });
     });
 
-    describe("PUT /api/collections/:ctn", () => {
+describe("PUT /api/collections/:ctn", () => {
         it("Should successfully update collection data", async () => {
-            const oldRecord = { ctn: 1, volume_ml: 100, hospital: "Old Hospital" };
             const updatedRecord = { ctn: 1, volume_ml: 150, hospital: "New Hospital" };
             
-            mockRawMilkFindUnique.mockResolvedValue(oldRecord);
+            // We only need to mock the update now
             mockRawMilkUpdate.mockResolvedValue(updatedRecord);
 
             const res = await request(app)
@@ -239,7 +238,7 @@ describe("Collection API Unit Tests", () => {
         });
 
         it("Should return 404 if the collection to update doesn't exist", async () => {
-            mockRawMilkFindUnique.mockResolvedValue(null);
+            mockRawMilkUpdate.mockRejectedValue({ code: 'P2025' });
 
             const res = await request(app)
                 .put("/api/collections/999")
@@ -247,7 +246,6 @@ describe("Collection API Unit Tests", () => {
                 .send({ volume_ml: 200 });
 
             expect(res.status).toBe(404);
-            // Updated to match your server's actual response
             expect(res.body.error).toBe("Collection record not found.");
         });
     });
