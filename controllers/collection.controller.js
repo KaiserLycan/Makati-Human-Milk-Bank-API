@@ -159,20 +159,17 @@ export const UpdateCollection = async (req, res) => {
         const { volume_ml, expiration_date, pickup_date, hospital, health_center, remarks } = req.body;
         const user_id = req.user.user_id;
 
-        const existingRecord = await prisma.raw_milk.findUnique({ where: { ctn } });
-        if (!existingRecord) {
-            return res.status(404).json({ error: "Collection record not found." });
-        }
 
         const updatedCollection = await prisma.raw_milk.update({
             where: { ctn },
             data: {
-                volume_ml: volume_ml !== undefined ? volume_ml : existingRecord.volume_ml,
-                expiration_date: expiration_date ? new Date(expiration_date) : existingRecord.expiration_date,
-                pickup_date: pickup_date ? new Date(pickup_date) : existingRecord.pickup_date,
-                hospital: hospital !== undefined ? hospital : existingRecord.hospital,
-                health_center: health_center !== undefined ? health_center : existingRecord.health_center,
-                remarks: remarks !== undefined ? remarks : existingRecord.remarks,
+                // Conditionally add fields to the update object only if they exist
+                ...(volume_ml !== undefined && { volume_ml }),
+                ...(expiration_date && { expiration_date: new Date(expiration_date) }),
+                ...(pickup_date && { pickup_date: new Date(pickup_date) }),
+                ...(hospital !== undefined && { hospital }),
+                ...(health_center !== undefined && { health_center }),
+                ...(remarks !== undefined && { remarks }),
                 modified_by: user_id,
                 modified_at: new Date()
             }
@@ -181,12 +178,14 @@ export const UpdateCollection = async (req, res) => {
         return res.status(200).json(updatedCollection);
 
     } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({ error: "Collection record not found." });
+        }
         console.log("Error in UpdateCollection Controller:");
         console.log(error)
         return res.status(500).json({ error: "Internal Server Error" });
     }
 }
-
 
 export const DeleteCollection = async (req, res) => {
     try {
@@ -242,7 +241,6 @@ export const PatchQATStatus = async (req, res) => {
         const { qat_status } = req.body;
         const user_id = req.user.user_id;
 
-        // Ensure we are checking against the exact new database enums
         if (!['pending', 'pass', 'fail'].includes(qat_status)) {
             return res.status(400).json({ error: "Invalid QAT status. Allowed values are: pending, pass, fail." });
         }
@@ -263,7 +261,7 @@ export const PatchQATStatus = async (req, res) => {
             return res.status(404).json({ error: "Collection record not found." });
         }
         console.log("Error in PatchQATStatus Controller:");
-        console.log(error); // This prints the exact crash reason to your terminal!
+        console.log(error); 
         return res.status(500).json({ error: "Internal Server Error" });
     }
 }
