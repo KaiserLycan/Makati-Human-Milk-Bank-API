@@ -154,3 +154,54 @@ export const SendRejection = async (applicant, type) => {
         html: isDonor ? donorHtml : beneficiaryHtml
     });
 }
+
+export const SendAllocationNotification = async (beneficiary, allocatedVolume) => {
+    if (!beneficiary.caregiver_email) throw new Error("No email provided");
+
+    const subjectLine = "Your Milk Request Has Been Allocated";
+
+    const text = `Dear ${beneficiary.caregiver},
+
+    Great news! We are pleased to inform you that milk has been allocated to fulfill the milk request for ${beneficiary.name}.
+
+    Allocated Volume: ${allocatedVolume} ml
+    Baby: ${beneficiary.name}
+
+    Our team will contact you shortly with details on pickup or delivery arrangements. Please ensure someone is available to receive the milk and that it is properly stored in a refrigerator (2-4°C) or freezer immediately upon receipt.
+
+    If you have any questions or need to reschedule, please contact us at 09763026873.
+
+    Thank you for choosing Makati Human Milk Bank for your baby's nutrition and care.
+
+    Warmly,
+    The Team at Makati Human Milk Bank`;
+
+    const html = `
+      <div style="font-family: sans-serif; color: #333; line-height: 1.6; max-width: 600px;">
+        <h2 style="color: #2c3e50;">Milk Request Allocated</h2>
+        <p>Dear ${beneficiary.caregiver},</p>
+        <p>Great news! We are pleased to inform you that milk has been allocated to fulfill the milk request for <b>${beneficiary.name}</b>.</p>
+        
+        <div style="background-color: #d4edda; padding: 15px; border-left: 4px solid #28a745; margin: 20px 0;">
+          <p style="margin: 5px 0;"><b>Allocated Volume:</b> ${allocatedVolume} ml</p>
+          <p style="margin: 5px 0;"><b>Baby:</b> ${beneficiary.name}</p>
+        </div>
+
+        <p>Our team will contact you shortly with details on pickup or delivery arrangements. Please ensure someone is available to receive the milk and that it is properly stored in a refrigerator (2-4°C) or freezer immediately upon receipt.</p>
+        
+        <p>If you have any questions or need to reschedule, please contact us at <b>09763026873</b>.</p>
+
+        <br/>
+        <p>Thank you for choosing Makati Human Milk Bank for your baby's nutrition and care.</p>
+        <p>Warmly,<br/><b>The Team at Makati Human Milk Bank</b></p>
+      </div>
+    `;
+
+    await EmailAPI.sendMail({
+        from: `"Makati Human Milk Bank" <${process.env.EMAIL_USER}>`,
+        to: beneficiary.caregiver_email,
+        subject: subjectLine,
+        text: text,
+        html: html
+    });
+}

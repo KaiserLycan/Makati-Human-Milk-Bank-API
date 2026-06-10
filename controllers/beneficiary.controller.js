@@ -1,4 +1,6 @@
 import {prisma} from "../db/db.ts";
+import { SendApproval, SendRejection } from "../service/email.service.js";
+import { NotifyStaffNewApplication } from "../service/notification.service.js";
 
 export const GetBeneficiaries = async (req, res) => {
     try {
@@ -76,6 +78,17 @@ export const RegisterBeneficiary = async (req, res) => {
         })
 
         if(!beneficiary) return res.status(400).json({error: "Cannot register beneficiary."});
+        try {
+            await NotifyStaffNewApplication(
+                beneficiary.name, 
+                'beneficiary', 
+                beneficiary.bid, 
+                req?.user?.user_id || "00000000-0000-0000-0000-000000000000"
+            );
+        } catch (notificationError) {
+            console.log("Warning: Notification failed for new beneficiary application", beneficiary.bid);
+        }
+
         return res.status(201).json(beneficiary);
     }
     catch (error) {
@@ -83,15 +96,20 @@ export const RegisterBeneficiary = async (req, res) => {
         console.log(error);
         return res.status(500).json({error:"Internal Server Error"});
     }
+
+    
 }
+
 
 export const UpdateApplicationStatus = async (req, res) => {
     try {
         const {application_status} = req.body;
         const {bid} = req.params;
 
-        if (!application_status) return res.status(400).json({error: "application_status property is not defined."});
-        if(application_status !== "approved" && application_status !== "rejected") return res.status(400).json({error: "Invalid request. application status must be approved or rejected only."});
+        if (!application_status) 
+            return res.status(400).json({error: "application_status property is not defined."});
+        if(application_status !== "approved" && application_status !== "rejected") 
+            return res.status(400).json({error: "Invalid request. application status must be approved or rejected only."});
 
         const beneficiary = await prisma.beneficiary.update({
             where: {
@@ -107,6 +125,19 @@ export const UpdateApplicationStatus = async (req, res) => {
                 modified_by: true
             }
         })
+
+        // send notification email to beneficiary
+        try {
+            if (application_status === "approved") {
+                await SendApproval({name: beneficiary.name, email: beneficiary.caregiver_email}, "beneficiary");
+            } else if (application_status === "rejected") {
+                await SendRejection({name: beneficiary.name, email: beneficiary.caregiver_email}, "beneficiary");
+            }
+        } catch (emailError) {
+            console.log("Warning: Email notification failed for beneficiary", bid);
+            console.log(emailError);
+            // Don't fail the API call if email fails - still return success
+        }
 
         return res.status(200).json(beneficiary);
     }

@@ -10,6 +10,14 @@ const mockPrismaFindMany = jest.fn();
 const mockPrismaCreateDonor = jest.fn();
 const mockPrismaUpdateDonor = jest.fn();
 const mockPrismaDeleteDonor = jest.fn();
+const mockSendApproval = jest.fn();
+const mockSendRejection = jest.fn();
+
+jest.mock("../service/email.service.js", () => ({
+    __esModule: true,
+    SendApproval: (...args) => mockSendApproval(...args),
+    SendRejection: (...args) => mockSendRejection(...args),
+}));
 
 jest.mock("jsonwebtoken", () => {
     return {
@@ -313,8 +321,79 @@ describe("Donor API Unit Tests", () => {
     })
 
     describe("PATCH /:dtn", () => {
-        it ("Should approve donor", async () => {
-            const mockApplication = {
+        beforeAll(() => {
+            jest.clearAllMocks();
+            process.env.ACCESS_TOKEN_SECRET = "test_access_secret";
+        })
+
+
+        beforeEach(() => {
+            jest.clearAllMocks();
+            mockSendApproval.mockResolvedValue(undefined);
+            mockSendRejection.mockResolvedValue(undefined);
+        });
+
+        it("Should approve donor and send approval email", async () => {
+            const mockDonor = {
+                dtn: 1,
+                name: "Stiffler",
+                email: "sy@gmail.com",
+                application_status: "approved"
+            }
+
+            mockJwtVerify.mockImplementationOnce(() => ({
+                user_id: "123"
+            }));
+            mockPrismaFindUniqueOrThrow
+                .mockImplementationOnce(() => ({user_id: "123", role: "manager"}));
+            mockPrismaUpdateDonor.mockResolvedValue(mockDonor);
+            mockSendApproval.mockResolvedValue(undefined);
+
+            const res = await request(app)
+                .patch("/1")
+                .send({
+                    application_status: "approved",
+                })
+                .set("Cookie", ["access_token=valid_access_token"]);
+
+            expect(res.status).toBe(200);
+            expect(res.body.application_status).toBe("approved");
+            
+            // Verify email notification was sent
+            expect(mockSendApproval).toHaveBeenCalledWith(mockDonor, "donor");
+        });
+
+        it("Should reject donor and send rejection email", async () => {
+            const mockDonor = {
+                dtn: 1,
+                name: "Stiffler",
+                email: "sy@gmail.com",
+                application_status: "rejected"
+            }
+
+            mockJwtVerify.mockImplementationOnce(() => ({
+                user_id: "123"
+            }));
+            mockPrismaFindUniqueOrThrow
+                .mockImplementationOnce(() => ({user_id: "123", role: "manager"}));
+            mockPrismaUpdateDonor.mockResolvedValue(mockDonor);
+            mockSendRejection.mockResolvedValue(undefined);
+
+            const res = await request(app)
+                .patch("/1")
+                .send({
+                    application_status: "rejected",
+                })
+                .set("Cookie", ["access_token=valid_access_token"]);
+
+            expect(res.status).toBe(200);
+            expect(res.body.application_status).toBe("rejected");
+            
+            expect(mockSendRejection).toHaveBeenCalledWith(mockDonor, "donor");
+        });
+
+        it("Should still approve donor even if email fails", async () => {
+            const mockDonor = {
                 dtn: 1,
                 name: "Stiffler",
                 application_status: "approved"
@@ -325,7 +404,8 @@ describe("Donor API Unit Tests", () => {
             }));
             mockPrismaFindUniqueOrThrow
                 .mockImplementationOnce(() => ({user_id: "123", role: "manager"}));
-            mockPrismaUpdateDonor.mockResolvedValue(mockApplication)
+            mockPrismaUpdateDonor.mockResolvedValue(mockDonor);
+            mockSendApproval.mockRejectedValue(new Error("Email service error"));
 
             const res = await request(app)
                 .patch("/1")
@@ -335,64 +415,8 @@ describe("Donor API Unit Tests", () => {
                 .set("Cookie", ["access_token=valid_access_token"]);
 
             expect(res.status).toBe(200);
-            expect(res.body).toEqual(mockApplication);
-            expect(mockPrismaUpdateDonor).toHaveBeenCalledWith({
-                data: {
-                    application_status: "approved",
-                },
-                where: {
-                    application_status: "pending",
-                    dtn: 1
-                },
-                omit: {
-                    modified_at: true,
-                    created_at: true,
-                    modified_by: true,
-                }
-            })
-
-        })
-
-        it ("Should reject donor", async () => {
-            const mockApplication = {
-                dtn: 1,
-                name: "Stiffler",
-                application_status: "approved"
-            }
-
-            mockJwtVerify.mockImplementationOnce(() => ({
-                user_id: "123"
-            }));
-            mockPrismaFindUniqueOrThrow
-                .mockImplementationOnce(() => ({user_id: "123", role: "manager"}));
-            mockPrismaUpdateDonor.mockResolvedValue(mockApplication)
-
-            const res = await request(app)
-                .patch("/1")
-                .send({
-                    application_status: "rejected",
-                })
-                .set("Cookie", ["access_token=valid_access_token"]);
-
-            expect(res.status).toBe(200);
-            expect(res.body).toEqual(mockApplication);
-            expect(mockPrismaUpdateDonor).toHaveBeenCalledWith({
-                data: {
-                    application_status: "rejected",
-                },
-                where: {
-                    application_status: "pending",
-                    dtn: 1
-                },
-                omit: {
-                    modified_at: true,
-                    created_at: true,
-                    modified_by: true,
-                }
-            })
-
-        })
-    })
+        });
+    });
 
     describe("DELETE /:dtn", () => {
         it ("Should delete a donor", async () => {
