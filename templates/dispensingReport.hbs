@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; color: #333; }
+        .header { text-align: center; border-bottom: 3px solid #005f73; padding-bottom: 10px; margin-bottom: 20px; }
+        .header h1 { margin: 0; color: #005f73; font-size: 24px; }
+        .header p { margin: 5px 0 0 0; color: #666; font-size: 14px; }
+        .summary-box { background-color: #f8f9fa; padding: 15px; border-left: 5px solid #0a9396; margin-bottom: 20px; }
+        .summary-box p { margin: 5px 0; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #005f73; color: white; text-transform: uppercase; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Makati Human Milk Bank</h1>
+        <h2>Dispensing & Distribution Report</h2>
+        <p><strong>Period:</strong> {{dateRange}}</p>
+        <p><strong>Generated On:</strong> {{generatedDate}}</p>
+    </div>
+
+    <div class="summary-box">
+        <p><strong>Total Bottles Dispensed:</strong> {{totalBottles}}</p>
+        <p><strong>Total Volume Dispensed:</strong> {{totalVolume}} ml</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Dispense Date</th>
+                <th>Bottle ID (btl_id)</th>
+                <th>Batch #</th>
+                <th>Volume (ml)</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each records}}
+            <tr>
+                <td>{{this.date}}</td>
+                <td>{{this.btl_id}}</td>
+                <td>{{this.batch_number}}</td>
+                <td>{{this.volume_ml}}</td>
+                <td>DISPENSED</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</body>
+</html>
