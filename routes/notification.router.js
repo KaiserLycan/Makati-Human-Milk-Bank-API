@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { ProtectRoute } from "../middleware/auth.middleware.js";
 import { GetNotifications, MarkNotificationRead } from "../controllers/notification.controller.js";
+import { runExpirationCheck } from "../service/expiration.service.js";
 
 const router = Router();
 
@@ -54,5 +55,28 @@ router.get("/", ProtectRoute, GetNotifications);
  *         description: Internal Server Error
  */
 router.patch("/:nid/read", ProtectRoute, MarkNotificationRead);
+
+/**
+ * @swagger
+ * /api/notifications/trigger-expiration:
+ *   post:
+ *     summary: Manually trigger the daily milk expiration check (Admin/Testing)
+ *     tags: [Notifications]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Expiration check triggered successfully
+ *       500:
+ *         description: Internal Server Error
+ */
+router.post("/trigger-expiration", ProtectRoute, async (req, res) => {
+    try {
+        await runExpirationCheck();
+        res.status(200).json({ message: "Expiration check completed successfully." });
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 export default router;

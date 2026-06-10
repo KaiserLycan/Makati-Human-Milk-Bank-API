@@ -42,6 +42,7 @@ jest.mock("../db/db.ts", () => {
             },
             user: {
                 findUniqueOrThrow: (...args) => mockPrismaFindUniqueOrThrow(...args),
+            findMany: jest.fn().mockResolvedValue([{ user_id: '123', role: 'staff' }]),
             }
         }
     }
