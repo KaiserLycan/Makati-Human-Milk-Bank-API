@@ -37,6 +37,39 @@ const router = express.Router();
  */
 router.get("/summary", ProtectRoute, GetDashboardMetrics);
 
+
+
+
+
+
+
+
+/**
+ * @swagger
+ * /api/dashboard/trends:
+ * get:
+ * summary: Get time-series data for dashboard charts
+ * tags: [Dashboard]
+ * security:
+ * - cookieAuth: []
+ * parameters:
+ * - in: query
+ * name: range
+ * required: true
+ * schema:
+ * type: string
+ * enum: [week, month, year]
+ * description: The timeframe for the trend data
+ * responses:
+ * 200:
+ * description: Successfully retrieved trend data.
+ * 400:
+ * description: Invalid timeframe range provided.
+ * 500:
+ * description: Internal Server Error.
+ */
+
+
 router.get("/trends", ProtectRoute, GetDashboardTrends);
 
 export default router;
