@@ -1,6 +1,6 @@
 import express from "express";
 import { ProtectRoute } from "../middleware/auth.middleware.js";
-import { GetDashboardMetrics } from "../controllers/dashboard.controller.js";
+import { GetDashboardMetrics, GetDashboardTrends } from "../controllers/dashboard.controller.js";
 
 const router = express.Router();
 
@@ -36,5 +36,7 @@ const router = express.Router();
  *         description: Internal Server Error.
  */
 router.get("/summary", ProtectRoute, GetDashboardMetrics);
+
+router.get("/trends", ProtectRoute, GetDashboardTrends);
 
 export default router;
