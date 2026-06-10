@@ -30,6 +30,7 @@ jest.mock('../db/db.ts', () => ({
     prisma: {
         user: {
             findUniqueOrThrow: (...args) => mockFindUniqueUser(...args),
+            findMany: jest.fn().mockResolvedValue([{ user_id: '123', role: 'staff' }]),
         },
         beneficiary: {
             findMany: (...args) => mockFindManyBeneficiaries(...args),
