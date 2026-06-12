@@ -1,6 +1,18 @@
-import { prisma } from "../db/db.ts";
-import { createUser, updatePassword, updateUserStatus } from "../service/user.service.js";
+import { createUser, getUsers, updatePassword, updateUserStatus } from "../service/user.service.js";
 import { ValidateCredentials } from "../service/auth.service.js";
+import { redis } from "../lib/redis.lib.js";
+
+export const queryUsers = async (req, res) => {
+    try {
+        const { role, status, page, limit, search, sortBy, sortOrder } = req.query;
+        const users = await getUsers({ status, role, limit, page, search, sortBy, sortOrder });
+        res.status(200).json(users);
+    } catch (error) {
+        console.log("Error getting users");
+        console.log(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+};
 
 export const addUser = async (req, res) => {
     try {

@@ -5,6 +5,7 @@ import {
     deactivateUser,
     resetPassword,
     activateUser,
+    queryUsers,
 } from "../controllers/user.controller.js";
 import Validate from "../utils/validate.util.js";
 import { UserSchemaValidator } from "../utils/validators/user.validate.js";
@@ -20,6 +21,111 @@ const router = express.Router();
  *   name: User Management
  *   description: API for managing user accounts
  */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         user_id:
+ *           type: string
+ *           format: uuid
+ *         name:
+ *           type: string
+ *         email:
+ *           type: string
+ *           format: email
+ *         phone:
+ *           type: string
+ *         role:
+ *           type: string
+ *           enum: [staff, manager]
+ *         status:
+ *           type: string
+ *           enum: [active, inactive]
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *         modified_at:
+ *           type: string
+ *           format: date-time
+ */
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Query users
+ *     tags: [User Management]
+ *     description: Retrieves a list of users, with optional filtering, sorting, and pagination. Requires manager privileges.
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search string to filter users by name or email.
+ *       - in: query
+ *         name: role
+ *         schema:
+ *           type: string
+ *           enum: [staff, manager]
+ *         description: Filter users by role.
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [active, inactive]
+ *         description: Filter users by status.
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *           enum: [name, created_at]
+ *         default: created_at
+ *         description: Field to sort by.
+ *       - in: query
+ *         name: sortOrder
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *         default: desc
+ *         description: Sort order.
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         default: 1
+ *         description: Page number for pagination.
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *         default: 10
+ *         description: Number of users per page.
+ *     responses:
+ *       200:
+ *         description: A list of users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized.
+ *       403:
+ *         description: Forbidden.
+ *       500:
+ *         description: Internal Server Error.
+ */
+router.get("/", ProtectRoute, Authorize, queryUsers);
 
 /**
  * @swagger
