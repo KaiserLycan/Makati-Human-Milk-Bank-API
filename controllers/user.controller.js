@@ -26,6 +26,10 @@ export const changePassword = async (req, res) => {
         return res.status(200).json({ message: "Password has been changed." });
     } catch (error) {
         if (error.code === "P2025") return res.status(404).json({ error: "Cannot find user." });
+        if (error.message === "Invalid Credentials")
+            return res
+                .status(400)
+                .json({ error: "Old password doesn't match with current password." });
         console.log("Error in ResetPasswordController");
         console.log(error);
         return res.status(500).json({ error: "Internal Server Error" });
@@ -62,6 +66,25 @@ export const deactivateUser = async (req, res) => {
     } catch (error) {
         if (error.code === "P2025") return res.status(404).json({ error: "User not found" });
         console.log("Error in DeactivateUserController");
+        console.log(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+export const activateUser = async (req, res) => {
+    try {
+        const { user_id } = req.params;
+        const modified_by = req.user.user_id;
+        const updatedUser = await updateUserStatus({
+            user_id,
+            status: "active",
+            modified_by: modified_by,
+        });
+
+        return res.status(200).json(updatedUser);
+    } catch (error) {
+        if (error.code === "P2025") return res.status(404).json({ error: "User not found" });
+        console.log("Error in ActivateUserController");
         console.log(error);
         return res.status(500).json({ error: "Internal Server Error" });
     }

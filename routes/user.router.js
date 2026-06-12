@@ -4,6 +4,7 @@ import {
     addUser,
     deactivateUser,
     resetPassword,
+    activateUser,
 } from "../controllers/user.controller.js";
 import Validate from "../utils/validate.util.js";
 import { UserSchemaValidator } from "../utils/validators/user.validate.js";
@@ -189,5 +190,36 @@ router.patch("/reset-password/:user_id", ProtectRoute, Authorize, resetPassword)
  *         description: Internal Server Error.
  */
 router.patch("/deactivate/:user_id", ProtectRoute, Authorize, deactivateUser);
+
+/**
+ * @swagger
+ * /api/users/activate/{user_id}:
+ *   patch:
+ *     summary: Activate a user account
+ *     tags: [User Management]
+ *     description: Allows a manager to activate a user's account, granting them access to log in.
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         description: The UUID of the user account to activate.
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: User activated successfully.
+ *       401:
+ *         description: Unauthorized.
+ *       403:
+ *         description: Forbidden.
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal Server Error.
+ */
+router.patch("/activate/:user_id", ProtectRoute, Authorize, activateUser);
 
 export default router;
