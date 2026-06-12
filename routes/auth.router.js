@@ -1,6 +1,6 @@
-import express from 'express';
-import {Authenticate, RefreshAccessToken, Logout} from "../controllers/auth.controller.js";
-import {ProtectRoute} from "../middleware/auth.middleware.js";
+import express from "express";
+import { Authenticate, Logout } from "../controllers/auth.controller.js";
+import { ProtectRoute } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
@@ -42,22 +42,7 @@ const router = express.Router();
  *       401:
  *         description: Invalid email or password.
  */
-router.post("/login", Authenticate)
-
-/**
- * @swagger
- * /api/auth/refresh-token:
- *   post:
- *     summary: Refresh access token
- *     tags: [Authentication]
- *     description: Obtains a new access token using a refresh token.
- *     responses:
- *       200:
- *         description: New access token generated.
- *       401:
- *         description: Unauthorized.
- */
-router.post("/refresh-token", RefreshAccessToken)
+router.post("/login", Authenticate);
 
 /**
  * @swagger
@@ -74,6 +59,6 @@ router.post("/refresh-token", RefreshAccessToken)
  *       401:
  *         description: Unauthorized.
  */
-router.post("/logout", ProtectRoute, Logout)
+router.post("/logout", ProtectRoute, Logout);
 
 export default router;
