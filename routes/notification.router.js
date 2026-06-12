@@ -6,6 +6,13 @@ const router = Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: Notifications
+ *   description: API for managing reservations
+ */
+
+/**
+ * @swagger
  * /api/notifications:
  *   get:
  *     summary: Retrieve staff notifications

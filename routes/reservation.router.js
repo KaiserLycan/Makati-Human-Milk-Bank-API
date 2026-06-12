@@ -12,6 +12,13 @@ const router = express.Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: Reservation
+ *   description: API for managing reservations
+ */
+
+/**
+ * @swagger
  * /api/reservations:
  *   get:
  *     summary: Get all milk requests

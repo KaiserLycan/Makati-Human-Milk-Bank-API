@@ -1,11 +1,15 @@
 import express from "express";
 import { ProtectRoute } from "../middleware/auth.middleware.js";
-import {
-    GetDispensingQueue,
-    DispenseMilk,
-} from "../controllers/dispensing.controller.js";
+import { GetDispensingQueue, DispenseMilk } from "../controllers/dispensing.controller.js";
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * tags:
+ *   name: Dispensing
+ *   description: API for managing dispensing
+ */
 
 /**
  * @swagger

@@ -1,18 +1,25 @@
 import express from "express";
 import { GetCollections } from "../controllers/collection.controller.js";
 import { ProtectRoute } from "../middleware/auth.middleware.js";
-import { 
-    LogMilkyWayCollection, 
-    LogSupsupTodoCollection, 
-    LogMomsActCollection, 
+import {
+    LogMilkyWayCollection,
+    LogSupsupTodoCollection,
+    LogMomsActCollection,
     LogWalkInCollection,
     UpdateCollection,
     DeleteCollection,
     PatchMilkStatus,
-    PatchQATStatus
-} from "../controllers/collection.controller.js"
+    PatchQATStatus,
+} from "../controllers/collection.controller.js";
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * tags:
+ *   name: Collection
+ *   description: API for managing milk collection
+ */
 
 /**
  * @swagger
