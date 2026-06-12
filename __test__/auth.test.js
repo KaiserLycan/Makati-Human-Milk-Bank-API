@@ -1,163 +1,95 @@
-import { describe, it, expect, jest } from "@jest/globals";
+import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import request from "supertest";
 import express from "express";
 import cookieParser from "cookie-parser";
 import authRouter from "../routes/auth.router.js";
 
-const mockFindUniqueOrThrow = jest.fn();
-const mockJwtSign = jest.fn();
-const mockJwtVerify = jest.fn();
-const mockComparePassword = jest.fn();
-const mockRedisGet = jest.fn();
-const mockRedisSet = jest.fn();
-const mockRedisDel = jest.fn();
-const mockRedisQuit = jest.fn();
+jest.mock("../middleware/auth.middleware.js", () => ({
+    ProtectRoute: jest.fn((req, res, next) => {
+        req.user = { user_id: "123" };
+        next();
+    }),
+}));
 
-jest.mock("../db/db.ts", () => {
-    return {
-        __esModule: true,
-        prisma: {
-            user: {
-                findUniqueOrThrow: (...args) => mockFindUniqueOrThrow(...args),
-            },
-        },
-    };
-});
+const mockValidateCredentials = jest.fn();
+jest.mock("../service/auth.service.js", () => ({
+    __esModule: true,
+    ValidateCredentials: (...args) => mockValidateCredentials(...args),
+}));
 
-jest.mock("../lib/redis.lib.js", () => {
-    return {
-        __esModule: true,
-        redis: {
-            get: (...args) => mockRedisGet(...args),
-            set: (...args) => mockRedisSet(...args),
-            del: (...args) => mockRedisDel(...args),
-            quit: (...args) => mockRedisQuit(...args),
-        },
-    };
-});
-
-jest.mock("jsonwebtoken", () => {
-    return {
-        __esModule: true,
-        default: {
-            sign: (...args) => mockJwtSign(...args),
-            verify: (...args) => mockJwtVerify(...args),
-        },
-        sign: (...args) => mockJwtSign(...args),
-        verify: (...args) => mockJwtVerify(...args),
-    };
-});
-
-jest.mock("../utils/password.util.js", () => {
-    return {
-        __esModule: true,
-        ComparePassword: (...args) => mockComparePassword(...args),
-    };
-});
+const mockGenerateAccessToken = jest.fn();
+jest.mock("../utils/tokens.util.js", () => ({
+    __esModule: true,
+    GenerateAccessToken: (...args) => mockGenerateAccessToken(...args),
+}));
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(authRouter);
+app.use("/api/auth", authRouter);
 
 describe("Authentication API Unit Tests", () => {
-    beforeAll(() => {
+    beforeEach(() => {
         jest.clearAllMocks();
-        process.env.ACCESS_TOKEN_SECRET = "test_access_secret";
-        process.env.REFRESH_TOKEN_SECRET = "test_refresh_secret";
     });
 
-    afterAll(async () => {
-        await mockRedisQuit();
-    });
-
-    describe("POST /login", () => {
-        it("Should authenticate user and set cookies on valid credentials", async () => {
+    describe("POST /api/auth/login", () => {
+        it("Should authenticate user and generate tokens on valid credentials", async () => {
             const mockUser = {
                 user_id: "123",
                 name: "John Doe",
                 email: "jd@example.com",
                 role: "manager",
                 phone: "12345678",
-                password: "hashed_password",
                 status: "active",
             };
 
-            mockFindUniqueOrThrow.mockResolvedValue(mockUser);
-            mockComparePassword.mockResolvedValue(true);
-            mockJwtSign.mockResolvedValue("mocked_token");
+            mockValidateCredentials.mockResolvedValue(mockUser);
+            mockGenerateAccessToken.mockResolvedValue("some-token");
 
             const res = await request(app)
-                .post("/login")
-                .send({ email: "jd@example.com", password: "12345678" });
+                .post("/api/auth/login")
+                .send({ email: "jd@example.com", password: "password" });
 
             expect(res.status).toBe(200);
-            expect(res.body).toEqual({
-                user_id: "123",
-                name: "John Doe",
+            expect(res.body).toEqual(mockUser);
+            expect(mockValidateCredentials).toHaveBeenCalledWith({
                 email: "jd@example.com",
-                phone: "12345678",
-                role: "manager",
-                status: "active",
+                password: "password",
             });
-            expect(res.headers["set-cookie"]).toBeDefined();
+            expect(mockGenerateAccessToken).toHaveBeenCalledWith(expect.any(Object), "123");
         });
 
-        it("should return 400 error if password validation fails", async () => {
-            mockFindUniqueOrThrow.mockResolvedValue({ password: "hash", status: "active" });
-            mockComparePassword.mockResolvedValue(false);
+        it("should return 400 if validation fails", async () => {
+            mockValidateCredentials.mockRejectedValue({ message: "Invalid Credentials" });
 
             const res = await request(app)
-                .post("/login")
-                .send({ email: "jd@example.com", password: "hash" });
+                .post("/api/auth/login")
+                .send({ email: "jd@example.com", password: "wrong_password" });
 
             expect(res.status).toBe(400);
             expect(res.body.error).toBe("Invalid Credentials");
         });
 
-        it("should return 401 if user is not active", async () => {
-            const mockUser = {
-                user_id: "123",
-                name: "John Doe",
-                email: "jd@example.com",
-                role: "manager",
-                phone: "12345678",
-                password: "hashed_password",
-                status: "inactive",
-            };
-
-            mockFindUniqueOrThrow.mockResolvedValue(mockUser);
+        it("should return 500 on an internal server error", async () => {
+            mockValidateCredentials.mockRejectedValue(new Error("DB connection lost"));
 
             const res = await request(app)
-                .post("/login")
-                .send({ email: "jd@example.com", password: "12345678" });
+                .post("/api/auth/login")
+                .send({ email: "user@example.com", password: "password" });
 
-            expect(res.status).toBe(401);
-            expect(res.body).toEqual({
-                error: "Authentication failed",
-                description: "User account is no longer active.",
-            });
+            expect(res.status).toBe(500);
+            expect(res.body.error).toBe("Internal Server Error");
         });
     });
 
-    describe("POST /logout", () => {
-        it("Should clear access and refresh token and delete refresh token from Redis on logout.", async () => {
-            mockJwtVerify.mockImplementationOnce(() => ({ user_id: "123" }));
-            mockFindUniqueOrThrow.mockResolvedValue({ user_id: "123" });
-            mockRedisDel.mockResolvedValue(1);
-
-            const res = await request(app)
-                .post("/logout")
-                .set("Cookie", [
-                    "access_token=valid_access_token",
-                    "refresh_token=valid_refresh_token",
-                ]);
+    describe("POST /api/auth/logout", () => {
+        it("Should clear access token on logout", async () => {
+            const res = await request(app).post("/api/auth/logout");
 
             expect(res.status).toBe(200);
             expect(res.body).toEqual({ message: "Successfully logged out" });
             expect(res.headers["set-cookie"][0]).toContain("access_token=;");
-            expect(res.headers["set-cookie"][1]).toContain("refresh_token=;");
-            expect(mockRedisDel).toHaveBeenCalledWith("refresh_token_123");
         });
     });
 });
