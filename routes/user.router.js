@@ -9,50 +9,66 @@ import {PasswordSchemaValidator} from "../utils/validators/password.validate.js"
 const router = express.Router();
 
 /**
- * @openapi
+ * @swagger
+ * tags:
+ *   name: User Management
+ *   description: API for managing user accounts
+ */
+
+/**
+ * @swagger
  * /api/users/create:
  *   post:
  *     summary: Create a new user
- *     tags:
- *      - User Management
- *     description: Creates a new user with the provided details.
+ *     tags: [User Management]
+ *     description: Creates a new user with the provided details. Requires manager privileges.
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *              type: object
- *              properties:
- *                  name:
- *                      type: string
- *                  email:
- *                      type: string
- *                      format: email
- *                  phone:
- *                      type: string
- *                      default: "09786458976"
- *                  password:
- *                      type: string
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - phone
+ *               - password
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "John Doe"
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "john.doe@example.com"
+ *               phone:
+ *                 type: string
+ *                 example: "09123456789"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: "Password123!"
  *     responses:
  *       201:
  *         description: User created successfully.
  *       400:
- *         description: Invalid user data.
+ *         description: Invalid user data provided.
  *       401:
  *         description: Unauthorized.
+ *       403:
+ *         description: Forbidden.
  */
 router.post("/create", ProtectRoute, Authorize, Validate(UserSchemaValidator), CreateUser)
 
 /**
- * @openapi
+ * @swagger
  * /api/users/change-password:
  *   patch:
  *     summary: Change user password
- *     tags:
- *      - User Management
- *     description: Allows an authenticated user to change their password.
+ *     tags: [User Management]
+ *     description: Allows an authenticated user to change their own password.
  *     security:
  *       - cookieAuth: []
  *     requestBody:
@@ -75,29 +91,29 @@ router.post("/create", ProtectRoute, Authorize, Validate(UserSchemaValidator), C
  *       200:
  *         description: Password changed successfully.
  *       400:
- *         description: Invalid request.
+ *         description: Invalid request (e.g., incorrect current password).
  *       401:
  *         description: Unauthorized.
  */
 router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator), ChangePassword)
 
 /**
- * @openapi
+ * @swagger
  * /api/users/{user_id}/reset-password:
  *   patch:
- *     summary: Reset user password.
- *     tags:
- *       - User Management
- *     description: Managers can set user password to default/any, when user forgets their password. They are not required to input the old/current password.
+ *     summary: Reset a user's password
+ *     tags: [User Management]
+ *     description: Allows a manager to reset the password for a specific user account without needing the current password.
  *     security:
  *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: user_id
  *         required: true
- *         description: The unique identifier of the user whose password needs resetting.
+ *         description: The UUID of the user account.
  *         schema:
  *           type: string
+ *           format: uuid
  *     requestBody:
  *       required: true
  *       content:
@@ -113,48 +129,45 @@ router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator)
  *                 example: "NewSecurePassword123"
  *     responses:
  *       200:
- *         description: Password updated successfully.
+ *         description: Password reset successfully.
  *       400:
- *         description: User and password is not specified.
+ *         description: Invalid input.
  *       401:
- *         description: Missing Token or Invalid Token.
+ *         description: Unauthorized.
  *       403:
- *         description: Forbidden. You do not have permission to access this resource.
+ *         description: Forbidden.
  *       404:
  *         description: User not found.
- *       500:
- *         description: Internal Server Error or Cannot update user.
  */
 router.patch("/:user_id/reset-password", ProtectRoute, Authorize, ResetPassword);
 
 /**
- * @openapi
+ * @swagger
  * /api/users/{user_id}/deactivate:
  *   patch:
- *     summary: Deactivate a user account.
- *     tags:
- *       - User Management
- *     description: Allows authorized users (e.g., managers) to deactivate a user's account, preventing them from logging in.
+ *     summary: Deactivate a user account
+ *     tags: [User Management]
+ *     description: Allows a manager to deactivate a user's account, preventing them from logging in.
  *     security:
  *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: user_id
  *         required: true
- *         description: The unique identifier of the user to deactivate.
+ *         description: The UUID of the user account to deactivate.
  *         schema:
  *           type: string
+ *           format: uuid
  *     responses:
  *       200:
  *         description: User deactivated successfully.
  *       401:
- *         description: Missing Token or Invalid Token.
+ *         description: Unauthorized.
  *       403:
- *         description: Forbidden. You do not have permission to access this resource.
+ *         description: Forbidden.
  *       404:
  *         description: User not found.
- *       500:
- *         description: Internal Server Error or Cannot deactivate user.
  */
 router.patch("/:user_id/deactivate", ProtectRoute, Authorize, DeactivateUser);
+
 export default router;
