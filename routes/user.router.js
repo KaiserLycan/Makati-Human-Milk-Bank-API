@@ -40,6 +40,7 @@ const router = express.Router();
  *               - email
  *               - phone
  *               - password
+ *               - role
  *             properties:
  *               name:
  *                 type: string
@@ -55,15 +56,21 @@ const router = express.Router();
  *                 type: string
  *                 format: password
  *                 example: "Password123!"
+ *               role:
+ *                 type: string
+ *                 enum: [staff, manager]
+ *                 example: "staff"
  *     responses:
  *       201:
  *         description: User created successfully.
  *       400:
- *         description: Invalid user data provided.
+ *         description: Invalid user data provided or email already exists.
  *       401:
  *         description: Unauthorized.
  *       403:
  *         description: Forbidden.
+ *       500:
+ *         description: Internal Server Error.
  */
 router.post("/create", ProtectRoute, Authorize, Validate(UserSchemaValidator), addUser);
 
@@ -83,13 +90,13 @@ router.post("/create", ProtectRoute, Authorize, Validate(UserSchemaValidator), a
  *           schema:
  *             type: object
  *             required:
- *               - currentPassword
- *               - newPassword
+ *               - old_password
+ *               - new_password
  *             properties:
- *               currentPassword:
+ *               old_password:
  *                 type: string
  *                 format: password
- *               newPassword:
+ *               new_password:
  *                 type: string
  *                 format: password
  *     responses:
@@ -99,12 +106,16 @@ router.post("/create", ProtectRoute, Authorize, Validate(UserSchemaValidator), a
  *         description: Invalid request (e.g., incorrect current password).
  *       401:
  *         description: Unauthorized.
+ *       404:
+ *         description: Cannot find user.
+ *       500:
+ *         description: Internal Server Error.
  */
 router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator), changePassword);
 
 /**
  * @swagger
- * /api/users/{user_id}/reset-password:
+ * /api/users/reset-password/{user_id}:
  *   patch:
  *     summary: Reset a user's password
  *     tags: [User Management]
@@ -142,13 +153,15 @@ router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator)
  *       403:
  *         description: Forbidden.
  *       404:
- *         description: User not found.
+ *         description: User does not exist.
+ *       500:
+ *         description: Internal Server Error.
  */
 router.patch("/reset-password/:user_id", ProtectRoute, Authorize, resetPassword);
 
 /**
  * @swagger
- * /api/users/{user_id}/deactivate:
+ * /api/users/deactivate/{user_id}:
  *   patch:
  *     summary: Deactivate a user account
  *     tags: [User Management]
@@ -172,6 +185,8 @@ router.patch("/reset-password/:user_id", ProtectRoute, Authorize, resetPassword)
  *         description: Forbidden.
  *       404:
  *         description: User not found.
+ *       500:
+ *         description: Internal Server Error.
  */
 router.patch("/deactivate/:user_id", ProtectRoute, Authorize, deactivateUser);
 

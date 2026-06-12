@@ -2,7 +2,7 @@ import Joi from "joi";
 
 export const UserSchemaValidator = Joi.object({
     name: Joi.string().min(2).required().messages({
-        "string.min" : "Name must be at least 2 characters.",
+        "string.min": "Name must be at least 2 characters.",
         "any.required": "Name is required.",
     }),
     email: Joi.string().email().required().messages({
@@ -10,10 +10,14 @@ export const UserSchemaValidator = Joi.object({
         "any.required": "Email is required.",
     }),
     phone: Joi.string().required().messages({
-        "any.required": "Phone number is required."
+        "any.required": "Phone number is required.",
     }),
     password: Joi.string().min(8).required().messages({
-        "string.min" : "Password must be at least 8 characters long.",
+        "string.min": "Password must be at least 8 characters long.",
         "any.required": "Password is required.",
-    })
-})
+    }),
+    role: Joi.string().valid("staff", "manager").required().messages({
+        "any.only": "Role must be either 'staff' or 'manager'.",
+        "any.required": "Role is required.",
+    }),
+});

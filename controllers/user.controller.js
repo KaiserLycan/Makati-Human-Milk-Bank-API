@@ -55,7 +55,7 @@ export const deactivateUser = async (req, res) => {
         const updatedUser = await updateUserStatus({
             user_id,
             status: "inactive",
-            modified_by: user_id,
+            modified_by: modified_by,
         });
 
         return res.status(200).json(updatedUser);

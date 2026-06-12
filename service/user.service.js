@@ -3,15 +3,18 @@ import { prisma } from "../db/db.ts";
 
 export const createUser = async ({ name, role, email, phone, password, modified_by }) => {
     const hashedPassword = await HashPassword(password);
+    const userData = {
+        name: name,
+        email: email,
+        phone: phone,
+        password: hashedPassword,
+        modified_by: modified_by,
+    };
+
+    if (role) userData.role = role;
+
     return prisma.user.create({
-        data: {
-            name: name,
-            email: email,
-            phone: phone,
-            role: role ? role : "staff",
-            password: hashedPassword,
-            modified_by: modified_by,
-        },
+        data: userData,
         omit: {
             modified_by: true,
             modified_at: true,
