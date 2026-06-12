@@ -15,9 +15,9 @@ const router = express.Router();
  * @swagger
  * /api/auth/login:
  *   post:
- *     summary: Authenticate users
+ *     summary: Authenticate a user
  *     tags: [Authentication]
- *     description: Returns an access token, refresh token, and user profile information.
+ *     description: Authenticates a user with their email and password. On success, it sets httpOnly cookies for access and refresh tokens and returns user information.
  *     requestBody:
  *       required: true
  *       content:
@@ -38,9 +38,55 @@ const router = express.Router();
  *                 example: SuperSecretPassword123
  *     responses:
  *       200:
- *         description: Successful authentication.
+ *         description: Authentication successful. Returns user profile.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user_id:
+ *                   type: string
+ *                   example: "c6a9b5b0-c2b6-4e0d-8a2b-5a6a8b4c3d2e"
+ *                 name:
+ *                   type: string
+ *                   example: "John Doe"
+ *                 email:
+ *                   type: string
+ *                   example: "user@example.com"
+ *                 phone:
+ *                   type: string
+ *                   example: "123-456-7890"
+ *                 role:
+ *                   type: string
+ *                   example: "user"
+ *                 status:
+ *                   type: string
+ *                   example: "active"
+ *       400:
+ *         description: Invalid credentials provided.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid Credentials"
  *       401:
- *         description: Invalid email or password.
+ *         description: Authentication failed, e.g., user account is not active.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Authentication failed"
+ *                 description:
+ *                   type: string
+ *                   example: "User account is no longer active."
+ *       500:
+ *         description: Internal Server Error.
  */
 router.post("/login", Authenticate);
 
@@ -48,16 +94,26 @@ router.post("/login", Authenticate);
  * @swagger
  * /api/auth/logout:
  *   post:
- *     summary: Logout user
+ *     summary: Log out a user
  *     tags: [Authentication]
- *     description: Invalidates the user's refresh token.
+ *     description: Clears the user's session by invalidating their access and refresh tokens and removing them from cookies.
  *     security:
  *       - cookieAuth: []
  *     responses:
  *       200:
  *         description: Logout successful.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Successfully logged out"
  *       401:
- *         description: Unauthorized.
+ *         description: Unauthorized. The user is not authenticated.
+ *       500:
+ *         description: Internal Server Error.
  */
 router.post("/logout", ProtectRoute, Logout);
 
