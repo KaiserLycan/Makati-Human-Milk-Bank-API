@@ -167,6 +167,8 @@ model user {
   audit_log                                            audit_log[]
   beneficiary                                          beneficiary[]
   donor                                                donor[]
+  notifications_modified                               notification[]     @relation("notification_modifier")
+  notifications_received                               notification[]     @relation("notification_recipient")
   pasteurized_milk_pasteurized_milk_modified_byTouser  pasteurized_milk[] @relation("pasteurized_milk_modified_byTouser")
   pasteurized_milk_pasteurized_milk_processed_byTouser pasteurized_milk[] @relation("pasteurized_milk_processed_byTouser")
   pool_milk_pool_milk_modified_byTouser                pool_milk[]        @relation("pool_milk_modified_byTouser")
@@ -176,8 +178,6 @@ model user {
   request                                              request[]
   user                                                 user?              @relation("userTouser", fields: [modified_by], references: [user_id], onUpdate: NoAction)
   other_user                                           user[]             @relation("userTouser")
-  notifications_received notification[] @relation("notification_recipient")
-  notifications_modified notification[] @relation("notification_modifier")
 }
 
 model notification {
@@ -193,13 +193,11 @@ model notification {
   created_at        DateTime? @default(now()) @db.Timestamp(6)
   modified_at       DateTime? @default(now()) @db.Timestamp(6)
   modified_by       String?   @db.Uuid
-
+  user_modifier     user?     @relation("notification_modifier", fields: [modified_by], references: [user_id], onUpdate: NoAction)
   user_recipient    user      @relation("notification_recipient", fields: [recipient_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
-  user_modifier     user?     @relation("notification_modifier", fields: [modified_by], references: [user_id], onDelete: SetNull, onUpdate: NoAction)
 
   @@index([recipient_id, is_read])
 }
-
 
 enum request_status {
   waiting
