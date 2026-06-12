@@ -1,10 +1,15 @@
-import express from 'express';
-import {ChangePassword, CreateUser, DeactivateUser, ResetPassword} from "../controllers/user.controller.js";
+import express from "express";
+import {
+    changePassword,
+    addUser,
+    deactivateUser,
+    resetPassword,
+} from "../controllers/user.controller.js";
 import Validate from "../utils/validate.util.js";
-import {UserSchemaValidator} from "../utils/validators/user.validate.js";
-import {ProtectRoute} from "../middleware/auth.middleware.js";
-import {Authorize} from "../middleware/authorize.middleware.js";
-import {PasswordSchemaValidator} from "../utils/validators/password.validate.js";
+import { UserSchemaValidator } from "../utils/validators/user.validate.js";
+import { ProtectRoute } from "../middleware/auth.middleware.js";
+import { Authorize } from "../middleware/authorize.middleware.js";
+import { PasswordSchemaValidator } from "../utils/validators/password.validate.js";
 
 const router = express.Router();
 
@@ -60,7 +65,7 @@ const router = express.Router();
  *       403:
  *         description: Forbidden.
  */
-router.post("/create", ProtectRoute, Authorize, Validate(UserSchemaValidator), CreateUser)
+router.post("/create", ProtectRoute, Authorize, Validate(UserSchemaValidator), addUser);
 
 /**
  * @swagger
@@ -95,7 +100,7 @@ router.post("/create", ProtectRoute, Authorize, Validate(UserSchemaValidator), C
  *       401:
  *         description: Unauthorized.
  */
-router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator), ChangePassword)
+router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator), changePassword);
 
 /**
  * @swagger
@@ -139,7 +144,7 @@ router.patch("/change-password", ProtectRoute, Validate(PasswordSchemaValidator)
  *       404:
  *         description: User not found.
  */
-router.patch("/:user_id/reset-password", ProtectRoute, Authorize, ResetPassword);
+router.patch("/reset-password/:user_id", ProtectRoute, Authorize, resetPassword);
 
 /**
  * @swagger
@@ -168,6 +173,6 @@ router.patch("/:user_id/reset-password", ProtectRoute, Authorize, ResetPassword)
  *       404:
  *         description: User not found.
  */
-router.patch("/:user_id/deactivate", ProtectRoute, Authorize, DeactivateUser);
+router.patch("/deactivate/:user_id", ProtectRoute, Authorize, deactivateUser);
 
 export default router;

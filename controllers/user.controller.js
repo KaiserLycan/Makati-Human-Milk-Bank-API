@@ -1,143 +1,68 @@
-import {prisma} from "../db/db.ts";
-import {ComparePassword, HashPassword} from "../utils/password.util.js";
+import { prisma } from "../db/db.ts";
+import { createUser, updatePassword, updateUserStatus } from "../service/user.service.js";
+import { ValidateCredentials } from "../service/auth.service.js";
 
-export const CreateUser = async (req, res) => {
+export const addUser = async (req, res) => {
     try {
-        const {name, email, phone, password} = req.body;
-
-        const password_hash = await HashPassword(password);
-
-        const user = await prisma.user.create({
-            data: {
-                name,
-                email,
-                phone,
-                password: password_hash,
-                modified_by: req.user.user_id,
-            }
-        })
-
-        return res.status(201).json({user_id: user.user_id, name: user.name, email: user.email, phone: user.phone, role: user.role, status: user.status})
-    }
-    catch(error) {
+        const { name, role, email, phone, password } = req.body;
+        const modified_by = req.user.user_id;
+        const newUser = await createUser({ name, role, email, phone, password, modified_by });
+        return res.status(201).json(newUser);
+    } catch (error) {
         if (error.code === "P2002") return res.status(400).json({ error: "Email already exists." });
         console.log("Error in CreateUser controller");
-        console.log(error)
-        return res.status(500).json({error: "Internal Server Error"})
+        console.log(error);
+        return res.status(500).json({ error: "Internal Server Error" });
     }
-}
+};
 
-export const ChangePassword = async (req, res) => {
+export const changePassword = async (req, res) => {
     try {
-        const {old_password, new_password} = req.body;
+        const { old_password, new_password } = req.body;
+        const user_id = req.user.user_id;
 
-        const user = await prisma.user.findUniqueOrThrow({
-            where: {
-                user_id: req.user.user_id,
-            }
-        })
-
-        const is_valid_password = await ComparePassword(old_password, user.password);
-        if(!is_valid_password) return res.status(401).json({error: "Old password does not match current password."});
-
-        const hashed_password = await HashPassword(new_password);
-
-        await prisma.user.update({
-            data: {
-                password: hashed_password,
-                modified_by: req.user.user_id,
-            },
-            where: {
-                user_id: req.user.user_id,
-            }
-        })
-
-        return res.status(200).json({message: "Password updated successfully."});
-    }
-    catch(error) {
-        if (error.code === "P2025") return res.status(404).json({error: "Cannot find user."});
+        await ValidateCredentials({ user_id, password: old_password });
+        await updatePassword({ password: new_password, user_id, modified_by: user_id });
+        return res.status(200).json({ message: "Password has been changed." });
+    } catch (error) {
+        if (error.code === "P2025") return res.status(404).json({ error: "Cannot find user." });
         console.log("Error in ResetPasswordController");
         console.log(error);
-        return res.status(500).json({error: "Internal Server Error"})
+        return res.status(500).json({ error: "Internal Server Error" });
     }
-}
+};
 
-export const ResetPassword = async (req, res) => {
+export const resetPassword = async (req, res) => {
     try {
-        const {new_password} = req.body;
-        const {user_id} = req.params;
+        const { new_password } = req.body;
+        const { user_id } = req.params;
+        const modified_by = req.user.user_id;
 
-
-        if (!user_id || !new_password) return res.status(400).json({error: "User and password is not specified"});
-
-        const user = await prisma.user.findUniqueOrThrow({
-            where: {
-                user_id: user_id,
-            }
-        })
-
-
-        const new_hash_password = await HashPassword(new_password);
-
-        const updated_user = await prisma.user.update({
-            data: {
-                password: new_hash_password,
-                modified_by: req.user.user_id,
-            },
-            where: {
-                user_id: user.user_id,
-            },
-            select: {
-                password: false
-            }
-        })
-
-        if (!updated_user) return res.status(500).json({error: "Cannot update user."});
-
-        return res.status(200).json({message: "Password reset successfully."});
-    }
-    catch (error) {
-        if (error.code === "P2025") return res.status(404).json({error: "User does not exist."});
+        await updatePassword({ password: new_password, user_id, modified_by });
+        return res.status(200).json({ message: "Password has been reset." });
+    } catch (error) {
+        if (error.code === "P2025") return res.status(404).json({ error: "User does not exist." });
         console.log("Error in ResetPasswordController");
         console.log(error);
-        return res.status(500).json({error: "Internal Server Error"})
+        return res.status(500).json({ error: "Internal Server Error" });
     }
-}
+};
 
-export const DeactivateUser = async (req, res) => {
+export const deactivateUser = async (req, res) => {
     try {
-        const {user_id} = req.params;
+        const { user_id } = req.params;
+        const modified_by = req.user.user_id;
+        const updatedUser = await updateUserStatus({
+            user_id,
+            status: "inactive",
+            modified_by: user_id,
+        });
 
-        const user = await prisma.user.findUniqueOrThrow({
-            where: {
-                user_id: user_id,
-            }
-        })
-
-        if (user.status === 'inactive') return res.status(400).json({error: "User account is already deactivated."});
-
-        const updated_user = await prisma.user.update({
-            data: {
-                status: "inactive",
-                modified_by: req.user.user_id,
-            },
-            where: {
-                user_id: user_id,
-            },
-            select: {
-                password: false,
-            }
-        })
-
-
-        if (!updated_user) return res.status(500).json({error: "Cannot update user status."});
-
-        return res.status(200).json(updated_user);
-    }
-    catch(error) {
-        if (error.code === "P2025") return res.status(404).json({error: "User not found"});
+        return res.status(200).json(updatedUser);
+    } catch (error) {
+        if (error.code === "P2025") return res.status(404).json({ error: "User not found" });
         console.log("Error in DeactivateUserController");
         console.log(error);
-        return res.status(500).json({error: "Internal Server Error"})
+        return res.status(500).json({ error: "Internal Server Error" });
     }
-}
+};
