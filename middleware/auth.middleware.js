@@ -15,7 +15,7 @@ export const ProtectRoute = async (req, res, next) => {
         const user = await prisma.user.findUniqueOrThrow({
             where: { user_id: decoded_token.user_id },
             omit: {
-                created_by: true,
+                created_at: true,
                 modified_by: true,
                 modified_at: true,
                 password: true,

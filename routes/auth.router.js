@@ -1,5 +1,5 @@
 import express from "express";
-import { Authenticate, Logout } from "../controllers/auth.controller.js";
+import { login, logout } from "../controllers/auth.controller.js";
 import { ProtectRoute } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
@@ -88,7 +88,7 @@ const router = express.Router();
  *       500:
  *         description: Internal Server Error.
  */
-router.post("/login", Authenticate);
+router.post("/login", login);
 
 /**
  * @swagger
@@ -115,6 +115,6 @@ router.post("/login", Authenticate);
  *       500:
  *         description: Internal Server Error.
  */
-router.post("/logout", ProtectRoute, Logout);
+router.post("/logout", ProtectRoute, logout);
 
 export default router;
