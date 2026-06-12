@@ -44,8 +44,8 @@ jest.mock("../db/db.ts", () => ({
         },
         request_bottles: {
             createMany: (...args) => mockRequestBottlesCreateMany(...args),
-        }
-    }
+        },
+    },
 }));
 
 jest.mock("../service/email.service.js", () => ({
@@ -91,24 +91,24 @@ describe("Reservation API Unit Tests", () => {
                 total: 2,
                 page: 1,
                 limit: 10,
-                total_pages: 1
+                total_pages: 1,
             });
         });
 
-    it("Should fetch requests filtered by status", async () => {
-        const mockRequests = [{ rid: 1, request_status: "waiting" }];
-        mockRequestFindMany.mockResolvedValue(mockRequests);
-        mockRequestCount.mockResolvedValue(1);
+        it("Should fetch requests filtered by status", async () => {
+            const mockRequests = [{ rid: 1, request_status: "waiting" }];
+            mockRequestFindMany.mockResolvedValue(mockRequests);
+            mockRequestCount.mockResolvedValue(1);
 
-        const res = await request(app)
-            .get("/api/reservations?request_status=waiting")
-            .set("Cookie", ["access_token=valid_token"]);
+            const res = await request(app)
+                .get("/api/reservations?request_status=waiting")
+                .set("Cookie", ["access_token=valid_token"]);
 
-        expect(res.status).toBe(200);
-        expect(res.body.data).toEqual(mockRequests);
-        expect(res.body.meta.total).toBe(1);
+            expect(res.status).toBe(200);
+            expect(res.body.data).toEqual(mockRequests);
+            expect(res.body.meta.total).toBe(1);
+        });
     });
-});
 
     describe("GET /api/reservations/:rid", () => {
         it("Should fetch a specific request", async () => {
@@ -141,9 +141,11 @@ describe("Reservation API Unit Tests", () => {
         it("Should create a new request", async () => {
             const mockBeneficiary = { bid: 1, name: "Baby Cruz", application_status: "approved" };
             const mockNewRequest = {
-                rid: 1, bid: 1, requested_vol_ml: 150,
+                rid: 1,
+                bid: 1,
+                requested_vol_ml: 150,
                 request_status: "waiting",
-                beneficiary: { bid: 1, name: "Baby Cruz" }
+                beneficiary: { bid: 1, name: "Baby Cruz" },
             };
 
             mockBeneficiaryFindUniqueOrThrow.mockResolvedValue(mockBeneficiary);
@@ -189,7 +191,10 @@ describe("Reservation API Unit Tests", () => {
         });
 
         it("Should return 400 if beneficiary is not approved", async () => {
-            mockBeneficiaryFindUniqueOrThrow.mockResolvedValue({ bid: 1, application_status: "pending" });
+            mockBeneficiaryFindUniqueOrThrow.mockResolvedValue({
+                bid: 1,
+                application_status: "pending",
+            });
 
             const res = await request(app)
                 .post("/api/reservations")
@@ -267,63 +272,63 @@ describe("Reservation API Unit Tests", () => {
         });
     });
 
-    //allocation notification 
+    //allocation notification
     describe("POST /api/reservations/:rid/allocate", () => {
-    it("Should allocate milk bottles and send notification", async () => {
-        const mockRequest = {
-            rid: 1,
-            bid: 1,
-            request_status: "waiting",
-            beneficiary: {
+        it("Should allocate milk bottles and send notification", async () => {
+            const mockRequest = {
+                rid: 1,
                 bid: 1,
-                name: "Baby Cruz",
-                caregiver: "Maria Cruz",
-                caregiver_email: "maria@example.com"
-            }
-        };
+                request_status: "waiting",
+                beneficiary: {
+                    bid: 1,
+                    name: "Baby Cruz",
+                    caregiver: "Maria Cruz",
+                    caregiver_email: "maria@example.com",
+                },
+            };
 
-        const mockBottles = [
-            { btl_id: 10, volume_ml: 75 },
-            { btl_id: 11, volume_ml: 75 }
-        ];
+            const mockBottles = [
+                { btl_id: 10, volume_ml: 75 },
+                { btl_id: 11, volume_ml: 75 },
+            ];
 
-        const mockUpdatedRequest = {
-            ...mockRequest,
-            request_status: "allocated"
-        };
+            const mockUpdatedRequest = {
+                ...mockRequest,
+                request_status: "allocated",
+            };
 
-        mockRequestFindUniqueOrThrow.mockResolvedValueOnce(mockRequest);
-        mockPasteurizedMilkFindMany.mockResolvedValueOnce(mockBottles);
-        mockRequestBottlesCreateMany.mockResolvedValueOnce({ count: 2 });
-        mockRequestUpdate.mockResolvedValueOnce(mockUpdatedRequest);
+            mockRequestFindUniqueOrThrow.mockResolvedValueOnce(mockRequest);
+            mockPasteurizedMilkFindMany.mockResolvedValueOnce(mockBottles);
+            mockRequestBottlesCreateMany.mockResolvedValueOnce({ count: 2 });
+            mockRequestUpdate.mockResolvedValueOnce(mockUpdatedRequest);
 
-        const res = await request(app)
-            .post("/api/reservations/1/allocate")
-            .set("Cookie", ["access_token=valid_token"])
-            .send({ bottleIds: [10, 11] });
+            const res = await request(app)
+                .post("/api/reservations/1/allocate")
+                .set("Cookie", ["access_token=valid_token"])
+                .send({ bottleIds: [10, 11] });
 
-        expect(res.status).toBe(200);
-        expect(res.body.request_status).toBe("allocated");
+            expect(res.status).toBe(200);
+            expect(res.body.request_status).toBe("allocated");
+        });
+
+        it("Should return 400 if bottle not found", async () => {
+            const mockRequest = {
+                rid: 1,
+                request_status: "waiting",
+                beneficiary: { bid: 1 },
+            };
+
+            mockRequestFindUniqueOrThrow.mockResolvedValueOnce(mockRequest);
+            mockPasteurizedMilkFindMany.mockResolvedValueOnce([]); // Empty array - no bottles found
+
+            const res = await request(app)
+                .post("/api/reservations/1/allocate")
+                .set("Cookie", ["access_token=valid_token"])
+                .send({ bottleIds: [999] });
+
+            console.log(res.body);
+            expect(res.status).toBe(400);
+            expect(res.body.error).toContain("One or more bottles not found");
+        });
     });
-
-    it("Should return 400 if bottle not found", async () => {
-        const mockRequest = {
-            rid: 1,
-            request_status: "waiting",
-            beneficiary: { bid: 1 }
-        };
-
-        mockRequestFindUniqueOrThrow.mockResolvedValueOnce(mockRequest);
-        mockPasteurizedMilkFindMany.mockResolvedValueOnce([]); // Empty array - no bottles found
-
-        const res = await request(app)
-            .post("/api/reservations/1/allocate")
-            .set("Cookie", ["access_token=valid_token"])
-            .send({ bottleIds: [999] });
-
-        expect(res.status).toBe(400);
-        expect(res.body.error).toContain("One or more bottles not found");
-    });
-});
-    
 });

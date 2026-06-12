@@ -1,7 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import Swagger from "./lib/swagger.lib.js"
+import Swagger from "./lib/swagger.lib.js";
 
 dotenv.config();
 
@@ -15,11 +15,8 @@ import CollectionRouter from "./routes/collection.router.js";
 import ReservationRouter from "./routes/reservation.router.js";
 import DispensingRouter from "./routes/dispensing.router.js";
 import BeneficiaryRouter from "./routes/beneficiary.router.js";
-<<<<<<< HEAD
 import NotificationRouter from "./routes/notification.router.js";
-=======
 import PasteurizationRouter from "./routes/pasteurization.router.js";
->>>>>>> development
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -28,9 +25,9 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-Swagger(app, port)
+Swagger(app, port);
 
-app.use("/api/auth", AuthRouter); 
+app.use("/api/auth", AuthRouter);
 app.use("/api/users", UserRouter);
 app.use("/api/pooling", PoolingRouter);
 app.use("/api/audit-logs", AuditLogRouter);
@@ -40,9 +37,9 @@ app.use("/api/collections", CollectionRouter);
 app.use("/api/pasteurization", PasteurizationRouter);
 app.use("/api/reservations", ReservationRouter);
 app.use("/api/dispensing", DispensingRouter);
-app.use("/api/beneficiaries", BeneficiaryRouter)
+app.use("/api/beneficiaries", BeneficiaryRouter);
 app.use("/api/notifications", NotificationRouter);
 
 app.listen(port, () => {
     console.log(`Server started on http://localhost:${port}`);
-})
+});
