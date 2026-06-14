@@ -73,10 +73,9 @@ export const SendApproval = async (applicant, type) => {
         to: applicant.email,
         subject: subjectLine,
         text: isDonor ? donorText : beneficiaryText,
-        html: isDonor ? donorHtml : beneficiaryHtml
+        html: isDonor ? donorHtml : beneficiaryHtml,
     });
-}
-
+};
 
 export const SendRejection = async (applicant, type) => {
     if (!applicant.email) throw new Error("No email provided");
@@ -151,9 +150,9 @@ export const SendRejection = async (applicant, type) => {
         to: applicant.email,
         subject: subjectLine,
         text: isDonor ? donorText : beneficiaryText,
-        html: isDonor ? donorHtml : beneficiaryHtml
+        html: isDonor ? donorHtml : beneficiaryHtml,
     });
-}
+};
 
 export const SendAllocationNotification = async (beneficiary, allocatedVolume) => {
     if (!beneficiary.caregiver_email) throw new Error("No email provided");
@@ -202,6 +201,43 @@ export const SendAllocationNotification = async (beneficiary, allocatedVolume) =
         to: beneficiary.caregiver_email,
         subject: subjectLine,
         text: text,
-        html: html
+        html: html,
     });
-}
+};
+
+export const SendCancellationNotification = async (beneficiary) => {
+    if (!beneficiary.caregiver_email) throw new Error("No email provided");
+
+    const subjectLine = "Update: Your Milk Request Was Canceled";
+
+    const text = `Dear ${beneficiary.caregiver},
+
+    We are writing to inform you that unfortunately, the milk allocated for ${beneficiary.name} has passed its expiration date before it could be dispensed.
+    
+    As a result, your current request has been automatically canceled by the system to ensure the highest safety standards for the infants we serve.
+
+    Please reach out to our team at 09763026873 to arrange a new request or discuss alternative options.
+
+    Warmly,
+    The Team at Makati Human Milk Bank`;
+
+    const html = `
+      <div style="font-family: sans-serif; color: #333; line-height: 1.6; max-width: 600px;">
+        <h2 style="color: #2c3e50;">Reservation Update</h2>
+        <p>Dear ${beneficiary.caregiver},</p>
+        <p>We are writing to inform you that unfortunately, the milk allocated for <b>${beneficiary.name}</b> has passed its expiration date before it could be dispensed.</p>
+        <p>As a result, your current request has been <b>automatically canceled</b> by the system to ensure the highest safety standards for the infants we serve.</p>
+        <p>Please reach out to our team at <b>09763026873</b> to arrange a new request or discuss alternative options.</p>
+        <br/>
+        <p>Warmly,<br/><b>The Team at Makati Human Milk Bank</b></p>
+      </div>
+    `;
+
+    await EmailAPI.sendMail({
+        from: `"Makati Human Milk Bank" <${process.env.EMAIL_USER}>`,
+        to: beneficiary.caregiver_email,
+        subject: subjectLine,
+        text: text,
+        html: html,
+    });
+};
