@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import Swagger from "./lib/swagger.lib.js";
+import morgan from "morgan";
 
 dotenv.config();
 
@@ -18,14 +19,17 @@ import BeneficiaryRouter from "./routes/beneficiary.router.js";
 import NotificationRouter from "./routes/notification.router.js";
 import PasteurizationRouter from "./routes/pasteurization.router.js";
 
+import { globalErrorHandler } from "./middleware/errorHandler.js";
+
 import { CheckExpirationJob } from "./service/expiration.service.js";
 
 const port = process.env.PORT || 5000;
 const app = express();
-
+const morganFormat = process.env.NODE_ENV === "production" ? "combined" : "dev";
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(morgan(morganFormat));
 
 Swagger(app, port);
 
@@ -41,6 +45,8 @@ app.use("/api/reservations", ReservationRouter);
 app.use("/api/dispensing", DispensingRouter);
 app.use("/api/beneficiaries", BeneficiaryRouter);
 app.use("/api/notifications", NotificationRouter);
+
+app.use(globalErrorHandler);
 
 CheckExpirationJob();
 
