@@ -1,103 +1,118 @@
-import { createUser, getUsers, updatePassword, updateUserStatus } from "../service/user.service.js";
+import {
+    createUser,
+    deleteUser,
+    getUser,
+    getUsers,
+    updatePassword,
+    updateUser,
+    updateUserStatus,
+} from "../service/user.service.js";
 import { ValidateCredentials } from "../service/auth.service.js";
-import { redis } from "../lib/redis.lib.js";
+import { APIResponse } from "../utils/apiResponse.js";
+import { uploadImageToCloudinary } from "../service/upload.service.js";
 
 export const queryUsers = async (req, res) => {
-    try {
-        const { role, status, page, limit, search, sortBy, sortOrder } = req.query;
-        const users = await getUsers({ status, role, limit, page, search, sortBy, sortOrder });
-        res.status(200).json(users);
-    } catch (error) {
-        console.log("Error getting users");
-        console.log(error);
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
+    const { role, status, page, limit, search, sortBy, sortOrder } = req.query;
+    const users = await getUsers({ status, role, limit, page, search, sortBy, sortOrder });
+    return res.status(200).json(new APIResponse(200, users, "Query successful"));
+};
+
+export const viewUser = async (req, res) => {
+    const { user_id } = req.params;
+    const user = await getUser(user_id);
+    return res.status(200).json(new APIResponse(200, user, "Successfully retrieved user"));
+};
+
+export const viewProfile = async (req, res) => {
+    const user_id = req.user.user_id;
+    const user = await getUser(user_id);
+    return res.status(200).json(new APIResponse(200, user, "Successfully retrieved user Profile"));
 };
 
 export const addUser = async (req, res) => {
-    try {
-        const { name, role, email, phone, password } = req.body;
-        const modified_by = req.user.user_id;
-        const newUser = await createUser({ name, role, email, phone, password, modified_by });
-        return res.status(201).json(newUser);
-    } catch (error) {
-        if (error.code === "P2002") return res.status(400).json({ error: "Email already exists." });
-        console.log("Error in CreateUser controller");
-        console.log(error);
-        return res.status(500).json({ error: "Internal Server Error" });
+    const { name, role, email, phone, password } = req.body;
+    const modified_by = req.user.user_id;
+    let profile_image_url = "";
+    if (req.file) {
+        const image = await uploadImageToCloudinary(req.file.buffer, "user_profile");
+        profile_image_url = image.secure_url;
     }
+    const newUser = await createUser({
+        name,
+        role,
+        email,
+        phone,
+        password,
+        modified_by,
+        profile_image_url,
+    });
+    return res.status(201).json(new APIResponse(201, newUser, "Successfully added user"));
+};
+
+export const updateUserProfile = async (req, res) => {
+    const { name, role, email, phone } = req.body;
+    let { profile_image_url } = req.body;
+    const { user_id } = req.params;
+    const modified_by = req.user.user_id;
+    if (req.file) {
+        const image = await uploadImageToCloudinary(req.file.buffer, "user_profile");
+        profile_image_url = image.secure_url;
+    }
+    const updatedUser = await updateUser({
+        user_id,
+        name,
+        role,
+        email,
+        phone,
+        modified_by,
+        profile_image_url,
+    });
+    return res
+        .status(201)
+        .json(new APIResponse(201, updatedUser, "Successfully updated user profile"));
 };
 
 export const changePassword = async (req, res) => {
-    try {
-        const { old_password, new_password } = req.body;
-        const user_id = req.user.user_id;
-
-        await ValidateCredentials({ user_id, password: old_password });
-        await updatePassword({ password: new_password, user_id, modified_by: user_id });
-        return res.status(200).json({ message: "Password has been changed." });
-    } catch (error) {
-        if (error.code === "P2025") return res.status(404).json({ error: "Cannot find user." });
-        if (error.message === "Invalid Credentials")
-            return res
-                .status(400)
-                .json({ error: "Old password doesn't match with current password." });
-        console.log("Error in ResetPasswordController");
-        console.log(error);
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
+    const { old_password, new_password } = req.body;
+    const user_id = req.user.user_id;
+    await ValidateCredentials({ user_id, password: old_password });
+    await updatePassword({ password: new_password, user_id, modified_by: user_id });
+    return res.status(200).json(new APIResponse(200, null, "Password changed successfully"));
 };
 
 export const resetPassword = async (req, res) => {
-    try {
-        const { new_password } = req.body;
-        const { user_id } = req.params;
-        const modified_by = req.user.user_id;
-
-        await updatePassword({ password: new_password, user_id, modified_by });
-        return res.status(200).json({ message: "Password has been reset." });
-    } catch (error) {
-        if (error.code === "P2025") return res.status(404).json({ error: "User does not exist." });
-        console.log("Error in ResetPasswordController");
-        console.log(error);
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
+    const { new_password } = req.body;
+    const { user_id } = req.params;
+    const modified_by = req.user.user_id;
+    await updatePassword({ password: new_password, user_id, modified_by });
+    return res.status(200).json(new APIResponse(200, null, "Password changed successfully"));
 };
 
 export const deactivateUser = async (req, res) => {
-    try {
-        const { user_id } = req.params;
-        const modified_by = req.user.user_id;
-        const updatedUser = await updateUserStatus({
-            user_id,
-            status: "inactive",
-            modified_by: modified_by,
-        });
-
-        return res.status(200).json(updatedUser);
-    } catch (error) {
-        if (error.code === "P2025") return res.status(404).json({ error: "User not found" });
-        console.log("Error in DeactivateUserController");
-        console.log(error);
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
+    const { user_id } = req.params;
+    const modified_by = req.user.user_id;
+    const updatedUser = await updateUserStatus({
+        user_id,
+        status: "inactive",
+        modified_by: modified_by,
+    });
+    return res.status(200).json(new APIResponse(200, updatedUser, "Successfully deactivated user"));
 };
 
 export const activateUser = async (req, res) => {
-    try {
-        const { user_id } = req.params;
-        const modified_by = req.user.user_id;
-        const updatedUser = await updateUserStatus({
-            user_id,
-            status: "active",
-            modified_by: modified_by,
-        });
+    const { user_id } = req.params;
+    const modified_by = req.user.user_id;
+    const updatedUser = await updateUserStatus({
+        user_id,
+        status: "active",
+        modified_by: modified_by,
+    });
+    return res.status(200).json(new APIResponse(200, updatedUser, "Successfully activated user"));
+};
 
-        return res.status(200).json(updatedUser);
-    } catch (error) {
-        if (error.code === "P2025") return res.status(404).json({ error: "User not found" });
-        console.log("Error in ActivateUserController");
-        console.log(error);
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
+export const removeUser = async (req, res) => {
+    const { user_id } = req.params;
+    const modified_by = req.user.user_id;
+    await deleteUser({ user_id, modified_by });
+    return res.status(200).json(new APIResponse(200, null, "User has been successfully deleted"));
 };

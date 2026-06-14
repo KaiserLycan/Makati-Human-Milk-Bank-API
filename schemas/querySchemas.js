@@ -5,5 +5,4 @@ export const standardListQuery = z.object({
     limit: z.coerce.number().int().positive().max(100).default(15),
     sortBy: z.string().optional().default("created_at"),
     sortOrder: z.enum(["asc", "desc"]).optional().default("desc"),
-    search: z.string().optional(),
 });

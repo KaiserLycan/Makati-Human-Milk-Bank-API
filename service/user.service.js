@@ -1,68 +1,52 @@
-import { HashPassword } from "../utils/password.util.js";
+import { HashPassword } from "../utils/passwordUtils.js";
 import { prisma } from "../db/db.ts";
-import { redis } from "../lib/redis.lib.js";
+import { cacheData, clearCachedData, getCachedData } from "../lib/redis.lib.js";
+import { AppError } from "../utils/appError.js";
+import { checkPrismaError } from "../utils/prismaErrorChecks.js";
 
-const clearUserListCaches = async () => {
-    let cursor = "0";
-    do {
-        const [nextCursor, keys] = await redis.scan(cursor, "MATCH", "users:list:*", "COUNT", 100);
-
-        cursor = nextCursor;
-
-        if (keys.length > 0) {
-            await redis.del(keys);
-        }
-    } while (cursor !== "0");
+const omit = {
+    created_at: true,
+    modified_at: true,
+    modified_by: true,
+    password: true,
 };
 
-export const getUsers = async ({
-    status,
-    role,
-    page = 1,
-    limit = 15,
-    search,
-    sortBy = "created_at",
-    sortOrder = "desc",
-}) => {
-    const parsedPage = parseInt(page, 10);
-    const parsedLimit = parseInt(limit, 10);
+const system_id = "00000000-0000-0000-0000-000000000000";
 
-    const cache = `users:list:status:${status || "all"}:role:${role || "all"}:page:${parsedPage}:limit:${parsedLimit}:search:${search || ""}:sortBy:${sortBy}:sortOrder:${sortOrder}`;
+const clearUserCachedData = async () => {
+    const key = "users:*";
+    await clearCachedData(key);
+};
 
-    const cachedData = await redis.get(cache);
-    if (cachedData) {
-        return JSON.parse(cachedData);
-    }
+export const getUsers = async ({ status, role, page, limit, search, sortBy, sortOrder }) => {
+    const key = `users:list:status:${status || "all"}:role:${role || "all"}:page:${page}:limit:${limit}:search:${search || ""}:sortBy:${sortBy}:sortOrder:${sortOrder}`;
+    const cachedData = await getCachedData(key);
+    if (cachedData) return cachedData;
 
     const filter = {
         ...(status && { status }),
         ...(role && { role }),
-    };
-
-    if (search) {
-        filter.OR = [
-            { name: { contains: search, mode: "insensitive" } },
-            { email: { contains: search, mode: "insensitive" } },
-        ];
-    }
-
-    const orderBy = {
-        [sortBy]: sortOrder,
+        user_id: {
+            not: system_id,
+        },
+        ...(search && {
+            OR: [
+                { name: { contains: search, mode: "insensitive" } },
+                { email: { contains: search, mode: "insensitive" } },
+            ],
+        }),
     };
 
     const [totalUsers, users] = await prisma.$transaction([
         prisma.user.count({ where: filter }),
         prisma.user.findMany({
             where: filter,
-            orderBy,
-            skip: (parsedPage - 1) * parsedLimit,
-            take: parsedLimit,
-            omit: {
-                created_at: true,
-                modified_at: true,
-                modified_by: true,
-                password: true,
+            orderBy: {
+                [sortBy]: sortOrder,
             },
+            skip: (page - 1) * limit,
+            take: limit,
+            omit: omit,
         }),
     ]);
 
@@ -70,41 +54,101 @@ export const getUsers = async ({
         data: users,
         meta: {
             total: totalUsers,
-            page: parsedPage,
-            limit: parsedLimit,
-            totalPages: Math.ceil(totalUsers / parsedLimit),
+            page: page,
+            limit: limit,
+            totalPages: Math.ceil(totalUsers / limit),
         },
     };
 
-    await redis.set(cache, JSON.stringify(responseData), "EX", 3600);
+    await cacheData(key, responseData);
     return responseData;
 };
 
-export const createUser = async ({ name, role, email, phone, password, modified_by }) => {
-    const hashedPassword = await HashPassword(password);
+export const getUser = async (user_id) => {
+    const key = `users:${user_id}`;
+    const cachedData = await getCachedData(key);
+    if (cachedData) return cachedData;
 
-    const userData = {
-        name,
-        email,
-        phone,
-        password: hashedPassword,
-        modified_by,
-        ...(role && { role }),
-    };
-
-    const newUser = await prisma.user.create({
-        data: userData,
-        omit: {
-            modified_by: true,
-            modified_at: true,
-            created_at: true,
-            password: true,
+    const user = await prisma.user.findUnique({
+        where: {
+            user_id: user_id,
         },
+        omit: omit,
     });
 
-    await clearUserListCaches();
+    if (!user) throw new AppError("User does not exist", 404);
 
-    return newUser;
+    await cacheData(key, user);
+    return user;
+};
+
+export const createUser = async ({
+    name,
+    role,
+    email,
+    phone,
+    password,
+    modified_by,
+    profile_image_url,
+}) => {
+    try {
+        const hashedPassword = await HashPassword(password);
+        const userData = {
+            name,
+            email,
+            phone,
+            password: hashedPassword,
+            modified_by,
+            ...(role && { role }),
+            profile_image_url: profile_image_url,
+        };
+
+        const newUser = await prisma.user.create({
+            data: userData,
+            omit: omit,
+        });
+
+        await clearUserCachedData();
+        return newUser;
+    } catch (error) {
+        checkPrismaError(error);
+        throw error;
+    }
+};
+
+export const updateUser = async ({
+    user_id,
+    profile_image_url,
+    name,
+    role,
+    email,
+    phone,
+    modified_by,
+}) => {
+    try {
+        const userData = {
+            name,
+            email,
+            phone,
+            modified_by,
+            ...(role && { role }),
+            profile_image_url: profile_image_url,
+        };
+
+        const newUser = await prisma.user.update({
+            data: userData,
+            where: {
+                user_id: user_id,
+            },
+            omit: omit,
+        });
+
+        await clearUserCachedData();
+        return newUser;
+    } catch (error) {
+        checkPrismaError(error);
+        throw error;
+    }
 };
 
 export const updatePassword = async ({ password, user_id, modified_by }) => {
@@ -118,12 +162,7 @@ export const updatePassword = async ({ password, user_id, modified_by }) => {
         where: {
             user_id,
         },
-        omit: {
-            modified_by: true,
-            modified_at: true,
-            created_at: true,
-            password: true,
-        },
+        omit: omit,
     });
 };
 
@@ -147,15 +186,32 @@ export const updateUserStatus = async ({ user_id, status, modified_by }) => {
         where: {
             user_id,
         },
-        omit: {
-            modified_by: true,
-            modified_at: true,
-            created_at: true,
-            password: true,
-        },
+        omit: omit,
     });
 
-    await clearUserListCaches();
+    await clearUserCachedData();
 
     return updatedUser;
+};
+
+export const deleteUser = async ({ user_id, modified_by }) => {
+    try {
+        await prisma.user.update({
+            data: {
+                modified_by: modified_by,
+            },
+            where: {
+                user_id: user_id,
+            },
+        });
+
+        await prisma.user.delete({
+            where: { user_id: user_id },
+        });
+
+        await clearUserCachedData();
+    } catch (error) {
+        checkPrismaError(error);
+        throw error;
+    }
 };
