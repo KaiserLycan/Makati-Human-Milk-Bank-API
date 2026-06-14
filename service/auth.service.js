@@ -1,24 +1,28 @@
 import { prisma } from "../db/db.ts";
-import { ComparePassword } from "../utils/password.util.js";
+import { ComparePassword } from "../utils/passwordUtils.js";
+import { AppError } from "../utils/appError.js";
 
 export const ValidateCredentials = async ({ email, user_id, password }) => {
-    const filter = {
-        status: "active",
-    };
-    if (email) filter.email = email;
-    if (user_id) filter.user_id = user_id;
-
-    const { password: hashedPassword, ...user } = await prisma.user.findFirstOrThrow({
-        omit: {
-            created_at: true,
-            modified_at: true,
-            modified_by: true,
-        },
-        where: filter,
-    });
-
-    const isValidPassword = await ComparePassword(password, hashedPassword);
-    if (!isValidPassword) throw new Error("Invalid Credentials");
-
+    let recordedUser;
+    try {
+        recordedUser = await prisma.user.findFirstOrThrow({
+            omit: {
+                created_at: true,
+                modified_at: true,
+                modified_by: true,
+            },
+            where: {
+                ...(email && { email }),
+                ...(user_id && { user_id }),
+                status: "active",
+            },
+        });
+    } catch (error) {
+        if (error.code === "P2025") throw new AppError("Invalid Credentials", 400);
+        throw error;
+    }
+    const { password: hashedPassword, ...user } = recordedUser;
+    const isValid = await ComparePassword(password, hashedPassword);
+    if (!isValid) throw new AppError("Invalid Credentials", 400);
     return user;
 };
