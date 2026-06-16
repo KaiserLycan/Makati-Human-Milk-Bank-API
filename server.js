@@ -18,8 +18,9 @@ import BeneficiaryRouter from "./routes/beneficiary.router.js";
 import NotificationRouter from "./routes/notification.router.js";
 import PasteurizationRouter from "./routes/pasteurization.router.js";
 
-// Import the expiration check job
+
 import { CheckExpirationJob } from "./service/expiration.service.js";
+import ReportsRouter from "./routes/reports.router.js";
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -42,8 +43,8 @@ app.use("/api/reservations", ReservationRouter);
 app.use("/api/dispensing", DispensingRouter);
 app.use("/api/beneficiaries", BeneficiaryRouter)
 app.use("/api/notifications", NotificationRouter);
+app.use("/api/reports", ReportsRouter);
 
-// Start background jobs (checks time)
 CheckExpirationJob();
 
 app.listen(port, () => {
