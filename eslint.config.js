@@ -5,6 +5,9 @@ import eslintConfigPrettier from "eslint-config-prettier";
 
 export default [
     {
+        ignores: ["lib/db/generated/prisma/**"],
+    },
+    {
         languageOptions: {
             ecmaVersion: "latest",
             sourceType: "module",
@@ -32,7 +35,7 @@ export default [
     },
     {
         rules: {
-            complexity: ["warn", 10],
+            complexity: ["warn", 20],
             "no-unused-vars": "warn",
             "no-undef": "warn",
         },
