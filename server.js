@@ -6,18 +6,20 @@ import morgan from "morgan";
 
 dotenv.config();
 
-import UserRouter from "./src/v2/users/user.router.js";
-import AuthRouter from "./src/v2/auth/auth.router.js";
-import PoolingRouter from "./src/v2/processing/pooling.router.js";
-import AuditLogRouter from "./src/v2/audits/auditLog.router.js";
-import DonorRouter from "./src/v2/donors/donor.router.js";
-import PrePoolRouter from "./src/v2/processing/prepool.router.js";
-import CollectionRouter from "./src/v2/collection/collection.router.js";
-import ReservationRouter from "./src/v2/reservation/reservation.router.js";
-import DispensingRouter from "./src/v2/dispensing/dispensing.router.js";
-import BeneficiaryRouter from "./src/v2/beneficiaries/beneficiary.router.js";
-import NotificationRouter from "./src/v2/notifications/notification.router.js";
-import PasteurizationRouter from "./src/v2/processing/pasteurization.router.js";
+import UserRouter from "./src/v1/users/user.router.js";
+import AuthRouter from "./src/v1/auth/auth.router.js";
+import PoolingRouter from "./src/v1/processing/pooling.router.js";
+import AuditLogRouter from "./src/v1/audits/auditLog.router.js";
+import DonorRouter from "./src/v1/donors/donor.router.js";
+import PrePoolRouter from "./src/v1/processing/prepool.router.js";
+import CollectionRouter from "./src/v1/collection/collection.router.js";
+import ReservationRouter from "./src/v1/reservation/reservation.router.js";
+import DispensingRouter from "./src/v1/dispensing/dispensing.router.js";
+import BeneficiaryRouter from "./src/v1/beneficiaries/beneficiary.router.js";
+import NotificationRouter from "./src/v1/notifications/notification.router.js";
+import PasteurizationRouter from "./src/v1/processing/pasteurization.router.js";
+import ReportsRouter from "./src/v1/dashboard and reports/reports.router.js";
+import DashboardRouter from "./src/v1/dashboard and reports/dashboard.router.js";
 
 import { globalErrorHandler } from "./src/middleware/errorHandler.js";
 
@@ -33,7 +35,7 @@ app.use(morgan(morganFormat));
 
 Swagger(app, port);
 
-app.use("/api/auth", AuthRouter);
+app.use("/api/v1/auth", AuthRouter);
 app.use("/api/users", UserRouter);
 app.use("/api/pooling", PoolingRouter);
 app.use("/api/audit-logs", AuditLogRouter);
@@ -45,7 +47,8 @@ app.use("/api/reservations", ReservationRouter);
 app.use("/api/dispensing", DispensingRouter);
 app.use("/api/beneficiaries", BeneficiaryRouter);
 app.use("/api/notifications", NotificationRouter);
-
+app.use("/api/reports", ReportsRouter);
+app.use("/api/dashboard", DashboardRouter);
 app.use(globalErrorHandler);
 
 CheckExpirationJob();
