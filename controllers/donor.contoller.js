@@ -10,7 +10,7 @@ import {
     updateDonorStatus,
 } from "../service/donor.service.js";
 import { APIResponse } from "../utils/apiResponse.js";
-import { uploadImageToCloudinary } from "../service/upload.service.js";
+import { uploadDonorProfileToCloudinary } from "../service/upload.service.js";
 
 export const queryDonors = async (req, res) => {
     const { application_status, status, page, limit, search, sortBy, sortOrder } = req.query;
@@ -35,30 +35,46 @@ export const viewDonorProfile = async (req, res) => {
 export const registerDonor = async (req, res) => {
     const { name, email, phone, birth_date, profile } = req.body;
     const modified_by = req?.user?.user_id || "00000000-0000-0000-0000-000000000000";
-    if (req.file) {
-        const image = await uploadImageToCloudinary(req.file.buffer, "donor_profile");
-        profile.personal_information.profile_image_url = image.secure_url;
-    }
+    await uploadDonorProfileToCloudinary(req, profile);
     const donor = await createDonor({ name, email, phone, birth_date, profile, modified_by });
     await NotifyStaffNewApplication(name, "donor", donor.dtn, modified_by);
     return res.status(201).json(new APIResponse(200, donor, "Donor has been registered"));
 };
 
 export const updateDonorInformation = async (req, res) => {
-    const { name, email, phone, birth_date, profile } = req.body;
     const { dtn } = req.params;
+    const existingDonor = await getDonor(dtn);
+
+    // Deep merge for nested profile object
+    const profile = {
+        ...existingDonor.profile,
+        ...req.body.profile,
+        personal_information: {
+            ...existingDonor.profile?.personal_information,
+            ...req.body.profile?.personal_information,
+        },
+        traveling_information: {
+            ...existingDonor.profile?.traveling_information,
+            ...req.body.profile?.traveling_information,
+        },
+        donation_information: {
+            ...existingDonor.profile?.donation_information,
+            ...req.body.profile?.donation_information,
+        },
+        medical_information: {
+            ...existingDonor.profile?.medical_information,
+            ...req.body.profile?.medical_information,
+        },
+    };
+
+    const donorData = { ...existingDonor, ...req.body, profile };
     const modified_by = req?.user?.user_id || "00000000-0000-0000-0000-000000000000";
-    if (req.file) {
-        const image = await uploadImageToCloudinary(req.file.buffer, "donor_profile");
-        profile.personal_information.profile_image_url = image.secure_url;
-    }
+
+    await uploadDonorProfileToCloudinary(req, donorData.profile, existingDonor.profile);
+
     const updatedDonor = await updateDonor({
         dtn,
-        name,
-        email,
-        phone,
-        birth_date,
-        profile,
+        ...donorData,
         modified_by,
     });
     return res.status(200).json(new APIResponse(200, updatedDonor, "Donor has been updated"));
