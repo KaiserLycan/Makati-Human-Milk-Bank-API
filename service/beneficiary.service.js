@@ -1,8 +1,8 @@
 import { cacheData, clearCachedData, getCachedData } from "../lib/redis.lib.js";
 import { prisma } from "../db/db.ts";
 import { omit } from "../config/constants.js";
-import { AppError } from "./appError.js";
-import { checkPrismaError } from "./prismaErrorChecks.js";
+import { AppError } from "../utils/appError.js";
+import { checkPrismaError } from "../utils/prismaErrorChecks.js";
 
 const clearBeneficiaryCachedData = async () => {
     const key = "beneficiaries:*";

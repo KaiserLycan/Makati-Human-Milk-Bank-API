@@ -14,7 +14,7 @@ import {
 import { validateRequest } from "../middleware/validate.js";
 import { beneficiaryQuerySchema, beneficiarySchema } from "../schemas/BeneficiarySchema.js";
 import { IdSchema } from "../schemas/idSchemas.js";
-import { uploadBeneficiaryProfile, uploadSingleImage } from "../middleware/upload.js";
+import { uploadBeneficiaryProfile } from "../middleware/upload.js";
 import { parseFormDataJson } from "../middleware/parseFormatData.js";
 const router = express.Router();
 
@@ -32,7 +32,7 @@ router.post(
     protectRoute,
     uploadBeneficiaryProfile,
     parseFormDataJson,
-    validateRequest({ beneficiarySchema }),
+    validateRequest({ body: beneficiarySchema }),
     registerBeneficiary,
 );
 
@@ -40,14 +40,14 @@ router.post(
     "/public-register",
     uploadBeneficiaryProfile,
     parseFormDataJson,
-    validateRequest({ beneficiarySchema }),
+    validateRequest({ body: beneficiarySchema }),
     registerBeneficiary,
 );
 
 router.put(
     "/:bid",
     protectRoute,
-    uploadSingleImage,
+    uploadBeneficiaryProfile,
     parseFormDataJson,
     validateRequest({ body: beneficiarySchema, params: IdSchema }),
     updateBeneficiaryInformation,

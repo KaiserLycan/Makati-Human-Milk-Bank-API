@@ -9,7 +9,7 @@ import {
     updateBeneficiary,
     updateBeneficiaryApplicationStatus,
     updateBeneficiaryStatus,
-} from "../utils/beneficiary.service.js";
+} from "../service/beneficiary.service.js";
 import { uploadBeneficiaryProfileToCloudinary } from "../service/upload.service.js";
 export const queryBeneficiaries = async (req, res) => {
     const { application_status, status, page, limit, search, sortBy, sortOrder } = req.query;
@@ -41,7 +41,7 @@ export const registerBeneficiary = async (req, res) => {
         caregiver_phone,
         birth_date,
         weight_kg,
-        feeding_requirement_mll,
+        feeding_requirement_ml,
         profile,
     } = req.body;
     const modified_by = req?.user?.user_id || "00000000-0000-0000-0000-000000000000";
@@ -53,7 +53,7 @@ export const registerBeneficiary = async (req, res) => {
         caregiver_phone,
         birth_date,
         weight_kg,
-        feeding_requirement_mll,
+        feeding_requirement_ml,
         profile,
         modified_by,
     });
@@ -69,40 +69,30 @@ export const registerBeneficiary = async (req, res) => {
 };
 
 export const updateBeneficiaryInformation = async (req, res) => {
-    const {
-        name,
-        caregiver,
-        caregiver_email,
-        caregiver_phone,
-        birth_date,
-        weight_kg,
-        feeding_requirement_mll,
-        profile,
-    } = req.body;
     const { bid } = req.params;
+    const existingBeneficiary = await getBeneficiary(bid);
+    const profile = { ...existingBeneficiary.profile, ...req.body.profile };
+    const beneficiaryData = { ...existingBeneficiary, ...req.body, profile };
     const modified_by = req.user.user_id;
-    await uploadBeneficiaryProfileToCloudinary(req, profile);
+    await uploadBeneficiaryProfileToCloudinary(
+        req,
+        beneficiaryData.profile,
+        existingBeneficiary.profile,
+    );
     const beneficiary = await updateBeneficiary({
         bid,
-        name,
-        caregiver,
-        caregiver_email,
-        caregiver_phone,
-        birth_date,
-        weight_kg,
-        feeding_requirement_mll,
-        profile,
+        ...beneficiaryData,
         modified_by,
     });
     return res
-        .status(201)
+        .status(200)
         .json(new APIResponse(200, beneficiary, "Updated beneficiary successfully"));
 };
 
 export const approveBeneficiary = async (req, res) => {
-    const { dtn } = req.params;
+    const { bid } = req.params;
     const updatedBeneficiary = await updateBeneficiaryApplicationStatus({
-        dtn,
+        bid,
         application_status: "approved",
     });
     await SendApproval(updatedBeneficiary, "beneficiary");
@@ -112,10 +102,10 @@ export const approveBeneficiary = async (req, res) => {
 };
 
 export const rejectBeneficiary = async (req, res) => {
-    const { dtn } = req.params;
+    const { bid } = req.params;
     const modified_by = req.user.user_id;
     const updatedBeneficiary = await updateBeneficiaryApplicationStatus({
-        dtn,
+        bid,
         application_status: "rejected",
         modified_by,
     });
@@ -126,10 +116,10 @@ export const rejectBeneficiary = async (req, res) => {
 };
 
 export const activateBeneficiary = async (req, res) => {
-    const { dtn } = req.params;
+    const { bid } = req.params;
     const modified_by = req.user.user_id;
     const updatedBeneficiary = await updateBeneficiaryStatus({
-        dtn,
+        bid,
         status: "active",
         modified_by,
     });
@@ -139,10 +129,10 @@ export const activateBeneficiary = async (req, res) => {
 };
 
 export const deactivateBeneficiary = async (req, res) => {
-    const { dtn } = req.params;
+    const { bid } = req.params;
     const modified_by = req.user.user_id;
     const updatedBeneficiary = await updateBeneficiaryStatus({
-        dtn,
+        bid,
         status: "inactive",
         modified_by,
     });
@@ -152,9 +142,9 @@ export const deactivateBeneficiary = async (req, res) => {
 };
 
 export const removeBeneficiary = async (req, res) => {
-    const { dtn } = req.params;
+    const { bid } = req.params;
     const modified_by = req.user.user_id;
-    await deleteBeneficiary({ dtn, modified_by });
+    await deleteBeneficiary({ bid, modified_by });
     return res
         .status(200)
         .json(new APIResponse(200, null, "Beneficiary has been successfully deleted"));
