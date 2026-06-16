@@ -21,11 +21,48 @@ export const uploadImageToCloudinary = (fileBuffer, folderName = "general") => {
     });
 };
 
-export const uploadBeneficiaryProfileToCloudinary = async (req, profile) => {
+const deleteImageFromCloudinary = async (imageUrl) => {
+    if (!imageUrl) return;
+    try {
+        const urlParts = imageUrl.split("/");
+        const publicIdWithExtension = urlParts.slice(-2).join("/");
+        const publicId = publicIdWithExtension.split(".")[0];
+        await cloudinary.uploader.destroy(publicId);
+    } catch (error) {
+        console.error("Failed to delete image from Cloudinary:", error);
+    }
+};
+
+export const uploadDonorProfileToCloudinary = async (req, profile, existingProfile) => {
     const uploadTasks = [];
-    if (req.files?.profile_image_url) {
+
+    if (req.files?.profile_image_url?.[0]) {
+        if (existingProfile?.personal_information?.profile_image_url) {
+            await deleteImageFromCloudinary(existingProfile.personal_information.profile_image_url);
+        }
         const task = uploadImageToCloudinary(
-            req.files.profile_image[0].buffer,
+            req.files.profile_image_url[0].buffer,
+            "donor_profile",
+        ).then((res) => {
+            profile.personal_information.profile_image_url = res.secure_url;
+        });
+        uploadTasks.push(task);
+    }
+
+    if (uploadTasks.length > 0) {
+        await Promise.all(uploadTasks);
+    }
+};
+
+export const uploadBeneficiaryProfileToCloudinary = async (req, profile, existingProfile) => {
+    const uploadTasks = [];
+
+    if (req.files?.profile_image_url?.[0]) {
+        if (existingProfile?.profile_image_url) {
+            await deleteImageFromCloudinary(existingProfile.profile_image_url);
+        }
+        const task = uploadImageToCloudinary(
+            req.files.profile_image_url[0].buffer,
             "beneficiary_profile",
         ).then((res) => {
             profile.profile_image_url = res.secure_url;
@@ -33,9 +70,12 @@ export const uploadBeneficiaryProfileToCloudinary = async (req, profile) => {
         uploadTasks.push(task);
     }
 
-    if (req.files?.prescription_details) {
+    if (req.files?.prescription_details?.[0]) {
+        if (existingProfile?.prescription_details) {
+            await deleteImageFromCloudinary(existingProfile.prescription_details);
+        }
         const task = uploadImageToCloudinary(
-            req.files.prescription[0].buffer,
+            req.files.prescription_details[0].buffer,
             "prescriptions",
         ).then((res) => {
             profile.prescription_details = res.secure_url;
@@ -43,7 +83,10 @@ export const uploadBeneficiaryProfileToCloudinary = async (req, profile) => {
         uploadTasks.push(task);
     }
 
-    if (req.files?.clinical_abstract) {
+    if (req.files?.clinical_abstract?.[0]) {
+        if (existingProfile?.clinical_abstract) {
+            await deleteImageFromCloudinary(existingProfile.clinical_abstract);
+        }
         const task = uploadImageToCloudinary(
             req.files.clinical_abstract[0].buffer,
             "abstracts",
