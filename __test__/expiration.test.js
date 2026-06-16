@@ -1,6 +1,6 @@
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
-import { runExpirationCheck } from "../service/expiration.service.js";
-import { SendCancellationNotification } from "../service/email.service.js";
+import { runExpirationCheck } from "../src/shared/service/expiration.service.js";
+import { SendCancellationNotification } from "../src/shared/service/email.service.js";
 
 // 1. Mock Prisma correctly via the db.ts file
 const mockUserFindMany = jest.fn();
@@ -13,7 +13,7 @@ const mockPasteurizedMilkFindMany = jest.fn();
 const mockPasteurizedMilkUpdate = jest.fn();
 const mockRequestUpdate = jest.fn();
 
-jest.mock("../db/db.ts", () => ({
+jest.mock("../lib/db/db.ts", () => ({
     __esModule: true,
     prisma: {
         user: { findMany: (...args) => mockUserFindMany(...args) },
@@ -35,7 +35,7 @@ jest.mock("../db/db.ts", () => ({
 }));
 
 // 2. Mock the Email Service
-jest.mock("../service/email.service.js", () => ({
+jest.mock("../src/shared/service/email.service.js", () => ({
     SendCancellationNotification: jest.fn(),
 }));
 

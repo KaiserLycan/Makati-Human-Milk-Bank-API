@@ -24,7 +24,7 @@ jest.mock("jsonwebtoken", () => ({
     verify: (...args) => mockJwtVerify(...args),
 }));
 
-jest.mock("../db/db.ts", () => ({
+jest.mock("../lib/db/db.ts", () => ({
     prisma: {
         user: {
             findUniqueOrThrow: (...args) => mockFindUniqueOrThrow(...args),
@@ -38,7 +38,7 @@ jest.mock("../db/db.ts", () => ({
     },
 }));
 
-jest.mock("../utils/password.util.js", () => ({
+jest.mock("../lib/utils/passwordUtils.js", () => ({
     default: {
         HashPassword: (...args) => mockHashPassword(...args),
         ComparePassword: (...args) => mockComparePassword(...args),
@@ -47,7 +47,7 @@ jest.mock("../utils/password.util.js", () => ({
     ComparePassword: (...args) => mockComparePassword(...args),
 }));
 
-jest.mock("../lib/redis.lib.js", () => ({
+jest.mock("../config/redis.lib.js", () => ({
     redis: {
         get: jest.fn().mockResolvedValue(null),
         set: jest.fn().mockResolvedValue("OK"),
@@ -56,7 +56,7 @@ jest.mock("../lib/redis.lib.js", () => ({
     },
 }));
 
-const UserRouter = require("../routes/user.router.js").default;
+const UserRouter = require("../src/v2/users/user.router.js").default;
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));

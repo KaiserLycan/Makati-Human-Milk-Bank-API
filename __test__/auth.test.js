@@ -2,9 +2,9 @@ import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import request from "supertest";
 import express from "express";
 import cookieParser from "cookie-parser";
-import authRouter from "../routes/auth.router.js";
+import authRouter from "../src/v2/auth/auth.router.js";
 
-jest.mock("../middleware/auth.middleware.js", () => ({
+jest.mock("../src/middleware/protectRoute.js", () => ({
     ProtectRoute: jest.fn((req, res, next) => {
         req.user = { user_id: "123" };
         next();
@@ -12,13 +12,13 @@ jest.mock("../middleware/auth.middleware.js", () => ({
 }));
 
 const mockValidateCredentials = jest.fn();
-jest.mock("../service/auth.service.js", () => ({
+jest.mock("../src/v2/auth/auth.service.js", () => ({
     __esModule: true,
     ValidateCredentials: (...args) => mockValidateCredentials(...args),
 }));
 
 const mockGenerateAccessToken = jest.fn();
-jest.mock("../utils/tokens.util.js", () => ({
+jest.mock("../lib/utils/tokens.util.js", () => ({
     __esModule: true,
     GenerateAccessToken: (...args) => mockGenerateAccessToken(...args),
 }));

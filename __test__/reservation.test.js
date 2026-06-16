@@ -23,7 +23,7 @@ jest.mock("jsonwebtoken", () => ({
     verify: (...args) => mockJwtVerify(...args),
 }));
 
-jest.mock("../db/db.ts", () => ({
+jest.mock("../lib/db/db.ts", () => ({
     __esModule: true,
     prisma: {
         user: {
@@ -48,12 +48,12 @@ jest.mock("../db/db.ts", () => ({
     },
 }));
 
-jest.mock("../service/email.service.js", () => ({
+jest.mock("../src/shared/service/email.service.js", () => ({
     __esModule: true,
     SendAllocationNotification: (...args) => mockSendAllocationNotification(...args),
 }));
 
-import ReservationRouter from "../routes/reservation.router.js";
+import ReservationRouter from "../src/v2/reservation/reservation.router.js";
 
 const app = express();
 app.use(express.json());
@@ -271,5 +271,4 @@ describe("Reservation API Unit Tests", () => {
             expect(res.body.error).toBe("Request not found.");
         });
     });
-
 });

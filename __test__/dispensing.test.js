@@ -19,7 +19,7 @@ jest.mock("jsonwebtoken", () => ({
     verify: (...args) => mockJwtVerify(...args),
 }));
 
-jest.mock("../db/db.ts", () => ({
+jest.mock("../lib/db/db.ts", () => ({
     __esModule: true,
     prisma: {
         user: {
@@ -33,11 +33,11 @@ jest.mock("../db/db.ts", () => ({
         },
         pasteurized_milk: {
             updateMany: (...args) => mockPasteurizedMilkUpdateMany(...args),
-        }
-    }
+        },
+    },
 }));
 
-import DispensingRouter from "../routes/dispensing.router.js";
+import DispensingRouter from "../src/v2/dispensing/dispensing.router.js";
 
 const app = express();
 app.use(express.json());
@@ -64,9 +64,9 @@ describe("Dispensing API Unit Tests", () => {
                     requested_vol_ml: 150,
                     beneficiary: { bid: 1, name: "Baby Cruz" },
                     request_bottles: [
-                        { btl_id: 1, pasteurized_milk: { btl_id: 1, volume_ml: 150 } }
-                    ]
-                }
+                        { btl_id: 1, pasteurized_milk: { btl_id: 1, volume_ml: 150 } },
+                    ],
+                },
             ];
             mockRequestFindMany.mockResolvedValue(mockQueue);
             mockRequestCount.mockResolvedValue(1);
@@ -81,7 +81,7 @@ describe("Dispensing API Unit Tests", () => {
                 total: 1,
                 page: 1,
                 limit: 10,
-                total_pages: 1
+                total_pages: 1,
             });
         });
 
@@ -116,9 +116,7 @@ describe("Dispensing API Unit Tests", () => {
             const mockRequest = {
                 rid: 1,
                 request_status: "allocated",
-                request_bottles: [
-                    { btl_id: 1, pasteurized_milk: { btl_id: 1, volume_ml: 150 } }
-                ]
+                request_bottles: [{ btl_id: 1, pasteurized_milk: { btl_id: 1, volume_ml: 150 } }],
             };
 
             const mockCompleted = {
@@ -126,8 +124,15 @@ describe("Dispensing API Unit Tests", () => {
                 request_status: "completed",
                 beneficiary: { bid: 1, name: "Baby Cruz" },
                 request_bottles: [
-                    { btl_id: 1, pasteurized_milk: { btl_id: 1, volume_ml: 150, dispense_status: "dispensed" } }
-                ]
+                    {
+                        btl_id: 1,
+                        pasteurized_milk: {
+                            btl_id: 1,
+                            volume_ml: 150,
+                            dispense_status: "dispensed",
+                        },
+                    },
+                ],
             };
 
             mockRequestFindUniqueOrThrow.mockResolvedValue(mockRequest);
@@ -146,7 +151,7 @@ describe("Dispensing API Unit Tests", () => {
             mockRequestFindUniqueOrThrow.mockResolvedValue({
                 rid: 1,
                 request_status: "waiting",
-                request_bottles: []
+                request_bottles: [],
             });
 
             const res = await request(app)
@@ -161,7 +166,7 @@ describe("Dispensing API Unit Tests", () => {
             mockRequestFindUniqueOrThrow.mockResolvedValue({
                 rid: 1,
                 request_status: "completed",
-                request_bottles: []
+                request_bottles: [],
             });
 
             const res = await request(app)

@@ -2,7 +2,7 @@ import { jest, describe, it } from "@jest/globals";
 import request from "supertest";
 import express from "express";
 import cookieParser from "cookie-parser";
-import DonorRouter from "../routes/donor.router.js";
+import DonorRouter from "../src/v2/donors/donor.router.js";
 
 const mockJwtVerify = jest.fn();
 const mockPrismaFindUniqueOrThrow = jest.fn();
@@ -13,7 +13,7 @@ const mockPrismaDeleteDonor = jest.fn();
 const mockSendApproval = jest.fn();
 const mockSendRejection = jest.fn();
 
-jest.mock("../service/email.service.js", () => ({
+jest.mock("../src/shared/service/email.service.js", () => ({
     __esModule: true,
     SendApproval: (...args) => mockSendApproval(...args),
     SendRejection: (...args) => mockSendRejection(...args),
@@ -29,7 +29,7 @@ jest.mock("jsonwebtoken", () => {
     };
 });
 
-jest.mock("../db/db.ts", () => {
+jest.mock("../lib/db/db.ts", () => {
     return {
         __esModule: true,
         prisma: {

@@ -2,7 +2,7 @@ import { describe, it, expect, jest, beforeEach, beforeAll } from "@jest/globals
 import request from "supertest";
 import express from "express";
 import cookieParser from "cookie-parser";
-import pasteurizationRouter from "../routes/pasteurization.router.js";
+import pasteurizationRouter from "../src/v2/processing/pasteurization.router.js";
 
 // --- Mocking Prisma ---
 const mockPoolFindUnique = jest.fn();
@@ -10,25 +10,25 @@ const mockPasteurizedCreateMany = jest.fn();
 const mockPasteurizedUpdate = jest.fn(); // NEW MOCK ADDED
 const mockUserFindUniqueOrThrow = jest.fn();
 
-jest.mock("../db/db.ts", () => ({
+jest.mock("../lib/db/db.ts", () => ({
     __esModule: true,
     prisma: {
         pool_milk: {
-            findUnique: (...args) => mockPoolFindUnique(...args)
+            findUnique: (...args) => mockPoolFindUnique(...args),
         },
         pasteurized_milk: {
             createMany: (...args) => mockPasteurizedCreateMany(...args),
-            update: (...args) => mockPasteurizedUpdate(...args) // NEW MOCK ADDED
+            update: (...args) => mockPasteurizedUpdate(...args), // NEW MOCK ADDED
         },
         user: {
-            findUniqueOrThrow: (...args) => mockUserFindUniqueOrThrow(...args)
-        }
-    }
+            findUniqueOrThrow: (...args) => mockUserFindUniqueOrThrow(...args),
+        },
+    },
 }));
 
 // --- Mocking JWT for Auth Middleware ---
 const mockJwtVerify = jest.fn();
-jest.mock('jsonwebtoken', () => ({
+jest.mock("jsonwebtoken", () => ({
     __esModule: true,
     default: { verify: (...args) => mockJwtVerify(...args) },
     verify: (...args) => mockJwtVerify(...args),
@@ -54,19 +54,23 @@ describe("Pasteurization API Unit Tests", () => {
     // --- R45 & R46: BATCHING TESTS ---
     describe("POST /api/pasteurization/batch", () => {
         it("Should successfully batch bottles from a pool", async () => {
-            mockPoolFindUnique.mockResolvedValue({ pid: 1, actual_volume_ml: 1000, expiration_date: new Date() });
+            mockPoolFindUnique.mockResolvedValue({
+                pid: 1,
+                actual_volume_ml: 1000,
+                expiration_date: new Date(),
+            });
             mockPasteurizedCreateMany.mockResolvedValue({ count: 5 });
 
             const res = await request(app)
                 .post("/api/pasteurization/batch")
                 .set("Cookie", ["access_token=valid_token"])
-                .send({ 
-                    pid: 1, 
-                    batch_number: 101, 
-                    bottle_count: 5, 
+                .send({
+                    pid: 1,
+                    batch_number: 101,
+                    bottle_count: 5,
                     volume_per_bottle: 100,
                     bottle_type: "ameda",
-                    pasteurization_date: "2026-06-08T00:00:00.000Z"
+                    pasteurization_date: "2026-06-08T00:00:00.000Z",
                 });
 
             expect(res.status).toBe(201);
@@ -75,19 +79,23 @@ describe("Pasteurization API Unit Tests", () => {
         });
 
         it("Should return 400 if trying to batch more volume than the pool holds", async () => {
-            mockPoolFindUnique.mockResolvedValue({ pid: 1, actual_volume_ml: 200, expiration_date: new Date() });
+            mockPoolFindUnique.mockResolvedValue({
+                pid: 1,
+                actual_volume_ml: 200,
+                expiration_date: new Date(),
+            });
 
             const res = await request(app)
                 .post("/api/pasteurization/batch")
                 .set("Cookie", ["access_token=valid_token"])
-                .send({ 
-                    pid: 1, 
-                    batch_number: 101, 
-                    bottle_count: 5, 
+                .send({
+                    pid: 1,
+                    batch_number: 101,
+                    bottle_count: 5,
                     volume_per_bottle: 100,
                     bottle_type: "ameda",
-                    pasteurization_date: "2026-06-08T00:00:00.000Z"
-                }); 
+                    pasteurization_date: "2026-06-08T00:00:00.000Z",
+                });
 
             expect(res.status).toBe(400);
             expect(res.body.error).toContain("exceeds pool's actual volume");
@@ -100,13 +108,13 @@ describe("Pasteurization API Unit Tests", () => {
             const res = await request(app)
                 .post("/api/pasteurization/batch")
                 .set("Cookie", ["access_token=valid_token"])
-                .send({ 
-                    pid: 999, 
-                    batch_number: 101, 
-                    bottle_count: 5, 
+                .send({
+                    pid: 999,
+                    batch_number: 101,
+                    bottle_count: 5,
                     volume_per_bottle: 100,
                     bottle_type: "ameda",
-                    pasteurization_date: "2026-06-08T00:00:00.000Z"
+                    pasteurization_date: "2026-06-08T00:00:00.000Z",
                 });
 
             expect(res.status).toBe(404);
@@ -114,7 +122,7 @@ describe("Pasteurization API Unit Tests", () => {
         });
     });
 
-// --- R47: INCIDENT TESTS ---
+    // --- R47: INCIDENT TESTS ---
     describe("PATCH /api/pasteurization/:btl_id/incident", () => {
         it("Should successfully report an incident (leakage/contamination)", async () => {
             const updatedBottle = { btl_id: 1, volume_ml: 80, milk_status: "contaminated" };
@@ -123,11 +131,15 @@ describe("Pasteurization API Unit Tests", () => {
             const res = await request(app)
                 .patch("/api/pasteurization/1/incident")
                 .set("Cookie", ["access_token=valid_token"])
-                .send({ volume_ml: 80, milk_status: "contaminated", remarks: "Leaked during process" });
+                .send({
+                    volume_ml: 80,
+                    milk_status: "contaminated",
+                    remarks: "Leaked during process",
+                });
 
             expect(res.status).toBe(200);
             // Notice we added .bottle here to match your nested response
-            expect(res.body.bottle.milk_status).toBe("contaminated"); 
+            expect(res.body.bottle.milk_status).toBe("contaminated");
             expect(res.body.bottle.volume_ml).toBe(80);
             expect(mockPasteurizedUpdate).toHaveBeenCalled();
         });
@@ -140,11 +152,13 @@ describe("Pasteurization API Unit Tests", () => {
 
             expect(res.status).toBe(400);
             // Matches your controller's exact string
-            expect(res.body.error).toBe("Invalid milk status. Must be one of: good, contaminated, discarded, expired."); 
+            expect(res.body.error).toBe(
+                "Invalid milk status. Must be one of: good, contaminated, discarded, expired.",
+            );
         });
 
         it("Should return 404 if the bottle to report doesn't exist", async () => {
-            mockPasteurizedUpdate.mockRejectedValue({ code: 'P2025' });
+            mockPasteurizedUpdate.mockRejectedValue({ code: "P2025" });
 
             const res = await request(app)
                 .patch("/api/pasteurization/999/incident")
@@ -169,7 +183,7 @@ describe("Pasteurization API Unit Tests", () => {
 
             expect(res.status).toBe(200);
             // Notice we added .bottle here
-            expect(res.body.bottle.mbt_status).toBe("pass"); 
+            expect(res.body.bottle.mbt_status).toBe("pass");
             expect(res.body.bottle.dispense_status).toBe("available");
         });
 
@@ -184,7 +198,7 @@ describe("Pasteurization API Unit Tests", () => {
 
             expect(res.status).toBe(200);
             // Notice we added .bottle here
-            expect(res.body.bottle.mbt_status).toBe("fail"); 
+            expect(res.body.bottle.mbt_status).toBe("fail");
             expect(res.body.bottle.milk_status).toBe("discarded");
         });
 
@@ -192,11 +206,11 @@ describe("Pasteurization API Unit Tests", () => {
             const res = await request(app)
                 .patch("/api/pasteurization/1/mbt")
                 .set("Cookie", ["access_token=valid_token"])
-                .send({ mbt_status: "pending" }); 
+                .send({ mbt_status: "pending" });
 
             expect(res.status).toBe(400);
             // Matches your controller's exact string
-            expect(res.body.error).toBe("Invalid MBT status. Must be either 'pass' or 'fail'."); 
+            expect(res.body.error).toBe("Invalid MBT status. Must be either 'pass' or 'fail'.");
         });
     });
 });

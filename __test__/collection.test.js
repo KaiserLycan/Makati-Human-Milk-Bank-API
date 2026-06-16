@@ -2,7 +2,7 @@ import { describe, it, expect, jest, beforeEach, beforeAll } from "@jest/globals
 import request from "supertest";
 import express from "express";
 import cookieParser from "cookie-parser";
-import collectionRouter from "../routes/collection.router.js";
+import collectionRouter from "../src/v2/collection/collection.router.js";
 
 // --- Mocking Prisma ---
 const mockRawMilkFindMany = jest.fn();
@@ -10,10 +10,10 @@ const mockRawMilkCreate = jest.fn();
 const mockRawMilkAggregate = jest.fn();
 const mockUserFindUniqueOrThrow = jest.fn();
 const mockRawMilkFindUnique = jest.fn(); // NEW
-const mockRawMilkUpdate = jest.fn();     // NEW
-const mockRawMilkDelete = jest.fn();     // NEW
+const mockRawMilkUpdate = jest.fn(); // NEW
+const mockRawMilkDelete = jest.fn(); // NEW
 
-jest.mock("../db/db.ts", () => ({
+jest.mock("../lib/db/db.ts", () => ({
     __esModule: true,
     prisma: {
         raw_milk: {
@@ -21,30 +21,30 @@ jest.mock("../db/db.ts", () => ({
             create: (...args) => mockRawMilkCreate(...args),
             aggregate: (...args) => mockRawMilkAggregate(...args),
             findUnique: (...args) => mockRawMilkFindUnique(...args), // NEW
-            update: (...args) => mockRawMilkUpdate(...args),         // NEW
-            delete: (...args) => mockRawMilkDelete(...args)          // NEW
+            update: (...args) => mockRawMilkUpdate(...args), // NEW
+            delete: (...args) => mockRawMilkDelete(...args), // NEW
         },
         user: {
-            findUniqueOrThrow: (...args) => mockUserFindUniqueOrThrow(...args)
-        }
-    }
+            findUniqueOrThrow: (...args) => mockUserFindUniqueOrThrow(...args),
+        },
+    },
 }));
 
 // --- Mocking Redis ---
-jest.mock("../lib/redis.lib.js", () => ({
+jest.mock("../config/redis.lib.js", () => ({
     __esModule: true,
     redis: {
         get: jest.fn(),
         set: jest.fn(),
         del: jest.fn(),
-        quit: jest.fn()
-    }
+        quit: jest.fn(),
+    },
 }));
 
 // --- Mocking JWT for Auth Middleware ---
 const mockJwtVerify = jest.fn();
 
-jest.mock('jsonwebtoken', () => ({
+jest.mock("jsonwebtoken", () => ({
     __esModule: true,
     default: {
         verify: (...args) => mockJwtVerify(...args),
@@ -65,14 +65,17 @@ describe("Collection API Unit Tests", () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        
+
         mockJwtVerify.mockReturnValue({ user_id: "test-staff-uuid" });
         mockUserFindUniqueOrThrow.mockResolvedValue({ user_id: "test-staff-uuid", role: "staff" });
     });
 
     describe("GET /api/collections", () => {
         it("Should fetch all collections ordered by created_at desc", async () => {
-            const mockCollections = [{ ctn: 1, volume_ml: 100 }, { ctn: 2, volume_ml: 150 }];
+            const mockCollections = [
+                { ctn: 1, volume_ml: 100 },
+                { ctn: 2, volume_ml: 150 },
+            ];
             mockRawMilkFindMany.mockResolvedValue(mockCollections);
 
             const res = await request(app)
@@ -84,7 +87,7 @@ describe("Collection API Unit Tests", () => {
         });
 
         it("Should fetch collections with query filters", async () => {
-            const mockCollections = [{ ctn: 1, program: 'ST' }];
+            const mockCollections = [{ ctn: 1, program: "ST" }];
             mockRawMilkFindMany.mockResolvedValue(mockCollections);
 
             const res = await request(app)
@@ -98,7 +101,13 @@ describe("Collection API Unit Tests", () => {
 
     describe("POST /api/collections/supsup-todo", () => {
         it("Should log a Supsup-Todo collection and return 201", async () => {
-            const mockInput = { dtn: 1, volume_ml: 150, expiration_date: "2024-12-31T00:00:00.000Z", health_center: "Center A", remarks: "" };
+            const mockInput = {
+                dtn: 1,
+                volume_ml: 150,
+                expiration_date: "2024-12-31T00:00:00.000Z",
+                health_center: "Center A",
+                remarks: "",
+            };
             const mockOutput = { ...mockInput, program: "ST", collected_by: "test-staff-uuid" };
 
             mockRawMilkCreate.mockResolvedValue(mockOutput);
@@ -128,7 +137,12 @@ describe("Collection API Unit Tests", () => {
 
     describe("POST /api/collections/moms-act", () => {
         it("Should log a Moms-Act collection and return 201", async () => {
-            const mockInput = { dtn: 2, volume_ml: 120, expiration_date: "2024-12-31T00:00:00.000Z", remarks: "" };
+            const mockInput = {
+                dtn: 2,
+                volume_ml: 120,
+                expiration_date: "2024-12-31T00:00:00.000Z",
+                remarks: "",
+            };
             const mockOutput = { ...mockInput, program: "MA", collected_by: "test-staff-uuid" };
 
             mockRawMilkCreate.mockResolvedValue(mockOutput);
@@ -145,7 +159,13 @@ describe("Collection API Unit Tests", () => {
 
     describe("POST /api/collections/milkyway", () => {
         it("Should log a Milky Way collection and return 201", async () => {
-            const mockInput = { dtn: 3, volume_ml: 200, expiration_date: "2024-12-31T00:00:00.000Z", hospital: "Hospital X", remarks: "" };
+            const mockInput = {
+                dtn: 3,
+                volume_ml: 200,
+                expiration_date: "2024-12-31T00:00:00.000Z",
+                hospital: "Hospital X",
+                remarks: "",
+            };
             const mockOutput = { ...mockInput, program: "MW", collected_by: "test-staff-uuid" };
 
             mockRawMilkCreate.mockResolvedValue(mockOutput);
@@ -175,7 +195,12 @@ describe("Collection API Unit Tests", () => {
 
     describe("POST /api/collections/walkin", () => {
         it("Should log a Walk-in collection and return 201 if within limit", async () => {
-            const mockInput = { dtn: 4, volume_ml: 100, expiration_date: "2024-12-31T00:00:00.000Z", remarks: "" };
+            const mockInput = {
+                dtn: 4,
+                volume_ml: 100,
+                expiration_date: "2024-12-31T00:00:00.000Z",
+                remarks: "",
+            };
             const mockOutput = { ...mockInput, program: "WI", collected_by: "test-staff-uuid" };
 
             mockRawMilkAggregate.mockResolvedValue({ _sum: { volume_ml: 500 } });
@@ -192,7 +217,12 @@ describe("Collection API Unit Tests", () => {
         });
 
         it("Should return 400 if volume is less than 30 or greater than 240", async () => {
-            const mockInput = { dtn: 4, volume_ml: 20, expiration_date: "2024-12-31T00:00:00.000Z", remarks: "" };
+            const mockInput = {
+                dtn: 4,
+                volume_ml: 20,
+                expiration_date: "2024-12-31T00:00:00.000Z",
+                remarks: "",
+            };
 
             const res = await request(app)
                 .post("/api/collections/walkin")
@@ -204,7 +234,12 @@ describe("Collection API Unit Tests", () => {
         });
 
         it("Should return 400 if daily limit exceeded", async () => {
-            const mockInput = { dtn: 4, volume_ml: 150, expiration_date: "2024-12-31T00:00:00.000Z", remarks: "" };
+            const mockInput = {
+                dtn: 4,
+                volume_ml: 150,
+                expiration_date: "2024-12-31T00:00:00.000Z",
+                remarks: "",
+            };
 
             // 700 + 150 = 850 > 800
             mockRawMilkAggregate.mockResolvedValue({ _sum: { volume_ml: 700 } });
@@ -215,14 +250,16 @@ describe("Collection API Unit Tests", () => {
                 .send(mockInput);
 
             expect(res.status).toBe(400);
-            expect(res.body.error).toBe("Collection exceeds daily limit. Current total today is 700 ml.");
+            expect(res.body.error).toBe(
+                "Collection exceeds daily limit. Current total today is 700 ml.",
+            );
         });
     });
 
-describe("PUT /api/collections/:ctn", () => {
+    describe("PUT /api/collections/:ctn", () => {
         it("Should successfully update collection data", async () => {
             const updatedRecord = { ctn: 1, volume_ml: 150, hospital: "New Hospital" };
-            
+
             // We only need to mock the update now
             mockRawMilkUpdate.mockResolvedValue(updatedRecord);
 
@@ -238,7 +275,7 @@ describe("PUT /api/collections/:ctn", () => {
         });
 
         it("Should return 404 if the collection to update doesn't exist", async () => {
-            mockRawMilkUpdate.mockRejectedValue({ code: 'P2025' });
+            mockRawMilkUpdate.mockRejectedValue({ code: "P2025" });
 
             const res = await request(app)
                 .put("/api/collections/999")
@@ -265,7 +302,7 @@ describe("PUT /api/collections/:ctn", () => {
         });
 
         it("Should return 404 if the collection to delete doesn't exist", async () => {
-            mockRawMilkDelete.mockRejectedValue({ code: 'P2025' });
+            mockRawMilkDelete.mockRejectedValue({ code: "P2025" });
 
             const res = await request(app)
                 .delete("/api/collections/999")
@@ -299,7 +336,9 @@ describe("PUT /api/collections/:ctn", () => {
 
             expect(res.status).toBe(400);
             // Updated to match your server's actual response
-            expect(res.body.error).toBe("Invalid milk status. Allowed values are: good, contaminated, discarded, expired.");
+            expect(res.body.error).toBe(
+                "Invalid milk status. Allowed values are: good, contaminated, discarded, expired.",
+            );
         });
     });
 
@@ -324,7 +363,9 @@ describe("PUT /api/collections/:ctn", () => {
                 .send({ qat_status: "maybe" });
 
             expect(res.status).toBe(400);
-            expect(res.body.error).toBe("Invalid QAT status. Allowed values are: pending, pass, fail.");
+            expect(res.body.error).toBe(
+                "Invalid QAT status. Allowed values are: pending, pass, fail.",
+            );
         });
     });
 });

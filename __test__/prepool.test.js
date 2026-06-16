@@ -2,14 +2,14 @@ import { describe, it, expect, jest, beforeEach, beforeAll } from "@jest/globals
 import request from "supertest";
 import express from "express";
 import cookieParser from "cookie-parser";
-import prepoolRouter from "../routes/prepool.router.js";
+import prepoolRouter from "../src/v2/processing/prepool.router.js";
 
 // --- Mocking Prisma ---
 const mockRawMilkFindUnique = jest.fn();
 const mockRawMilkUpdate = jest.fn();
 const mockUserFindUniqueOrThrow = jest.fn();
 
-jest.mock("../db/db.ts", () => {
+jest.mock("../lib/db/db.ts", () => {
     return {
         __esModule: true,
         prisma: {
@@ -19,22 +19,22 @@ jest.mock("../db/db.ts", () => {
             },
             user: {
                 findUniqueOrThrow: (...args) => mockUserFindUniqueOrThrow(...args),
-            }
-        }
-    }
+            },
+        },
+    };
 });
 
 // --- Mocking JWT for Auth Middleware ---
 const mockJwtVerify = jest.fn();
 
-jest.mock('jsonwebtoken', () => {
+jest.mock("jsonwebtoken", () => {
     return {
         __esModule: true,
         default: {
             verify: (...args) => mockJwtVerify(...args),
         },
         verify: (...args) => mockJwtVerify(...args),
-    }
+    };
 });
 
 // --- Setup Express App ---
@@ -50,17 +50,16 @@ describe("Pre-Pooling API Unit Tests", () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        
+
         mockJwtVerify.mockReturnValue({ user_id: "test-staff-uuid" });
         mockUserFindUniqueOrThrow.mockResolvedValue({ user_id: "test-staff-uuid", role: "staff" });
     });
 
     describe("PATCH /raw-milk/:ctn/qat", () => {
-        
         it("Should update QAT status to 'pass' and keep milk_status as 'good'", async () => {
             const oldMilk = { ctn: 1, milk_status: "good", remarks: "" };
             const updatedMilk = { ctn: 1, qat_status: "pass", milk_status: "good" };
-            
+
             mockRawMilkFindUnique.mockResolvedValue(oldMilk);
             mockRawMilkUpdate.mockResolvedValue(updatedMilk);
 
@@ -77,7 +76,7 @@ describe("Pre-Pooling API Unit Tests", () => {
         it("Should update QAT status to 'fail' and automatically change milk_status to 'discarded'", async () => {
             const oldMilk = { ctn: 2, milk_status: "good", remarks: "" };
             const updatedMilk = { ctn: 2, qat_status: "fail", milk_status: "discarded" };
-            
+
             mockRawMilkFindUnique.mockResolvedValue(oldMilk);
             mockRawMilkUpdate.mockResolvedValue(updatedMilk);
 
@@ -112,11 +111,10 @@ describe("Pre-Pooling API Unit Tests", () => {
     });
 
     describe("PATCH /raw-milk/:ctn/incident", () => {
-        
         it("Should record contamination and update milk_status to 'contaminated'", async () => {
             const oldMilk = { ctn: 3, milk_status: "good", volume_ml: 150, remarks: "Initial" };
             const updatedMilk = { ctn: 3, milk_status: "contaminated", volume_ml: 150 };
-            
+
             mockRawMilkFindUnique.mockResolvedValue(oldMilk);
             mockRawMilkUpdate.mockResolvedValue(updatedMilk);
 
@@ -133,7 +131,7 @@ describe("Pre-Pooling API Unit Tests", () => {
         it("Should record leakage and update volume_ml", async () => {
             const oldMilk = { ctn: 4, milk_status: "good", volume_ml: 200, remarks: "" };
             const updatedMilk = { ctn: 4, milk_status: "good", volume_ml: 180 };
-            
+
             mockRawMilkFindUnique.mockResolvedValue(oldMilk);
             mockRawMilkUpdate.mockResolvedValue(updatedMilk);
 

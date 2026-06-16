@@ -1,27 +1,27 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import Swagger from "./lib/swagger.lib.js";
+import Swagger from "./config/swagger.lib.js";
 import morgan from "morgan";
 
 dotenv.config();
 
-import UserRouter from "./routes/user.router.js";
-import AuthRouter from "./routes/auth.router.js";
-import PoolingRouter from "./routes/pooling.router.js";
-import AuditLogRouter from "./routes/auditLog.router.js";
-import DonorRouter from "./routes/donor.router.js";
-import PrePoolRouter from "./routes/prepool.router.js";
-import CollectionRouter from "./routes/collection.router.js";
-import ReservationRouter from "./routes/reservation.router.js";
-import DispensingRouter from "./routes/dispensing.router.js";
-import BeneficiaryRouter from "./routes/beneficiary.router.js";
-import NotificationRouter from "./routes/notification.router.js";
-import PasteurizationRouter from "./routes/pasteurization.router.js";
+import UserRouter from "./src/v2/users/user.router.js";
+import AuthRouter from "./src/v2/auth/auth.router.js";
+import PoolingRouter from "./src/v2/processing/pooling.router.js";
+import AuditLogRouter from "./src/v2/audits/auditLog.router.js";
+import DonorRouter from "./src/v2/donors/donor.router.js";
+import PrePoolRouter from "./src/v2/processing/prepool.router.js";
+import CollectionRouter from "./src/v2/collection/collection.router.js";
+import ReservationRouter from "./src/v2/reservation/reservation.router.js";
+import DispensingRouter from "./src/v2/dispensing/dispensing.router.js";
+import BeneficiaryRouter from "./src/v2/beneficiaries/beneficiary.router.js";
+import NotificationRouter from "./src/v2/notifications/notification.router.js";
+import PasteurizationRouter from "./src/v2/processing/pasteurization.router.js";
 
-import { globalErrorHandler } from "./middleware/errorHandler.js";
+import { globalErrorHandler } from "./src/middleware/errorHandler.js";
 
-import { CheckExpirationJob } from "./service/expiration.service.js";
+import { CheckExpirationJob } from "./src/shared/service/expiration.service.js";
 
 const port = process.env.PORT || 5000;
 const app = express();

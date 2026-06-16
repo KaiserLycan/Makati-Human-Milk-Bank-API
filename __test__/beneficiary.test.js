@@ -2,7 +2,7 @@ import { describe, it, expect, jest } from "@jest/globals";
 import request from "supertest";
 import express from "express";
 import cookieParser from "cookie-parser";
-import BeneficiaryRouter from "../routes/beneficiary.router.js";
+import BeneficiaryRouter from "../src/v2/beneficiaries/beneficiary.router.js";
 
 const mockJwtVerify = jest.fn();
 const mockFindUniqueUser = jest.fn();
@@ -14,7 +14,7 @@ const mockDeleteBeneficiary = jest.fn();
 const mockSendApproval = jest.fn();
 const mockSendRejection = jest.fn();
 
-jest.mock("../service/email.service.js", () => ({
+jest.mock("../src/shared/service/email.service.js", () => ({
     SendApproval: (...args) => mockSendApproval(...args),
     SendRejection: (...args) => mockSendRejection(...args),
 }));
@@ -26,7 +26,7 @@ jest.mock("jsonwebtoken", () => ({
     },
 }));
 
-jest.mock("../db/db.ts", () => ({
+jest.mock("../lib/db/db.ts", () => ({
     prisma: {
         user: {
             findUniqueOrThrow: (...args) => mockFindUniqueUser(...args),
