@@ -1,58 +1,72 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import Swagger from "./config/swagger.lib.js";
 import morgan from "morgan";
+import Swagger from "./configuration/swagger.js";
+import { globalErrorHandler } from "./middleware/errorHandler.js";
+import { initializeCronJobs } from "./jobs/index.js";
+import { subToAuditLogs } from "./services/audit.services.js";
+import { logger } from "./library/utils/logger.js";
+
+import UserRouter from "./routers/user.routers.js";
+import AuthRouter from "./routers/auth.routers.js";
+import AuditLogRouter from "./routers/audit.routers.js";
+import DonorRouter from "./routers/donor.routers.js";
+import CollectionRouter from "./routers/collection.routers.js";
+import PoolingRouter from "./routers/pooling.routers.js";
+import PasteurizationRouter from "./routers/pasteurization.routers.js";
+import ReservationRouter from "./routers/reservation.routers.js";
+import DispensingRouter from "./routers/dispensing.routers.js";
+import BeneficiaryRouter from "./routers/beneficiary.routers.js";
+import NotificationRouter from "./routers/notification.routers.js";
+import ReportsRouter from "./routers/reports.routers.js";
+import DashboardRouter from "./routers/dashboard.routers.js";
 
 dotenv.config();
 
-import UserRouter from "./src/v1/users/user.router.js";
-import AuthRouter from "./src/v1/auth/auth.router.js";
-import PoolingRouter from "./src/v1/processing/pooling.router.js";
-import AuditLogRouter from "./src/v1/audits/auditLog.router.js";
-import DonorRouter from "./src/v1/donors/donor.router.js";
-import PrePoolRouter from "./src/v1/processing/prepool.router.js";
-import CollectionRouter from "./src/v1/collection/collection.router.js";
-import ReservationRouter from "./src/v1/reservation/reservation.router.js";
-import DispensingRouter from "./src/v1/dispensing/dispensing.router.js";
-import BeneficiaryRouter from "./src/v1/beneficiaries/beneficiary.router.js";
-import NotificationRouter from "./src/v1/notifications/notification.router.js";
-import PasteurizationRouter from "./src/v1/processing/pasteurization.router.js";
-import ReportsRouter from "./src/v1/dashboard and reports/reports.router.js";
-import DashboardRouter from "./src/v1/dashboard and reports/dashboard.router.js";
-
-import { globalErrorHandler } from "./src/middleware/errorHandler.js";
-
-import { CheckExpirationJob } from "./src/shared/service/expiration.service.js";
-
-const port = process.env.PORT || 5000;
 const app = express();
+const port = process.env.PORT || 5000;
 const morganFormat = process.env.NODE_ENV === "production" ? "combined" : "dev";
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(morgan(morganFormat));
+app.use(morgan(morganFormat, { stream: { write: (message) => logger.info(message.trim()) } }));
+
+const apiRoutes = {
+    "/api/auth": AuthRouter,
+    "/api/users": UserRouter,
+    "/api/donors": DonorRouter,
+    "/api/beneficiaries": BeneficiaryRouter,
+    "/api/collections": CollectionRouter,
+    "/api/pooling": PoolingRouter,
+    "/api/pasteurization": PasteurizationRouter,
+    "/api/reservations": ReservationRouter,
+    "/api/dispensing": DispensingRouter,
+    "/api/audit-logs": AuditLogRouter,
+    "/api/notifications": NotificationRouter,
+    "/api/reports": ReportsRouter,
+    "/api/dashboard": DashboardRouter,
+};
+
+for (const [path, router] of Object.entries(apiRoutes)) {
+    app.use(path, router);
+}
 
 Swagger(app, port);
 
-app.use("/api/v1/auth", AuthRouter);
-app.use("/api/users", UserRouter);
-app.use("/api/pooling", PoolingRouter);
-app.use("/api/audit-logs", AuditLogRouter);
-app.use("/api/donors", DonorRouter);
-app.use("/api/prepool", PrePoolRouter);
-app.use("/api/collections", CollectionRouter);
-app.use("/api/pasteurization", PasteurizationRouter);
-app.use("/api/reservations", ReservationRouter);
-app.use("/api/dispensing", DispensingRouter);
-app.use("/api/beneficiaries", BeneficiaryRouter);
-app.use("/api/notifications", NotificationRouter);
-app.use("/api/reports", ReportsRouter);
-app.use("/api/dashboard", DashboardRouter);
 app.use(globalErrorHandler);
 
-CheckExpirationJob();
+const startServer = async () => {
+    try {
+        await subToAuditLogs();
+        initializeCronJobs();
+        app.listen(port, () => {
+            logger.info(`Server started on http://localhost:${port}`);
+        });
+    } catch (error) {
+        logger.crit("Failed to start server:", error);
+        process.exit(1);
+    }
+};
 
-app.listen(port, () => {
-    console.log(`Server started on http://localhost:${port}`);
-});
+startServer();

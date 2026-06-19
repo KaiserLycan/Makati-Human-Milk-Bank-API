@@ -5,7 +5,7 @@ import eslintConfigPrettier from "eslint-config-prettier";
 
 export default [
     {
-        ignores: ["lib/db/generated/prisma/**"],
+        ignores: ["library/db/generated/prisma/**"],
     },
     {
         languageOptions: {
@@ -35,10 +35,15 @@ export default [
     },
     {
         rules: {
-            complexity: ["warn", 20],
+            complexity: ["warn", 15],
             "no-unused-vars": "warn",
             "no-undef": "warn",
         },
     },
     eslintConfigPrettier,
+    {
+        rules: {
+            quotes: ["error", "double", { allowTemplateLiterals: true }],
+        },
+    },
 ];
