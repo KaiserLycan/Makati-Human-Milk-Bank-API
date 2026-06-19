@@ -1,12 +1,39 @@
 import { prisma } from "../library/db/db.ts";
 import { omit } from "../configuration/constants.js";
 import { fetchActiveUsers } from "./user.services.js";
+import { clearCachedData, fetchCachedData } from "./redis.services.js";
 
-export const fetchNotifications = async (user_id) => {
-    return prisma.notification.findMany({
-        where: { recipient_id: user_id },
+const NOTIFICATION_CACHE_KEY = "notifications:*";
+
+export const fetchNotificationsByUserId = async (params) => {
+    const { user_id, is_read } = params;
+    const key = `notifications:${JSON.stringify(params)}`;
+    const cachedData = await fetchCachedData(key);
+    if (cachedData) return cachedData;
+
+    const notifications = await prisma.notification.findMany({
+        where: {
+            recipient_id: user_id,
+            ...(is_read && { is_read }),
+        },
         omit,
     });
+
+    await cachedData(key, notifications);
+    return notifications;
+};
+
+export const readNotification = async ({ nid, user_id }) => {
+    const updatedNotification = prisma.notification.update({
+        where: { nid, recipient_id: user_id },
+        data: {
+            is_read: true,
+            read_at: new Date(),
+        },
+    });
+
+    await clearCachedData(NOTIFICATION_CACHE_KEY);
+    return updatedNotification;
 };
 
 export const buildStaffNotifications = async (entityType, ids, messageTemplate) => {
@@ -90,44 +117,10 @@ export const NotifyStaffNewApplication = async (
             ),
         );
 
+        await clearCachedData(NOTIFICATION_CACHE_KEY);
         return notifications;
     } catch (error) {
         console.error("Error notifying staff of new application:", error);
-        throw error;
-    }
-};
-
-export const GetStaffNotifications = async (staffId, isRead = null) => {
-    try {
-        const where = { recipient_id: staffId };
-        if (isRead !== null) {
-            where.is_read = isRead;
-        }
-
-        const notifications = await prisma.notification.findMany({
-            where,
-            orderBy: { created_at: "desc" },
-        });
-
-        return notifications;
-    } catch (error) {
-        console.error("Error fetching staff 11 notifications:", error);
-        throw error;
-    }
-};
-
-export const MarkNotificationAsRead = async (notificationId) => {
-    try {
-        const notification = await prisma.notification.update({
-            where: { nid: notificationId },
-            data: {
-                is_read: true,
-                read_at: new Date(),
-            },
-        });
-        return notification;
-    } catch (error) {
-        console.error("Error marking notification as read:", error);
         throw error;
     }
 };

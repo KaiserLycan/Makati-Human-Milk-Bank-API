@@ -1,10 +1,12 @@
 import { Router } from "express";
 import { protectRoute } from "../middleware/protectRoute.js";
 import {
-    GetNotifications,
-    MarkNotificationRead,
+    getNotifications,
+    readNotification,
     triggerExpirationCheck,
 } from "../controllers/notification.controllers.js";
+import { validateRequest } from "../middleware/validate.js";
+import { IdSchema } from "../schemas/id.schemas.js";
 
 const router = Router();
 
@@ -24,7 +26,7 @@ const router = Router();
  *       401:
  *         description: Unauthorized.
  */
-router.get("/", protectRoute, GetNotifications);
+router.get("/", protectRoute, getNotifications);
 
 /**
  * @swagger
@@ -50,7 +52,14 @@ router.get("/", protectRoute, GetNotifications);
  *       404:
  *         description: Not Found.
  */
-router.patch("/:nid/read", protectRoute, MarkNotificationRead);
+router.patch(
+    "/:nid",
+    protectRoute,
+    validateRequest({
+        params: IdSchema,
+    }),
+    readNotification,
+);
 
 /**
  * @swagger
