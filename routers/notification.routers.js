@@ -8,10 +8,66 @@ import {
 
 const router = Router();
 
+/**
+ * @swagger
+ * /notifications:
+ *   get:
+ *     tags:
+ *       - Notifications
+ *     summary: Get notifications
+ *     description: Retrieve a list of notifications for the authenticated user.
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of notifications.
+ *       401:
+ *         description: Unauthorized.
+ */
 router.get("/", protectRoute, GetNotifications);
 
+/**
+ * @swagger
+ * /notifications/{nid}/read:
+ *   patch:
+ *     tags:
+ *       - Notifications
+ *     summary: Mark notification as read
+ *     description: Mark a specific notification as read.
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: nid
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Notification marked as read successfully.
+ *       401:
+ *         description: Unauthorized.
+ *       404:
+ *         description: Not Found.
+ */
 router.patch("/:nid/read", protectRoute, MarkNotificationRead);
 
+/**
+ * @swagger
+ * /notifications/trigger-expiration:
+ *   post:
+ *     tags:
+ *       - Notifications
+ *     summary: Trigger expiration check
+ *     description: Manually trigger a check for expired milk.
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Expiration check triggered successfully.
+ *       401:
+ *         description: Unauthorized.
+ */
 router.post("/trigger-expiration", protectRoute, triggerExpirationCheck);
 
 export default router;

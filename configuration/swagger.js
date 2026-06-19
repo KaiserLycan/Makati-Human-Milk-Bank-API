@@ -32,11 +32,6 @@ export default function (app, port) {
                     description: "API for managing milk collections",
                 },
                 {
-                    name: "Pre-Pooling",
-                    description:
-                        "API for managing pre-pooling tasks (raw milk quality testing and incidents)",
-                },
-                {
                     name: "Pooling",
                     description: "API for pooling of raw milk",
                 },
@@ -81,7 +76,20 @@ export default function (app, port) {
                 },
             ],
         },
-        apis: ["./src/v1/**/*.router.js"],
+        apis: [
+            "./routers/audit.routers.js",
+            "./routers/auth.routers.js",
+            "./routers/beneficiary.routers.js",
+            "./routers/collection.routers.js",
+            "./routers/dashboard.routers.js",
+            "./routers/dispensing.routers.js",
+            "./routers/donor.routers.js",
+            "./routers/notification.routers.js",
+            "./routers/pasteurization.routers.js",
+            "./routers/pooling.routers.js",
+            "./routers/reservation.routers.js",
+            "./routers/user.routers.js",
+        ],
     };
 
     const uiOptions = {
