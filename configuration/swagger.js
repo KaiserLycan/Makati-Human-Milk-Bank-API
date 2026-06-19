@@ -55,6 +55,10 @@ export default function (app, port) {
                     name: "Notifications",
                     description: "API for managing 11 notifications",
                 },
+                {
+                    name: "Reports",
+                    description: "API for generating reports",
+                },
             ],
             components: {
                 securitySchemes: {
@@ -87,6 +91,7 @@ export default function (app, port) {
             "./routers/notification.routers.js",
             "./routers/pasteurization.routers.js",
             "./routers/pooling.routers.js",
+            "./routers/reports.routers.js",
             "./routers/reservation.routers.js",
             "./routers/user.routers.js",
         ],

@@ -6,7 +6,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /dashboard/summary:
+ * /api/dashboard/summary:
  *   get:
  *     tags:
  *       - Dashboard
@@ -24,7 +24,7 @@ router.get("/summary", protectRoute, GetDashboardMetrics);
 
 /**
  * @swagger
- * /dashboard/trends:
+ * /api/dashboard/trends:
  *   get:
  *     tags:
  *       - Dashboard

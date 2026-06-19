@@ -6,7 +6,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /auth/login:
+ * /api/auth/login:
  *   post:
  *     tags:
  *       - Authentication
@@ -33,7 +33,7 @@ router.post("/login", login);
 
 /**
  * @swagger
- * /auth/logout:
+ * /api/auth/logout:
  *   post:
  *     tags:
  *       - Authentication

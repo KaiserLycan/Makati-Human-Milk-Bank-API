@@ -6,7 +6,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /dispensing:
+ * /api/dispensing:
  *   get:
  *     tags:
  *       - Dispensing
@@ -24,7 +24,7 @@ router.get("/", protectRoute, GetDispensingQueue);
 
 /**
  * @swagger
- * /dispensing/{rid}/dispense:
+ * /api/dispensing/{rid}/dispense:
  *   patch:
  *     tags:
  *       - Dispensing

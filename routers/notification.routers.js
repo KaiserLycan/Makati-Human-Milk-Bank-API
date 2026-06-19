@@ -10,7 +10,7 @@ const router = Router();
 
 /**
  * @swagger
- * /notifications:
+ * /api/notifications:
  *   get:
  *     tags:
  *       - Notifications
@@ -28,7 +28,7 @@ router.get("/", protectRoute, GetNotifications);
 
 /**
  * @swagger
- * /notifications/{nid}/read:
+ * /api/notifications/{nid}/read:
  *   patch:
  *     tags:
  *       - Notifications
@@ -54,7 +54,7 @@ router.patch("/:nid/read", protectRoute, MarkNotificationRead);
 
 /**
  * @swagger
- * /notifications/trigger-expiration:
+ * /api/notifications/trigger-expiration:
  *   post:
  *     tags:
  *       - Notifications
