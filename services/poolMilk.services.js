@@ -37,12 +37,23 @@ export const getMilkPools = async (params) => {
     const cachedData = await fetchCachedData(key);
     if (cachedData) return cachedData;
 
-    const where = { milk_status, qat_status };
+    const where = {
+        ...(milk_status && { milk_status }),
+        ...(qat_status && { qat_status }),
+    };
 
     const [total, pools] = await prisma.$transaction([
         prisma.pool_milk.count({ where }),
         prisma.pool_milk.findMany({
             where,
+            include: {
+                pooled_by_user: {
+                    select: {
+                        user_id: true,
+                        name: true,
+                    },
+                },
+            },
             orderBy: { [sortBy]: sortOrder },
             skip: (page - 1) * limit,
             take: limit,
@@ -51,7 +62,10 @@ export const getMilkPools = async (params) => {
     ]);
 
     const responseData = {
-        data: pools,
+        data: pools.map(({ pooled_by_user, ...pool }) => ({
+            ...pool,
+            pooled_by: pooled_by_user,
+        })),
         meta: {
             total,
             page,
@@ -69,14 +83,39 @@ export const getMilkPool = async (pid) => {
     const cachedData = await fetchCachedData(key);
     if (cachedData) return cachedData;
 
-    const pool = await prisma.pool_milk.findUniqueOrThrow({
+    const { pooled_by_user, ...pool } = await prisma.pool_milk.findUniqueOrThrow({
         where: { pid },
-        include: { raw_milks: true },
+        include: {
+            raw_milk: {
+                select: {
+                    ctn: true,
+                    donor: {
+                        select: {
+                            dtn: true,
+                            name: true,
+                        },
+                    },
+                    expiration_date: true,
+                    milk_status: true,
+                },
+            },
+            pooled_by_user: {
+                select: {
+                    user_id: true,
+                    name: true,
+                },
+            },
+        },
         omit,
     });
 
-    await cacheData(key, pool);
-    return pool;
+    const response = {
+        ...pool,
+        pooled_by: pooled_by_user,
+    };
+
+    await cacheData(key, response);
+    return response;
 };
 
 export const createMilkPool = async (data) => {
