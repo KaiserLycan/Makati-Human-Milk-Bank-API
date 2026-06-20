@@ -2,6 +2,11 @@ import { prisma } from "../library/db/db.ts";
 import { AppError } from "../library/classes/AppError.js";
 import { omit } from "../configuration/constants.js";
 import { cacheData, clearCachedData, fetchCachedData } from "./redis.services.js";
+import {
+    deleteImageFromCloudinary,
+    uploadDonorProfileToCloudinary,
+} from "./cloudinary.services.js";
+import { deepmerge } from "deepmerge-ts";
 
 const DONOR_CACHE_KEY = "donors:*";
 
@@ -61,23 +66,82 @@ export const fetchDonorDetails = async (dtn) => {
     return donor;
 };
 
-export const registerDonor = async (data) => {
-    const donor = await prisma.donor.create({
-        data,
-        omit,
-    });
-    await clearCachedData(DONOR_CACHE_KEY);
-    return donor;
+export const registerDonor = async (req) => {
+    const { name, email, phone, birth_date, profile } = req.body;
+    const modified_by = req.user?.user_id;
+    let updatedProfile;
+
+    try {
+        updatedProfile = await uploadDonorProfileToCloudinary(req, profile);
+
+        const donor = await prisma.donor.create({
+            data: {
+                name,
+                email,
+                phone,
+                birth_date,
+                profile: updatedProfile,
+                modified_by,
+            },
+            omit,
+        });
+
+        await clearCachedData(DONOR_CACHE_KEY);
+        return donor;
+    } catch (error) {
+        if (updatedProfile?.personal_information?.profile_image_url) {
+            await deleteImageFromCloudinary(updatedProfile.personal_information.profile_image_url);
+        }
+        throw error;
+    }
 };
 
-export const updateDonor = async (dtn, data) => {
-    const donor = await prisma.donor.update({
-        where: { dtn },
-        data,
-        omit,
-    });
-    await clearCachedData(DONOR_CACHE_KEY);
-    return donor;
+export const updateDonor = async (req) => {
+    const { dtn } = req.params;
+    const modified_by = req.user?.user_id;
+    let donorData;
+
+    try {
+        const existingDonor = await fetchDonorDetails(dtn);
+
+        if (req.body.email && req.body.email !== existingDonor.email) {
+            const anotherDonorWithSameEmail = await prisma.donor.findFirst({
+                where: {
+                    email: req.body.email,
+                    dtn: { not: dtn },
+                },
+            });
+
+            if (anotherDonorWithSameEmail) {
+                throw new AppError("Email is already in use by another donor.", 400);
+            }
+        }
+
+        const updatedProfile = deepmerge(existingDonor.profile, req.body.profile);
+        donorData = { ...req.body, profile: updatedProfile, modified_by };
+
+        donorData.profile = await uploadDonorProfileToCloudinary(
+            req,
+            donorData.profile,
+            existingDonor.profile,
+        );
+
+        const updatedDonor = await prisma.donor.update({
+            where: { dtn },
+            data: donorData,
+            omit,
+        });
+
+        await clearCachedData(DONOR_CACHE_KEY);
+        return updatedDonor;
+    } catch (error) {
+        if (donorData?.profile?.personal_information?.profile_image_url) {
+            await deleteImageFromCloudinary(
+                donorData.profile.personal_information.profile_image_url,
+            );
+        }
+        throw error;
+    }
 };
 
 export const updateDonorApplicationStatus = async ({ dtn, application_status, modified_by }) => {

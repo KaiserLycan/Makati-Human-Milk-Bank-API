@@ -10,8 +10,6 @@ import {
 import { sendBeneficiaryApproval, sendBeneficiaryRejection } from "../services/email.services.js";
 import { NotifyStaffNewApplication } from "../services/notification.services.js";
 import { APIResponse } from "../library/classes/APIResponse.js";
-import { uploadBeneficiaryProfileToCloudinary } from "../services/cloudinary.services.js";
-import { deepmerge } from "deepmerge-ts";
 
 export const queryBeneficiaries = async (req, res) => {
     const beneficiaries = await fetchBeneficiaries(req.query);
@@ -27,9 +25,8 @@ export const viewBeneficiaryProfile = async (req, res) => {
 };
 
 export const registerBeneficiary = async (req, res) => {
+    const beneficiary = await createBeneficiaryService(req);
     const modified_by = req.user?.user_id;
-    await uploadBeneficiaryProfileToCloudinary(req, req.body.profile);
-    const beneficiary = await createBeneficiaryService({ ...req.body, modified_by });
     await NotifyStaffNewApplication(beneficiary.name, "beneficiary", beneficiary.bid, modified_by);
     return res
         .status(201)
@@ -37,17 +34,7 @@ export const registerBeneficiary = async (req, res) => {
 };
 
 export const updateBeneficiaryInformation = async (req, res) => {
-    const { bid } = req.params;
-    const modified_by = req.user.user_id;
-    const existingBeneficiary = await fetchBeneficiaryDetails(bid);
-    const updatedProfile = deepmerge(existingBeneficiary.profile, req.body.profile);
-    const beneficiaryData = { ...req.body, profile: updatedProfile, modified_by };
-    await uploadBeneficiaryProfileToCloudinary(
-        req,
-        beneficiaryData.profile,
-        existingBeneficiary.profile,
-    );
-    const beneficiary = await updateBeneficiaryService(bid, beneficiaryData);
+    const beneficiary = await updateBeneficiaryService(req);
     return res
         .status(200)
         .json(new APIResponse(200, beneficiary, "Updated beneficiary successfully"));
@@ -75,7 +62,7 @@ export const rejectBeneficiary = async (req, res) => {
         application_status: "rejected",
         modified_by,
     });
-    await sendBeneficiaryRejection(updatedBeneficiary);
+    await sendBeneficiaryRejection(updatedBeneficiary.caregiver_email, updatedBeneficiary.name);
     return res
         .status(200)
         .json(new APIResponse(200, updatedBeneficiary, "Beneficiary has been rejected"));

@@ -1,11 +1,15 @@
 import express from "express";
 import { protectRoute } from "../middleware/protectRoute.js";
 import {
-    GetRequests,
-    GetRequest,
-    CreateRequest,
-    CancelRequest,
+    getRequests,
+    getRequestById,
+    createRequest,
+    cancelRequest,
 } from "../controllers/reservation.controllers.js";
+import { validateRequest } from "../middleware/validate.js";
+import { listQuerySchema } from "../schemas/query.schemas.js";
+import { requestQuerySchemas } from "../schemas/request.schemas.js";
+import { IdSchema } from "../schemas/id.schemas.js";
 
 const router = express.Router();
 
@@ -40,7 +44,14 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized.
  */
-router.get("/", protectRoute, GetRequests);
+router.get(
+    "/",
+    protectRoute,
+    validateRequest({
+        query: requestQuerySchemas,
+    }),
+    getRequests,
+);
 
 /**
  * @swagger
@@ -67,7 +78,14 @@ router.get("/", protectRoute, GetRequests);
  *       404:
  *         description: Not Found.
  */
-router.get("/:rid", protectRoute, GetRequest);
+router.get(
+    "/:rid",
+    protectRoute,
+    validateRequest({
+        params: IdSchema,
+    }),
+    getRequestById,
+);
 
 /**
  * @swagger
@@ -93,7 +111,7 @@ router.get("/:rid", protectRoute, GetRequest);
  *       401:
  *         description: Unauthorized.
  */
-router.post("/", protectRoute, CreateRequest);
+router.post("/", protectRoute, createRequest);
 
 /**
  * @swagger
@@ -114,12 +132,12 @@ router.post("/", protectRoute, CreateRequest);
  *         example: "12345"
  *     responses:
  *       200:
- *         description: Reservation cancelled successfully.
+ *         description: Reservation canceled successfully.
  *       401:
  *         description: Unauthorized.
  *       404:
  *         description: Not Found.
  */
-router.patch("/:rid/cancel", protectRoute, CancelRequest);
+router.patch("/:rid/cancel", protectRoute, cancelRequest);
 
 export default router;

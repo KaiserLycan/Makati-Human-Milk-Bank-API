@@ -9,7 +9,6 @@ import {
     validateCredentials,
 } from "../services/user.services.js";
 import { APIResponse } from "../library/classes/APIResponse.js";
-import { uploadImageToCloudinary } from "../services/cloudinary.services.js";
 
 export const getUsers = async (req, res) => {
     const users = await queryUsers(req.query);
@@ -29,23 +28,12 @@ export const getProfile = async (req, res) => {
 };
 
 export const createUser = async (req, res) => {
-    const modified_by = req.user.user_id;
-    if (req.file) {
-        const image = await uploadImageToCloudinary(req.file.buffer, "user_profile");
-        req.body.profile_image_url = image.secure_url;
-    }
-    const newUser = await registerNewUser({ ...req.body, modified_by });
+    const newUser = await registerNewUser(req);
     return res.status(201).json(new APIResponse(201, newUser, "Successfully added user"));
 };
 
 export const updateUser = async (req, res) => {
-    const { user_id } = req.params;
-    const modified_by = req.user.user_id;
-    if (req.file) {
-        const image = await uploadImageToCloudinary(req.file.buffer, "user_profile");
-        req.body.profile_image_url = image.secure_url;
-    }
-    const updatedUser = await updateUserService(user_id, { ...req.body, modified_by });
+    const updatedUser = await updateUserService(req);
     return res.status(200).json(new APIResponse(200, updatedUser, "Successfully updated user"));
 };
 

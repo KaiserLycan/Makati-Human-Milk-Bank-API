@@ -1,28 +1,28 @@
 import {
     createCollection as createCollectionService,
     deleteCollection as deleteCollectionService,
-    getCollections,
-    getCollection,
+    getRawMilk,
+    getRawMilkById,
     updateCollection as updateCollectionService,
     updateMilkStatus as updateMilkStatusService,
     updateQATStatus as updateQATStatusService,
 } from "../services/rawMilk.services.js";
 import { APIResponse } from "../library/classes/APIResponse.js";
 
-export const queryCollections = async (req, res) => {
-    const collections = await getCollections(req.query);
+export const getCollections = async (req, res) => {
+    const collections = await getRawMilk(req.query);
     return res.status(200).json(new APIResponse(200, collections, "Query Successful"));
 };
 
-export const viewCollection = async (req, res) => {
+export const getCollectionById = async (req, res) => {
     const { ctn } = req.params;
-    const collection = await getCollection(parseInt(ctn));
+    const collection = await getRawMilkById(parseInt(ctn));
     return res
         .status(200)
         .json(new APIResponse(200, collection, "Successfully retrieved collection."));
 };
 
-export const logCollection = async (req, res) => {
+export const createCollection = async (req, res) => {
     const modified_by = req.user.user_id;
     const newCollection = await createCollectionService({
         ...req.body,

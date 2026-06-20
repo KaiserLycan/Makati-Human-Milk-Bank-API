@@ -2,6 +2,11 @@ import { prisma } from "../library/db/db.ts";
 import { omit } from "../configuration/constants.js";
 import { AppError } from "../library/classes/AppError.js";
 import { cacheData, clearCachedData, fetchCachedData } from "./redis.services.js";
+import {
+    deleteImageFromCloudinary,
+    uploadBeneficiaryProfileToCloudinary,
+} from "./cloudinary.services.js";
+import { deepmerge } from "deepmerge-ts";
 
 const BENEFICIARY_CACHE_KEY = "beneficiaries:*";
 
@@ -61,23 +66,67 @@ export const fetchBeneficiaryDetails = async (bid) => {
     return beneficiary;
 };
 
-export const createBeneficiary = async (data) => {
-    const beneficiary = await prisma.beneficiary.create({
-        data,
-        omit,
-    });
-    await clearCachedData(BENEFICIARY_CACHE_KEY);
-    return beneficiary;
+export const createBeneficiary = async (req) => {
+    const modified_by = req.user?.user_id;
+    let profile;
+
+    try {
+        profile = await uploadBeneficiaryProfileToCloudinary(req, req.body.profile);
+        const beneficiary = await prisma.beneficiary.create({
+            data: { ...req.body, profile, modified_by },
+            omit,
+        });
+        await clearCachedData(BENEFICIARY_CACHE_KEY);
+        return beneficiary;
+    } catch (error) {
+        if (profile?.profile_image_url) {
+            await deleteImageFromCloudinary(profile.profile_image_url);
+        }
+        if (profile?.prescription_details) {
+            await deleteImageFromCloudinary(profile.prescription_details);
+        }
+        if (profile?.clinical_abstract) {
+            await deleteImageFromCloudinary(profile.clinical_abstract);
+        }
+        throw error;
+    }
 };
 
-export const updateBeneficiary = async (bid, data) => {
-    const beneficiary = await prisma.beneficiary.update({
-        where: { bid },
-        data,
-        omit,
-    });
-    await clearCachedData(BENEFICIARY_CACHE_KEY);
-    return beneficiary;
+export const updateBeneficiary = async (req) => {
+    const { bid } = req.params;
+    const modified_by = req.user.user_id;
+    let beneficiaryData;
+
+    try {
+        const existingBeneficiary = await fetchBeneficiaryDetails(bid);
+        const updatedProfile = deepmerge(existingBeneficiary.profile, req.body.profile);
+        beneficiaryData = { ...req.body, profile: updatedProfile, modified_by };
+
+        beneficiaryData.profile = await uploadBeneficiaryProfileToCloudinary(
+            req,
+            beneficiaryData.profile,
+            existingBeneficiary.profile,
+        );
+
+        const beneficiary = await prisma.beneficiary.update({
+            where: { bid },
+            data: beneficiaryData,
+            omit,
+        });
+        await clearCachedData(BENEFICIARY_CACHE_KEY);
+        return beneficiary;
+    } catch (error) {
+        if (beneficiaryData?.profile?.profile_image_url) {
+            await deleteImageFromCloudinary(beneficiaryData.profile.profile_image_url);
+        }
+        if (beneficiaryData?.profile?.prescription_details) {
+            await deleteImageFromCloudinary(beneficiaryData.profile.prescription_details);
+        }
+        if (beneficiaryData?.profile?.clinical_abstract) {
+            await deleteImageFromCloudinary(beneficiaryData.profile.clinical_abstract);
+        }
+        throw error;
+    }
 };
 
 export const updateBeneficiaryApplicationStatus = async ({

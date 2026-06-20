@@ -1,105 +1,20 @@
-export const GetRequest = async (req, res) => {
-    try {
-        const { rid } = req.params;
+import { requestQuery, retrieveRequestInformation } from "../services/request.services.js";
+import { APIResponse } from "../library/classes/APIResponse.js";
 
-        const request = await prisma.request.findUniqueOrThrow({
-            where: { rid: parseInt(rid) },
-            include: {
-                beneficiary: {
-                    select: {
-                        bid: true,
-                        name: true,
-                        caregiver: true,
-                        caregiver_email: true,
-                        caregiver_phone: true,
-                        feeding_requirement_ml: true,
-                    },
-                },
-                request_bottles: {
-                    include: {
-                        pasteurized_milk: {
-                            select: {
-                                btl_id: true,
-                                volume_ml: true,
-                                expiration_date: true,
-                                dispense_status: true,
-                            },
-                        },
-                    },
-                },
-            },
-        });
-
-        return res.status(200).json(request);
-    } catch (error) {
-        if (error.code === "P2025") return res.status(404).json({ error: "Request not found." });
-        console.log("Error in GetRequest Controller:");
-        console.log(error);
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
+export const getRequestById = async (req, res) => {
+    const { rid } = req.params;
+    const request = await retrieveRequestInformation({ rid });
+    return res
+        .status(200)
+        .json(new APIResponse(200, request, "Retrieved request information  successful"));
 };
 
-export const GetRequests = async (req, res) => {
-    try {
-        const { request_status, page = 1, limit = 10 } = req.query;
-
-        const pageNum = parseInt(page);
-        const limitNum = parseInt(limit);
-        const skip = (pageNum - 1) * limitNum;
-
-        const where = request_status ? { request_status } : undefined;
-
-        const [requests, total] = await Promise.all([
-            prisma.request.findMany({
-                where,
-                orderBy: { created_at: "asc" },
-                skip,
-                take: limitNum,
-                include: {
-                    beneficiary: {
-                        select: {
-                            bid: true,
-                            name: true,
-                            caregiver: true,
-                            caregiver_email: true,
-                            caregiver_phone: true,
-                            feeding_requirement_ml: true,
-                        },
-                    },
-                    request_bottles: {
-                        include: {
-                            pasteurized_milk: {
-                                select: {
-                                    btl_id: true,
-                                    volume_ml: true,
-                                    expiration_date: true,
-                                    dispense_status: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            }),
-            prisma.request.count({ where }),
-        ]);
-
-        return res.status(200).json({
-            data: requests,
-            meta: {
-                total,
-                page: pageNum,
-                limit: limitNum,
-                total_pages: Math.ceil(total / limitNum),
-            },
-        });
-    } catch (error) {
-        console.log("Error in GetRequests Controller:");
-        console.log(error);
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
+export const getRequests = async (req, res) => {
+    const requests = await requestQuery(req.query);
+    return res.status(200).json(new APIResponse(200, requests, "Query successful"));
 };
 
-export const CreateRequest = async (req, res) => {
+export const createRequest = async (req, res) => {
     try {
         const { bid, requested_vol_ml, hospital } = req.body;
         const user_id = req.user.user_id;
@@ -148,7 +63,7 @@ export const CreateRequest = async (req, res) => {
     }
 };
 
-export const CancelRequest = async (req, res) => {
+export const cancelRequest = async (req, res) => {
     try {
         const { rid } = req.params;
         const user_id = req.user.user_id;

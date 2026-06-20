@@ -1,8 +1,8 @@
 import express from "express";
 import {
-    queryCollections,
-    viewCollection,
-    logCollection,
+    getCollections,
+    getCollectionById,
+    createCollection,
     updateCollection,
     deleteCollection,
     updateMilkStatus,
@@ -150,7 +150,7 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized.
  */
-router.get("/", protectRoute, validateRequest({ query: collectionQuerySchema }), queryCollections);
+router.get("/", protectRoute, validateRequest({ query: collectionQuerySchema }), getCollections);
 
 /**
  * @swagger
@@ -177,7 +177,7 @@ router.get("/", protectRoute, validateRequest({ query: collectionQuerySchema }),
  *       404:
  *         description: Not Found.
  */
-router.get("/:ctn", protectRoute, validateRequest({ params: IdSchema }), viewCollection);
+router.get("/:ctn", protectRoute, validateRequest({ params: IdSchema }), getCollectionById);
 
 /**
  * @swagger
@@ -203,7 +203,7 @@ router.get("/:ctn", protectRoute, validateRequest({ params: IdSchema }), viewCol
  *       401:
  *         description: Unauthorized.
  */
-router.post("/", protectRoute, validateRequest({ body: collectionSchema }), logCollection);
+router.post("/", protectRoute, validateRequest({ body: collectionSchema }), createCollection);
 
 /**
  * @swagger

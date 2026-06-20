@@ -41,15 +41,33 @@ export const getPasteurizedMilkRecords = async (params) => {
     const [total, records] = await prisma.$transaction([
         prisma.pasteurized_milk.count({ where }),
         prisma.pasteurized_milk.findMany({
+            select: {
+                btl_id: true,
+                processed_by_user: {
+                    select: {
+                        user_id: true,
+                        name: true,
+                    },
+                },
+                processed_date: true,
+                batch_number: true,
+                bottle_sequence_number: true,
+                volume_ml: true,
+                bottle: true,
+                expiration_date: true,
+                mbt_status: true,
+                dispense_status: true,
+                milk_status: true,
+                remarks: true,
+            },
             where,
             orderBy: { [sortBy]: sortOrder },
             skip: (page - 1) * limit,
             take: limit,
-            omit,
         }),
     ]);
 
-    const responseData = {
+    const results = {
         data: records,
         meta: {
             total,
@@ -59,8 +77,8 @@ export const getPasteurizedMilkRecords = async (params) => {
         },
     };
 
-    await cacheData(key, responseData);
-    return responseData;
+    await cacheData(key, results);
+    return results;
 };
 
 export const getPasteurizedMilk = async (btl_id) => {
@@ -69,8 +87,26 @@ export const getPasteurizedMilk = async (btl_id) => {
     if (cachedData) return cachedData;
 
     const record = await prisma.pasteurized_milk.findUniqueOrThrow({
+        select: {
+            btl_id: true,
+            processed_by_user: {
+                select: {
+                    user_id: true,
+                    name: true,
+                },
+            },
+            processed_date: true,
+            batch_number: true,
+            bottle_sequence_number: true,
+            volume_ml: true,
+            bottle: true,
+            expiration_date: true,
+            mbt_status: true,
+            dispense_status: true,
+            milk_status: true,
+            remarks: true,
+        },
         where: { btl_id },
-        omit,
     });
 
     await cacheData(key, record);

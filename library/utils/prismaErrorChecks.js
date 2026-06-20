@@ -16,7 +16,8 @@ export const checkPrismaError = (error) => {
         throw new AppError(`A user with this ${targetField} already exists`, 409);
     }
 
-    if (error.code === "P2025") {
-        throw new AppError("Not found.", 404);
-    }
+    if (error.code === "P2025") throw new AppError("Not found.", 404);
+
+    if (error.code === "P2024" || error.code === "P2028")
+        throw new AppError("Database timeout please try again", 504);
 };

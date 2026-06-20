@@ -10,8 +10,6 @@ import {
 import { sendDonorApproval, sendDonorRejection } from "../services/email.services.js";
 import { NotifyStaffNewApplication } from "../services/notification.services.js";
 import { APIResponse } from "../library/classes/APIResponse.js";
-import { uploadDonorProfileToCloudinary } from "../services/cloudinary.services.js";
-import { deepmerge } from "deepmerge-ts";
 
 export const queryDonors = async (req, res) => {
     const donors = await fetchDonors(req.query);
@@ -25,37 +23,15 @@ export const viewDonorProfile = async (req, res) => {
 };
 
 export const registerDonor = async (req, res) => {
-    const { name, email, phone, birth_date, profile } = req.body;
+    const donor = await registerDonorService(req);
+    const { name, dtn } = donor;
     const modified_by = req.user?.user_id;
-
-    await uploadDonorProfileToCloudinary(req, profile);
-
-    const donor = await registerDonorService({
-        name,
-        email,
-        phone,
-        birth_date,
-        profile,
-        modified_by,
-    });
-
-    await NotifyStaffNewApplication(name, "donor", donor.dtn, modified_by);
-
+    await NotifyStaffNewApplication(name, "donor", dtn, modified_by);
     return res.status(201).json(new APIResponse(201, donor, "Donor has been registered"));
 };
 
 export const updateDonorInformation = async (req, res) => {
-    const { dtn } = req.params;
-    const modified_by = req.user?.user_id;
-
-    const existingDonor = await fetchDonorDetails(dtn);
-    const updatedProfile = deepmerge(existingDonor.profile, req.body.profile);
-    const donorData = { ...req.body, profile: updatedProfile, modified_by };
-
-    await uploadDonorProfileToCloudinary(req, donorData.profile, existingDonor.profile);
-
-    const updatedDonor = await updateDonorService(dtn, donorData);
-
+    const updatedDonor = await updateDonorService(req);
     return res.status(200).json(new APIResponse(200, updatedDonor, "Donor has been updated"));
 };
 
@@ -84,7 +60,7 @@ export const rejectDonor = async (req, res) => {
         modified_by,
     });
 
-    await sendDonorRejection(updatedDonor);
+    await sendDonorRejection(updatedDonor.email, updatedDonor.name);
 
     return res.status(200).json(new APIResponse(200, updatedDonor, "Donor has been rejected"));
 };

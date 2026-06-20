@@ -1,7 +1,7 @@
 import { prisma } from "../library/db/db.ts";
 import { omit } from "../configuration/constants.js";
 import { fetchActiveUsers } from "./user.services.js";
-import { clearCachedData, fetchCachedData } from "./redis.services.js";
+import { cacheData, clearCachedData, fetchCachedData } from "./redis.services.js";
 
 const NOTIFICATION_CACHE_KEY = "notifications:*";
 
@@ -19,7 +19,7 @@ export const fetchNotificationsByUserId = async (params) => {
         omit,
     });
 
-    await cachedData(key, notifications);
+    await cacheData(key, notifications);
     return notifications;
 };
 
@@ -82,6 +82,7 @@ export const CreateNotification = async (
                 modified_by: modifierId,
             },
         });
+        await clearCachedData(NOTIFICATION_CACHE_KEY);
         return notification;
     } catch (error) {
         console.error("Error creating notification:", error);
@@ -98,7 +99,6 @@ export const NotifyStaffNewApplication = async (
     try {
         const staffUsers = await prisma.user.findMany({
             where: {
-                role: "staff",
                 status: "active",
             },
         });

@@ -45,27 +45,39 @@ export const getMilkPools = async (params) => {
     const [total, pools] = await prisma.$transaction([
         prisma.pool_milk.count({ where }),
         prisma.pool_milk.findMany({
-            where,
-            include: {
+            select: {
+                pid: true,
+                pooled_date: true,
                 pooled_by_user: {
                     select: {
                         user_id: true,
                         name: true,
                     },
                 },
+                raw_milk: {
+                    select: {
+                        ctn: true,
+                        volume_ml: true,
+                        qat_status: true,
+                        expiration_date: true,
+                    },
+                },
+                expiration_date: true,
+                expected_volume_ml: true,
+                actual_volume_ml: true,
+                qat_status: true,
+                milk_status: true,
+                remarks: true,
             },
+            where,
             orderBy: { [sortBy]: sortOrder },
             skip: (page - 1) * limit,
             take: limit,
-            omit,
         }),
     ]);
 
     const responseData = {
-        data: pools.map(({ pooled_by_user, ...pool }) => ({
-            ...pool,
-            pooled_by: pooled_by_user,
-        })),
+        data: pools,
         meta: {
             total,
             page,
@@ -83,39 +95,36 @@ export const getMilkPool = async (pid) => {
     const cachedData = await fetchCachedData(key);
     if (cachedData) return cachedData;
 
-    const { pooled_by_user, ...pool } = await prisma.pool_milk.findUniqueOrThrow({
-        where: { pid },
-        include: {
-            raw_milk: {
-                select: {
-                    ctn: true,
-                    donor: {
-                        select: {
-                            dtn: true,
-                            name: true,
-                        },
-                    },
-                    expiration_date: true,
-                    milk_status: true,
-                },
-            },
+    const pool = await prisma.pool_milk.findUniqueOrThrow({
+        select: {
+            pid: true,
+            pooled_date: true,
             pooled_by_user: {
                 select: {
                     user_id: true,
                     name: true,
                 },
             },
+            raw_milk: {
+                select: {
+                    ctn: true,
+                    volume_ml: true,
+                    qat_status: true,
+                    expiration_date: true,
+                },
+            },
+            expiration_date: true,
+            expected_volume_ml: true,
+            actual_volume_ml: true,
+            qat_status: true,
+            milk_status: true,
+            remarks: true,
         },
-        omit,
+        where: { pid },
     });
 
-    const response = {
-        ...pool,
-        pooled_by: pooled_by_user,
-    };
-
-    await cacheData(key, response);
-    return response;
+    await cacheData(key, pool);
+    return pool;
 };
 
 export const createMilkPool = async (data) => {

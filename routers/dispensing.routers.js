@@ -1,6 +1,13 @@
 import express from "express";
 import { protectRoute } from "../middleware/protectRoute.js";
-import { GetDispensingQueue, DispenseMilk } from "../controllers/dispensing.controllers.js";
+import {
+    getAllocatedRequests,
+    DispenseMilk,
+    getAllocatedRequest,
+} from "../controllers/dispensing.controllers.js";
+import { validateRequest } from "../middleware/validate.js";
+import { requestQuerySchemas } from "../schemas/request.schemas.js";
+import { IdSchema } from "../schemas/id.schemas.js";
 
 const router = express.Router();
 
@@ -20,7 +27,21 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized.
  */
-router.get("/", protectRoute, GetDispensingQueue);
+router.get(
+    "/",
+    protectRoute,
+    validateRequest({ query: requestQuerySchemas }),
+    getAllocatedRequests,
+);
+
+router.get(
+    "/:rid",
+    protectRoute,
+    validateRequest({
+        params: IdSchema,
+    }),
+    getAllocatedRequest,
+);
 
 /**
  * @swagger

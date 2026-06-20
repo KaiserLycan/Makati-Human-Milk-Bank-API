@@ -2,6 +2,10 @@ import { prisma } from "../library/db/db.ts";
 import { omit } from "../configuration/constants.js";
 import { AppError } from "../library/classes/AppError.js";
 import { startOfToday } from "date-fns";
+import { cacheData, fetchCachedData } from "./redis.services.js";
+
+const REQUEST_CACHE_KEY_ALL = "requests:*";
+const REQUEST_CACHE_KEY = "requests:";
 
 export const processRequestWithExpiredMilk = async () => {
     const today = startOfToday();
@@ -65,27 +69,116 @@ export const processRequestWithExpiredMilk = async () => {
     }
 };
 
-export const getRequest = async (rid) => {
-    return prisma.request.findUniqueOrThrow({
-        where: { rid: parseInt(rid) },
-        include: {
-            beneficiary: true,
-            request_bottles: true,
+export const requestQuery = async (params) => {
+    const { request_status, page, limit, sortBy, sortOrder } = params;
+    const key = REQUEST_CACHE_KEY + JSON.stringify(params);
+    const cachedData = await fetchCachedData(key);
+    if (cachedData) return cachedData;
+
+    const where = { request_status };
+
+    const [total, requests] = await prisma.$transaction([
+        prisma.request.count({ where }),
+        prisma.request.findMany({
+            select: {
+                rid: true,
+                beneficiary: {
+                    select: {
+                        bid: true,
+                        name: true,
+                        caregiver: true,
+                        caregiver_email: true,
+                        caregiver_phone: true,
+                    },
+                },
+                hospital: true,
+                requested_vol_ml: true,
+                requested_date: true,
+                request_status: true,
+                request_bottles: {
+                    select: {
+                        pasteurized_milk: {
+                            select: {
+                                btl_id: true,
+                                volume_ml: true,
+                                expiration_date: true,
+                                milk_status: true,
+                                dispense_status: true,
+                                mbt_status: true,
+                            },
+                        },
+                    },
+                },
+            },
+            where,
+            orderBy: {
+                [sortBy]: sortOrder,
+            },
+            skip: (page - 1) * limit,
+            take: limit,
+        }),
+    ]);
+
+    const results = {
+        data: requests,
+        meta: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
         },
-        omit: omit,
-    });
+    };
+
+    await cacheData(key, results);
+    return results;
 };
 
-export const getRequests = async ({ request_status, page, limit, sortBy, sortOrder }) => {
-    return prisma.request.findMany({
-        where: { request_status: request_status },
-        orderBy: {
-            [sortBy]: sortOrder,
+export const retrieveRequestInformation = async ({ rid, request_status }) => {
+    const key = REQUEST_CACHE_KEY + rid;
+    const cachedData = await fetchCachedData(key);
+    if (cachedData) return cachedData;
+
+    const where = {
+        rid,
+        ...(request_status && { request_status }),
+    };
+
+    const request = await prisma.request.findUniqueOrThrow({
+        select: {
+            rid: true,
+            beneficiary: {
+                select: {
+                    bid: true,
+                    name: true,
+                    caregiver: true,
+                    caregiver_email: true,
+                    caregiver_phone: true,
+                },
+            },
+            hospital: true,
+            requested_vol_ml: true,
+            requested_date: true,
+            request_status: true,
+            request_bottles: {
+                select: {
+                    pasteurized_milk: {
+                        select: {
+                            btl_id: true,
+                            volume_ml: true,
+                            expiration_date: true,
+                            milk_status: true,
+                            dispense_status: true,
+                            mbt_status: true,
+                        },
+                    },
+                },
+            },
         },
-        skip: (page - 1) * limit,
-        take: limit,
-        omit: omit,
+        where,
     });
+
+    await cacheData(key, request);
+    return request;
 };
 
 export const createRequest = async ({ bid, requested_vol_ml, hospital, modified_by }) => {
@@ -112,7 +205,7 @@ export const createRequest = async ({ bid, requested_vol_ml, hospital, modified_
 };
 
 export const updateRequestStatus = async ({ rid, request_status, modified_by }) => {
-    const request = await getRequest(rid);
+    const request = await retrieveRequestInformation({ rid });
 
     if (request?.request_status === request_status)
         throw new AppError(`Request is already ${request_status}`, 400);

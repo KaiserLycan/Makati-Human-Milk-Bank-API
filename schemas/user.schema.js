@@ -2,17 +2,31 @@ import { z } from "zod";
 import { listQuerySchema } from "./query.schemas.js";
 
 export const updateUserSchemas = z.object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    role: z.enum(["manager", "staff"], {
-        error: "Invalid role. User can only be a manager or staff.",
+    name: z.string({ error: "Name is required" }).min(2, "Name must be at least 2 characters"),
+    role: z
+        .enum(["manager", "staff"], {
+            error: "Invalid role. User can only be a manager or staff.",
+        })
+        .optional()
+        .default("staff"),
+    email: z.email({
+        error: (issue) => (issue.input === undefined ? "Email is required" : "Invalid email"),
     }),
-    email: z.email("Invalid email address"),
-    phone: z.e164("Invalid phone number"),
+    phone: z.e164({
+        error: (issue) =>
+            issue.input === undefined
+                ? "Phone is required"
+                : "Invalid phone format please use E164 formatting.",
+    }),
     profile_image_url: z.url().optional(),
 });
 
 export const userSchema = updateUserSchemas.extend({
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: z
+        .string({
+            error: "Password is required ",
+        })
+        .min(8, "Password must be at least 8 characters"),
 });
 
 export const userIDSchema = z.object({

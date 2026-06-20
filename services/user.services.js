@@ -3,6 +3,7 @@ import { prisma } from "../library/db/db.ts";
 import { AppError } from "../library/classes/AppError.js";
 import { omit, system_id } from "../configuration/constants.js";
 import { cacheData, clearCachedData, fetchCachedData } from "./redis.services.js";
+import { deleteImageFromCloudinary, uploadImageToCloudinary } from "./cloudinary.services.js";
 
 const USER_CACHE_KEY = "users:*";
 const OMIT_PASSWORD = { ...omit, password: true };
@@ -70,24 +71,66 @@ export const fetchUserDetails = async (user_id) => {
     return user;
 };
 
-export const registerNewUser = async (data) => {
-    data.password = await hasPassword(data.password);
-    const newUser = await prisma.user.create({
-        data,
-        omit: OMIT_PASSWORD,
-    });
-    await clearCachedData(USER_CACHE_KEY);
-    return newUser;
+export const registerNewUser = async (req) => {
+    const modified_by = req.user.user_id;
+    let imageUrl;
+
+    try {
+        if (req.file) {
+            const image = await uploadImageToCloudinary(req.file.buffer, "user_profile");
+            imageUrl = image.secure_url;
+        }
+
+        const data = { ...req.body, profile_image_url: imageUrl, modified_by };
+        data.password = await hasPassword(data.password);
+
+        const newUser = await prisma.user.create({
+            data,
+            omit: OMIT_PASSWORD,
+        });
+
+        await clearCachedData(USER_CACHE_KEY);
+        return newUser;
+    } catch (error) {
+        if (imageUrl) {
+            await deleteImageFromCloudinary(imageUrl);
+        }
+        throw error;
+    }
 };
 
-export const updateUser = async (user_id, data) => {
-    const updatedUser = await prisma.user.update({
-        where: { user_id },
-        data,
-        omit: OMIT_PASSWORD,
-    });
-    await clearCachedData(USER_CACHE_KEY);
-    return updatedUser;
+export const updateUser = async (req) => {
+    const { user_id } = req.params;
+    const modified_by = req.user.user_id;
+    let imageUrl;
+
+    try {
+        const existingUser = await fetchUserDetails(user_id);
+
+        if (req.file) {
+            if (existingUser.profile_image_url) {
+                await deleteImageFromCloudinary(existingUser.profile_image_url);
+            }
+            const image = await uploadImageToCloudinary(req.file.buffer, "user_profile");
+            imageUrl = image.secure_url;
+        }
+
+        const data = { ...req.body, profile_image_url: imageUrl, modified_by };
+
+        const updatedUser = await prisma.user.update({
+            where: { user_id },
+            data,
+            omit: OMIT_PASSWORD,
+        });
+
+        await clearCachedData(USER_CACHE_KEY);
+        return updatedUser;
+    } catch (error) {
+        if (imageUrl) {
+            await deleteImageFromCloudinary(imageUrl);
+        }
+        throw error;
+    }
 };
 
 export const updatePassword = async (user_id, password, modified_by) => {

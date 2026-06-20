@@ -21,7 +21,7 @@ export const uploadImageToCloudinary = (fileBuffer, folderName = "general") => {
     });
 };
 
-const deleteImageFromCloudinary = async (imageUrl) => {
+export const deleteImageFromCloudinary = async (imageUrl) => {
     if (!imageUrl) return;
     try {
         const urlParts = imageUrl.split("/");
@@ -34,24 +34,15 @@ const deleteImageFromCloudinary = async (imageUrl) => {
 };
 
 export const uploadDonorProfileToCloudinary = async (req, profile, existingProfile) => {
-    const uploadTasks = [];
-
-    if (req.files?.profile_image_url?.[0]) {
+    if (req.file) {
         if (existingProfile?.personal_information?.profile_image_url) {
             await deleteImageFromCloudinary(existingProfile.personal_information.profile_image_url);
         }
-        const task = uploadImageToCloudinary(
-            req.files.profile_image_url[0].buffer,
-            "donor_profile",
-        ).then((res) => {
-            profile.personal_information.profile_image_url = res.secure_url;
-        });
-        uploadTasks.push(task);
+        const res = await uploadImageToCloudinary(req.file.buffer, "donor_profile");
+        profile.personal_information.profile_image_url = res.secure_url;
     }
 
-    if (uploadTasks.length > 0) {
-        await Promise.all(uploadTasks);
-    }
+    return profile;
 };
 
 export const uploadBeneficiaryProfileToCloudinary = async (req, profile, existingProfile) => {
@@ -99,4 +90,6 @@ export const uploadBeneficiaryProfileToCloudinary = async (req, profile, existin
     if (uploadTasks.length > 0) {
         await Promise.all(uploadTasks);
     }
+
+    return profile;
 };

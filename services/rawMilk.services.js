@@ -5,7 +5,7 @@ import { clearCachedData, fetchCachedData, cacheData } from "./redis.services.js
 import { startOfToday } from "date-fns";
 import { buildStaffNotifications, notifyStaff } from "./notification.services.js";
 
-const RAW_MILK_CACHE_KEY = "collections:*";
+const RAW_MILK_CACHE_KEY = "rawMilk:*";
 
 export const markExpiredRawMilk = async () => {
     const expiredMilk = await prisma.raw_milk.findMany({
@@ -28,7 +28,7 @@ export const markExpiredRawMilk = async () => {
 
 const checkDailyLimit = async (dtn, program, volume_ml, limit) => {
     const startOfDay = startOfToday();
-    const dailyCollections = await prisma.raw_milk.aggregate({
+    const dailyRawMilk = await prisma.raw_milk.aggregate({
         _sum: { volume_ml: true },
         where: {
             dtn,
@@ -37,7 +37,7 @@ const checkDailyLimit = async (dtn, program, volume_ml, limit) => {
         },
     });
 
-    const currentTotal = dailyCollections._sum.volume_ml || 0;
+    const currentTotal = dailyRawMilk._sum.volume_ml || 0;
     if (currentTotal + volume_ml > limit) {
         throw new AppError(
             `Collection exceeds daily limit of ${limit}ml. Current total today is ${currentTotal}ml.`,
@@ -46,27 +46,51 @@ const checkDailyLimit = async (dtn, program, volume_ml, limit) => {
     }
 };
 
-export const getCollections = async (params) => {
+export const getRawMilk = async (params) => {
     const { milk_status, qat_status, program, page, limit, sortBy, sortOrder } = params;
-    const key = `collections:list:${JSON.stringify(params)}`;
+    const key = `rawMilk:list:${JSON.stringify(params)}`;
     const cachedData = await fetchCachedData(key);
     if (cachedData) return cachedData;
 
     const where = { milk_status, qat_status, program };
 
-    const [total, collections] = await prisma.$transaction([
+    const [total, rawMilks] = await prisma.$transaction([
         prisma.raw_milk.count({ where }),
         prisma.raw_milk.findMany({
+            select: {
+                ctn: true,
+                donor: {
+                    select: {
+                        dtn: true,
+                        name: true,
+                    },
+                },
+                program: true,
+                hospital: true,
+                health_center: true,
+                volume_ml: true,
+                collected_by_user: {
+                    select: {
+                        user_id: true,
+                        name: true,
+                    },
+                },
+                collection_date: true,
+                expiration_date: true,
+                pickup_date: true,
+                qat_status: true,
+                milk_status: true,
+                remarks: true,
+            },
             where,
             orderBy: { [sortBy]: sortOrder },
             skip: (page - 1) * limit,
             take: limit,
-            omit,
         }),
     ]);
 
     const responseData = {
-        data: collections,
+        data: rawMilks,
         meta: {
             total,
             page,
@@ -79,15 +103,38 @@ export const getCollections = async (params) => {
     return responseData;
 };
 
-export const getCollection = async (ctn) => {
-    const key = `collections:${ctn}`;
+export const getRawMilkById = async (ctn) => {
+    const key = `rawMilk:${ctn}`;
     const cachedData = await fetchCachedData(key);
     if (cachedData) return cachedData;
 
     const collection = await prisma.raw_milk.findUniqueOrThrow({
+        select: {
+            ctn: true,
+            donor: {
+                select: {
+                    dtn: true,
+                    name: true,
+                },
+            },
+            program: true,
+            hospital: true,
+            health_center: true,
+            volume_ml: true,
+            collected_by_user: {
+                select: {
+                    user_id: true,
+                    name: true,
+                },
+            },
+            collection_date: true,
+            expiration_date: true,
+            pickup_date: true,
+            qat_status: true,
+            milk_status: true,
+            remarks: true,
+        },
         where: { ctn },
-        omit,
-        include: { donor: true },
     });
 
     await cacheData(key, collection);
@@ -144,11 +191,11 @@ export const updateQATStatus = async (ctn, qat_status, modified_by) => {
 };
 
 export const validateCollectionsForPooling = async (collectionIds) => {
-    const collections = await prisma.raw_milk.findMany({
+    const rawMilk = await prisma.raw_milk.findMany({
         where: { ctn: { in: collectionIds } },
     });
 
-    collections.forEach((milk) => {
+    rawMilk.forEach((milk) => {
         if (milk.qat_status !== "pass") {
             throw new AppError(
                 `Cannot pool collection ${milk.ctn} because its QAT status is ${milk.qat_status}.`,
@@ -169,9 +216,9 @@ export const validateCollectionsForPooling = async (collectionIds) => {
         }
     });
 
-    return collections;
+    return rawMilk;
 };
 
-export const getTotalVolume = (collections) => {
-    return collections.reduce((total, milk) => total + milk.volume_ml, 0);
+export const getTotalVolume = (rawMilk) => {
+    return rawMilk.reduce((total, milk) => total + milk.volume_ml, 0);
 };

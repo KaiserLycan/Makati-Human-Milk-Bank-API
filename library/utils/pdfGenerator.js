@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 
 export const generatePDF = async (templateName, data) => {
-    const templatePath = path.resolve(process.cwd(), `templates/${templateName}.hbs`);
+    const templatePath = path.resolve(process.cwd(), `library/templates/${templateName}.hbs`);
     const templateHtml = fs.readFileSync(templatePath, "utf8");
 
     const template = handlebars.compile(templateHtml);
