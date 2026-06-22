@@ -167,8 +167,8 @@ router.get("/", protectRoute, validateRequest({ query: collectionQuerySchema }),
  *         name: ctn
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: The milk collection.
@@ -220,8 +220,8 @@ router.post("/", protectRoute, validateRequest({ body: collectionSchema }), crea
  *         name: ctn
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     requestBody:
  *       required: true
  *       content:
@@ -260,8 +260,8 @@ router.put(
  *         name: ctn
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Collection deleted successfully.
@@ -287,8 +287,8 @@ router.delete("/:ctn", protectRoute, validateRequest({ params: IdSchema }), dele
  *         name: ctn
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     requestBody:
  *       required: true
  *       content:
@@ -327,8 +327,8 @@ router.patch(
  *         name: ctn
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     requestBody:
  *       required: true
  *       content:

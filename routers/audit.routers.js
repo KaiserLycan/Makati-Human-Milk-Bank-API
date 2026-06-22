@@ -114,9 +114,9 @@ router.get(
  *         name: log_id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *         description: The ID of the audit log to retrieve.
- *         example: "12345"
+ *         example: 12345
  *     responses:
  *       200:
  *         description: The requested audit log.

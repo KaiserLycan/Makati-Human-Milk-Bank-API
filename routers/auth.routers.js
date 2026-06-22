@@ -1,6 +1,7 @@
 import express from "express";
 import { login, logout } from "../controllers/auth.controllers.js";
 import { protectRoute } from "../middleware/protectRoute.js";
+import { strictLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
@@ -19,8 +20,9 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               username:
+ *               email:
  *                 type: string
+ *                 format: email
  *               password:
  *                 type: string
  *     responses:
@@ -29,7 +31,7 @@ const router = express.Router();
  *       401:
  *         description: Invalid credentials.
  */
-router.post("/login", login);
+router.post("/login", strictLimiter, login);
 
 /**
  * @swagger

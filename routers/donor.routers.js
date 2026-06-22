@@ -15,6 +15,7 @@ import { donorQuerySchema, donorSchemas } from "../schemas/donor.schemas.js";
 import { uploadSingleImage } from "../middleware/upload.js";
 import { parseFormDataJson } from "../middleware/parseFormatData.js";
 import { IdSchema } from "../schemas/id.schemas.js";
+import { strictLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
@@ -216,8 +217,8 @@ router.get("/", protectRoute, validateRequest({ query: donorQuerySchema }), quer
  *         name: dtn
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: The donor's profile.
@@ -262,6 +263,7 @@ router.get("/:dtn", protectRoute, validateRequest({ params: IdSchema }), viewDon
 router.post(
     "/register",
     protectRoute,
+    strictLimiter,
     uploadSingleImage,
     parseFormDataJson,
     validateRequest({ body: donorSchemas }),
@@ -297,6 +299,7 @@ router.post(
  */
 router.post(
     "/public-register",
+    strictLimiter,
     uploadSingleImage,
     parseFormDataJson,
     validateRequest({ body: donorSchemas }),
@@ -318,8 +321,8 @@ router.post(
  *         name: dtn
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     requestBody:
  *       required: true
  *       content:
@@ -367,8 +370,8 @@ router.put(
  *         name: dtn
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Donor approved successfully.
@@ -394,8 +397,8 @@ router.patch("/approve/:dtn", protectRoute, validateRequest({ params: IdSchema }
  *         name: dtn
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Donor rejected successfully.
@@ -421,8 +424,8 @@ router.patch("/reject/:dtn", protectRoute, validateRequest({ params: IdSchema })
  *         name: dtn
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Donor status toggled successfully.
@@ -453,8 +456,8 @@ router.patch(
  *         name: dtn
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Donor removed successfully.

@@ -5,7 +5,6 @@ import {
     createMilkPool,
     updateMilkPool,
     deleteMilkPool,
-    updateQATStatus,
     updateMilkPoolStatus,
 } from "../controllers/pooling.controllers.js";
 import { protectRoute } from "../middleware/protectRoute.js";
@@ -13,8 +12,8 @@ import { validateRequest } from "../middleware/validate.js";
 import {
     milkPoolSchema,
     milkPoolQuerySchema,
-    updateQATStatusSchema,
     updateMilkPoolStatusSchema,
+    updatePoolSchema,
 } from "../schemas/poolMilk.schemas.js";
 import { IdSchema } from "../schemas/id.schemas.js";
 
@@ -38,13 +37,6 @@ const router = express.Router();
  *         remarks:
  *           type: string
  *           example: "Pooled from three collections"
- *     UpdateQATStatus:
- *       type: object
- *       properties:
- *         qat_status:
- *           type: string
- *           enum: [pending, pass, fail]
- *           example: "pass"
  *     UpdateMilkPoolStatus:
  *       type: object
  *       properties:
@@ -104,12 +96,6 @@ const router = express.Router();
  *           type: string
  *           enum: [good, contaminated, discarded, expired]
  *         example: "good"
- *       - in: query
- *         name: qat_status
- *         schema:
- *           type: string
- *           enum: [pending, pass, fail]
- *         example: "pass"
  *     responses:
  *       200:
  *         description: A list of milk pools.
@@ -133,8 +119,8 @@ router.get("/", protectRoute, validateRequest({ query: milkPoolQuerySchema }), q
  *         name: pid
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: The milk pool.
@@ -186,8 +172,8 @@ router.post("/", protectRoute, validateRequest({ body: milkPoolSchema }), create
  *         name: pid
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     requestBody:
  *       required: true
  *       content:
@@ -207,7 +193,7 @@ router.post("/", protectRoute, validateRequest({ body: milkPoolSchema }), create
 router.put(
     "/:pid",
     protectRoute,
-    validateRequest({ body: milkPoolSchema, params: IdSchema }),
+    validateRequest({ body: updatePoolSchema, params: IdSchema }),
     updateMilkPool,
 );
 
@@ -226,8 +212,8 @@ router.put(
  *         name: pid
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Milk pool deleted successfully.
@@ -237,46 +223,6 @@ router.put(
  *         description: Not Found.
  */
 router.delete("/:pid", protectRoute, validateRequest({ params: IdSchema }), deleteMilkPool);
-
-/**
- * @swagger
- * /api/pooling/{pid}/qat-status:
- *   patch:
- *     tags:
- *       - Pooling
- *     summary: Update QAT status
- *     description: Update the Quality Assurance Test status of a milk pool.
- *     security:
- *       - cookieAuth: []
- *     parameters:
- *       - in: path
- *         name: pid
- *         required: true
- *         schema:
- *           type: string
- *         example: "12345"
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/UpdateQATStatus'
- *     responses:
- *       200:
- *         description: QAT status updated successfully.
- *       400:
- *         description: Bad Request.
- *       401:
- *         description: Unauthorized.
- *       404:
- *         description: Not Found.
- */
-router.patch(
-    "/:pid/qat-status",
-    protectRoute,
-    validateRequest({ body: updateQATStatusSchema, params: IdSchema }),
-    updateQATStatus,
-);
 
 /**
  * @swagger
@@ -293,8 +239,8 @@ router.patch(
  *         name: pid
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     requestBody:
  *       required: true
  *       content:

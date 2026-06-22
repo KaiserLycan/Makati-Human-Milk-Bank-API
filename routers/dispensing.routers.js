@@ -34,6 +34,31 @@ router.get(
     getAllocatedRequests,
 );
 
+/**
+ * @swagger
+ * /api/dispensing/{rid}:
+ *   get:
+ *     tags:
+ *       - Dispensing
+ *     summary: Get details of an allocated request
+ *     description: Retrieve details of a specific allocated request by its ID.
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: rid
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 12345
+ *     responses:
+ *       200:
+ *         description: Details of the allocated request.
+ *       401:
+ *         description: Unauthorized.
+ *       404:
+ *         description: Not Found.
+ */
 router.get(
     "/:rid",
     protectRoute,
@@ -58,7 +83,8 @@ router.get(
  *         name: rid
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Milk dispensed successfully.

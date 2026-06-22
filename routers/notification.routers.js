@@ -43,7 +43,8 @@ router.get("/", protectRoute, getNotifications);
  *         name: nid
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Notification marked as read successfully.
@@ -53,7 +54,7 @@ router.get("/", protectRoute, getNotifications);
  *         description: Not Found.
  */
 router.patch(
-    "/:nid",
+    "/:nid/read",
     protectRoute,
     validateRequest({
         params: IdSchema,

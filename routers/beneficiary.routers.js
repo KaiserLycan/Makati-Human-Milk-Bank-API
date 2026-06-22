@@ -15,6 +15,7 @@ import { beneficiaryQuerySchema, beneficiarySchemas } from "../schemas/beneficia
 import { IdSchema } from "../schemas/id.schemas.js";
 import { uploadBeneficiaryProfile } from "../middleware/upload.js";
 import { parseFormDataJson } from "../middleware/parseFormatData.js";
+import { strictLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
@@ -153,8 +154,8 @@ router.get(
  *         name: bid
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: The beneficiary's profile.
@@ -214,6 +215,7 @@ router.get("/:bid", protectRoute, validateRequest({ params: IdSchema }), viewBen
 router.post(
     "/register",
     protectRoute,
+    strictLimiter,
     uploadBeneficiaryProfile,
     parseFormDataJson,
     validateRequest({ body: beneficiarySchemas }),
@@ -264,6 +266,7 @@ router.post(
  */
 router.post(
     "/public-register",
+    strictLimiter,
     uploadBeneficiaryProfile,
     parseFormDataJson,
     validateRequest({ body: beneficiarySchemas }),
@@ -285,8 +288,8 @@ router.post(
  *         name: bid
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     requestBody:
  *       required: true
  *       content:
@@ -349,8 +352,8 @@ router.put(
  *         name: bid
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Beneficiary approved successfully.
@@ -381,8 +384,8 @@ router.patch(
  *         name: bid
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Beneficiary rejected successfully.
@@ -413,8 +416,8 @@ router.patch(
  *         name: bid
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Beneficiary status toggled successfully.
@@ -445,8 +448,8 @@ router.patch(
  *         name: bid
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Beneficiary removed successfully.

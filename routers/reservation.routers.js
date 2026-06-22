@@ -68,8 +68,8 @@ router.get(
  *         name: rid
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: The reservation.
@@ -128,8 +128,8 @@ router.post("/", protectRoute, createRequest);
  *         name: rid
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Reservation canceled successfully.

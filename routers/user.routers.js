@@ -22,6 +22,7 @@ import {
     usersQuery,
 } from "../schemas/user.schema.js";
 import { uploadSingleImage } from "../middleware/upload.js";
+import { strictLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
@@ -250,6 +251,7 @@ router.post(
     "/",
     protectRoute,
     authorize,
+    strictLimiter,
     uploadSingleImage,
     validateRequest({ body: userSchema }),
     createUser,

@@ -2,19 +2,20 @@ import express from "express";
 import {
     queryPasteurizedMilkRecords,
     viewPasteurizedMilk,
-    createPasteurizedMilk,
+    createBatchMilk,
     updatePasteurizedMilk,
     deletePasteurizedMilk,
-    updateQATStatus,
+    updateMBTStatus,
     updateMilkStatus,
 } from "../controllers/pasteurization.controllers.js";
 import { protectRoute } from "../middleware/protectRoute.js";
 import { validateRequest } from "../middleware/validate.js";
 import {
-    pasteurizedMilkSchema,
+    createBatchMilkSchema,
     pasteurizedMilkQuerySchema,
-    updateQATStatusSchema,
+    updateMBTStatusSchema,
     updateMilkStatusSchema,
+    updatePasteurizedMilkSchema,
 } from "../schemas/pasteurizedMilk.schemas.js";
 import { IdSchema } from "../schemas/id.schemas.js";
 
@@ -30,9 +31,6 @@ const router = express.Router();
  *         pid:
  *           type: integer
  *           example: 12345
- *         batch_number:
- *           type: integer
- *           example: 1
  *         bottle_count:
  *           type: integer
  *           example: 10
@@ -46,10 +44,20 @@ const router = express.Router();
  *           type: string
  *           format: date
  *           example: "2024-05-20"
- *     UpdateQATStatus:
+ *     UpdatePasteurizedMilk:
  *       type: object
  *       properties:
- *         qat_status:
+ *         volume_per_bottle:
+ *           type: integer
+ *           example: 100
+ *         pasteurization_date:
+ *           type: string
+ *           format: date
+ *           example: "2024-05-20"
+ *     UpdateMBTStatus:
+ *       type: object
+ *       properties:
+ *         mbt_status:
  *           type: string
  *           enum: [pending, pass, fail]
  *           example: "pass"
@@ -113,7 +121,7 @@ const router = express.Router();
  *           enum: [good, contaminated, discarded, expired]
  *         example: "good"
  *       - in: query
- *         name: qat_status
+ *         name: mbt_status
  *         schema:
  *           type: string
  *           enum: [pending, pass, fail]
@@ -152,8 +160,8 @@ router.get(
  *         name: btl_id
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: The pasteurized milk record.
@@ -188,17 +196,12 @@ router.get("/:btl_id", protectRoute, validateRequest({ params: IdSchema }), view
  *       401:
  *         description: Unauthorized.
  */
-router.post(
-    "/",
-    protectRoute,
-    validateRequest({ body: pasteurizedMilkSchema }),
-    createPasteurizedMilk,
-);
+router.post("/", protectRoute, validateRequest({ body: createBatchMilkSchema }), createBatchMilk);
 
 /**
  * @swagger
  * /api/pasteurization/{btl_id}:
- *   put:
+ *   patch:
  *     tags:
  *       - Pasteurization
  *     summary: Update pasteurized milk record
@@ -210,14 +213,14 @@ router.post(
  *         name: btl_id
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/PasteurizedMilk'
+ *             $ref: '#/components/schemas/UpdatePasteurizedMilk'
  *     responses:
  *       200:
  *         description: Pasteurized milk record updated successfully.
@@ -228,10 +231,10 @@ router.post(
  *       404:
  *         description: Not Found.
  */
-router.put(
+router.patch(
     "/:btl_id",
     protectRoute,
-    validateRequest({ body: pasteurizedMilkSchema, params: IdSchema }),
+    validateRequest({ body: updatePasteurizedMilkSchema, params: IdSchema }),
     updatePasteurizedMilk,
 );
 
@@ -250,8 +253,8 @@ router.put(
  *         name: btl_id
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     responses:
  *       200:
  *         description: Pasteurized milk record deleted successfully.
@@ -269,12 +272,12 @@ router.delete(
 
 /**
  * @swagger
- * /api/pasteurization/{btl_id}/qat-status:
+ * /api/pasteurization/{btl_id}/mbt-status:
  *   patch:
  *     tags:
  *       - Pasteurization
- *     summary: Update QAT status
- *     description: Update the Quality Assurance Test status of a pasteurized milk record.
+ *     summary: Update MBT status
+ *     description: Update the Microbiological Test status of a pasteurized milk record.
  *     security:
  *       - cookieAuth: []
  *     parameters:
@@ -282,17 +285,17 @@ router.delete(
  *         name: btl_id
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UpdateQATStatus'
+ *             $ref: '#/components/schemas/UpdateMBTStatus'
  *     responses:
  *       200:
- *         description: QAT status updated successfully.
+ *         description: MBT status updated successfully.
  *       400:
  *         description: Bad Request.
  *       401:
@@ -301,10 +304,10 @@ router.delete(
  *         description: Not Found.
  */
 router.patch(
-    "/:btl_id/qat-status",
+    "/:btl_id/mbt-status",
     protectRoute,
-    validateRequest({ body: updateQATStatusSchema, params: IdSchema }),
-    updateQATStatus,
+    validateRequest({ body: updateMBTStatusSchema, params: IdSchema }),
+    updateMBTStatus,
 );
 
 /**
@@ -322,8 +325,8 @@ router.patch(
  *         name: btl_id
  *         required: true
  *         schema:
- *           type: string
- *         example: "12345"
+ *           type: integer
+ *         example: 12345
  *     requestBody:
  *       required: true
  *       content:
