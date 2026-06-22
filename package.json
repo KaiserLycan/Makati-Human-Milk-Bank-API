@@ -8,7 +8,8 @@
         "start": "node server.js",
         "test": "cross-env NODE_OPTIONS=--no-webstorage jest --ci __test__ --passWithNoTests --verbose",
         "format": "prettier --write .",
-        "prepare": "husky"
+        "prepare": "node prepare.js",
+        "postinstall": "prisma generate"
     },
     "keywords": [],
     "author": "",
@@ -19,6 +20,7 @@
         "@prisma/client": "^7.8.0",
         "bcryptjs": "^3.0.3",
         "cloudinary": "^2.10.0",
+        "compression": "^1.7.5",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.6",
         "cross-env": "^10.1.0",
@@ -28,6 +30,7 @@
         "express": "^5.2.1",
         "express-rate-limit": "^8.5.0",
         "handlebars": "^4.7.9",
+        "helmet": "^8.0.0",
         "ioredis": "^5.11.0",
         "jsonwebtoken": "^9.0.3",
         "morgan": "^1.11.0",
@@ -42,7 +45,9 @@
         "swagger-jsdoc": "^6.3.0",
         "swagger-ui-express": "^5.0.1",
         "winston": "^3.19.0",
-        "zod": "^4.4.3"
+        "zod": "^4.4.3",
+        "prisma": "^7.8.0",
+        "tsx": "^4.22.4"
     },
     "devDependencies": {
         "@babel/core": "^7.29.7",
@@ -62,9 +67,7 @@
         "lint-staged": "^15.2.11",
         "nodemon": "^3.1.14",
         "prettier": "^3.3.2",
-        "prisma": "^7.8.0",
-        "ts-jest": "^29.1.2",
-        "tsx": "^4.22.4"
+        "ts-jest": "^29.1.2"
     },
     "lint-staged": {
         "*.js": [
