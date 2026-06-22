@@ -22,7 +22,7 @@ export const markExpiredPoolMilk = async () => {
         });
 
         await notifyStaff(
-            buildStaffNotifications(
+            await buildStaffNotifications(
                 "Pool Milk",
                 ids,
                 (id) => `Pooled milk (PID: ${id}) has expired`,
@@ -32,14 +32,13 @@ export const markExpiredPoolMilk = async () => {
 };
 
 export const getMilkPools = async (params) => {
-    const { milk_status, qat_status, page, limit, sortBy, sortOrder } = params;
+    const { milk_status, page, limit, sortBy, sortOrder } = params;
     const key = `pools:list:${JSON.stringify(params)}`;
     const cachedData = await fetchCachedData(key);
     if (cachedData) return cachedData;
 
     const where = {
         ...(milk_status && { milk_status }),
-        ...(qat_status && { qat_status }),
     };
 
     const [total, pools] = await prisma.$transaction([
@@ -58,14 +57,13 @@ export const getMilkPools = async (params) => {
                     select: {
                         ctn: true,
                         volume_ml: true,
-                        qat_status: true,
                         expiration_date: true,
                     },
                 },
                 expiration_date: true,
                 expected_volume_ml: true,
                 actual_volume_ml: true,
-                qat_status: true,
+                remaining_volume_ml: true,
                 milk_status: true,
                 remarks: true,
             },
@@ -109,14 +107,13 @@ export const getMilkPool = async (pid) => {
                 select: {
                     ctn: true,
                     volume_ml: true,
-                    qat_status: true,
                     expiration_date: true,
                 },
             },
             expiration_date: true,
             expected_volume_ml: true,
             actual_volume_ml: true,
-            qat_status: true,
+            remaining_volume_ml: true,
             milk_status: true,
             remarks: true,
         },
@@ -128,18 +125,26 @@ export const getMilkPool = async (pid) => {
 };
 
 export const createMilkPool = async (data) => {
-    const { collections, actual_volume, pooled_by, modified_by, remarks } = data;
+    const { collections, actual_volume_ml, pooled_by, modified_by, remarks } = data;
     const validCollections = await validateCollectionsForPooling(collections);
     const expiration_date = new Date(
         Math.min(...validCollections.map((c) => new Date(c.expiration_date).getTime())),
     );
+
     const expected_volume = getTotalVolume(validCollections);
 
-    return prisma.$transaction(async (tx) => {
+    if (expected_volume < actual_volume_ml)
+        throw new AppError(
+            `Actual volume (${actual_volume_ml} ml) cannot exceed expected volume (${expected_volume} ml)`,
+            400,
+        );
+
+    const pool = await prisma.$transaction(async (tx) => {
         const createdPool = await tx.pool_milk.create({
             data: {
                 expected_volume_ml: expected_volume,
-                actual_volume_ml: actual_volume,
+                actual_volume_ml: actual_volume_ml,
+                remaining_volume_ml: actual_volume_ml,
                 pooled_by,
                 modified_by,
                 expiration_date,
@@ -153,19 +158,24 @@ export const createMilkPool = async (data) => {
             data: { pid: createdPool.pid, modified_by },
         });
 
-        await clearCachedData(POOL_CACHE_KEY);
         return createdPool;
     });
+
+    await markExpiredPoolMilk();
+    await clearCachedData(POOL_CACHE_KEY);
+    return await getMilkPool(pool.pid);
 };
 
 export const updateMilkPool = async (pid, data) => {
-    const updatedPool = await prisma.pool_milk.update({
+    await prisma.pool_milk.update({
         where: { pid },
         data,
         omit,
     });
+
+    await markExpiredPoolMilk();
     await clearCachedData(POOL_CACHE_KEY);
-    return updatedPool;
+    return await getMilkPool(pid);
 };
 
 export const deleteMilkPool = async (pid) => {
@@ -173,31 +183,20 @@ export const deleteMilkPool = async (pid) => {
     await clearCachedData(POOL_CACHE_KEY);
 };
 
-export const updateQATStatus = async (pid, qat_status, modified_by) => {
-    const milkPool = await prisma.pool_milk.findUniqueOrThrow({
-        where: { pid },
-        select: { qat_status: true },
-    });
-
-    if (milkPool.qat_status === qat_status) {
-        throw new AppError(`Milk pool ${pid} is already ${qat_status}`, 400);
-    }
-
-    return prisma.pool_milk.update({
-        where: { pid },
-        data: { qat_status, modified_by },
-        omit,
-    });
-};
-
 export const updateMilkPoolStatus = async (pid, milk_status, remarks, modified_by) => {
     const milkPool = await prisma.pool_milk.findUniqueOrThrow({
         where: { pid },
-        select: { milk_status: true },
     });
 
     if (milkPool.milk_status === milk_status) {
         throw new AppError(`Milk pool ${pid} is already marked as ${milk_status}`, 400);
+    }
+
+    if (milk_status !== "discarded" && milkPool.expiration_date < startOfToday()) {
+        throw new AppError(
+            `Pool ${pid} expiration date has passed. Milk status can no longer be updated from 'expired' status unless 'discarded'`,
+            400,
+        );
     }
 
     return prisma.$transaction(async (tx) => {
@@ -214,4 +213,40 @@ export const updateMilkPoolStatus = async (pid, milk_status, remarks, modified_b
         await clearCachedData(POOL_CACHE_KEY);
         return updatedMilkPool;
     });
+};
+
+export const validatePoolMilkForPasteurizing = async (pid, volume_per_bottle, bottle_count) => {
+    const total_volume = bottle_count * volume_per_bottle;
+    const pool = await prisma.pool_milk.findUniqueOrThrow({
+        select: {
+            milk_status: true,
+            actual_volume_ml: true,
+            remaining_volume_ml: true,
+            expiration_date: true,
+        },
+        where: { pid },
+    });
+
+    const remainingVolume = pool.remaining_volume_ml !== null ? Number(pool.remaining_volume_ml) : Number(pool.actual_volume_ml);
+
+    if (total_volume > remainingVolume) {
+        throw new AppError(
+            `Total volume (${total_volume}ml) exceeds pool's remaining volume of ${remainingVolume}ml.`,
+            400,
+        );
+    }
+
+    if (pool.milk_status === "expired" || pool.expiration_date < startOfToday()) {
+        throw new AppError(`Cannot create a batch from pool ${pid}, because it has expired.`, 400);
+    }
+
+    if (pool.milk_status === "contaminated") {
+        throw new AppError(`Cannot create a batch from pool ${pid}, because it is contaminated.`);
+    }
+
+    if (pool.milk_status === "discarded") {
+        throw new AppError(`Cannot create a batch from pool ${pid}, because it has been discarded`);
+    }
+
+    return pool;
 };

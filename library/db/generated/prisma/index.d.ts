@@ -63,6 +63,11 @@ export type user = $Result.DefaultSelection<Prisma.$userPayload>
  * 
  */
 export type notification = $Result.DefaultSelection<Prisma.$notificationPayload>
+/**
+ * Model batch_milk
+ * 
+ */
+export type batch_milk = $Result.DefaultSelection<Prisma.$batch_milkPayload>
 
 /**
  * Enums
@@ -407,6 +412,16 @@ export class PrismaClient<
     * ```
     */
   get notification(): Prisma.notificationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.batch_milk`: Exposes CRUD operations for the **batch_milk** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Batch_milks
+    * const batch_milks = await prisma.batch_milk.findMany()
+    * ```
+    */
+  get batch_milk(): Prisma.batch_milkDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -850,7 +865,8 @@ export namespace Prisma {
     raw_milk: 'raw_milk',
     request_bottles: 'request_bottles',
     user: 'user',
-    notification: 'notification'
+    notification: 'notification',
+    batch_milk: 'batch_milk'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -866,7 +882,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "audit_log" | "beneficiary" | "donor" | "request" | "pasteurized_milk" | "pool_milk" | "raw_milk" | "request_bottles" | "user" | "notification"
+      modelProps: "audit_log" | "beneficiary" | "donor" | "request" | "pasteurized_milk" | "pool_milk" | "raw_milk" | "request_bottles" | "user" | "notification" | "batch_milk"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1610,6 +1626,80 @@ export namespace Prisma {
           }
         }
       }
+      batch_milk: {
+        payload: Prisma.$batch_milkPayload<ExtArgs>
+        fields: Prisma.batch_milkFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.batch_milkFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$batch_milkPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.batch_milkFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$batch_milkPayload>
+          }
+          findFirst: {
+            args: Prisma.batch_milkFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$batch_milkPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.batch_milkFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$batch_milkPayload>
+          }
+          findMany: {
+            args: Prisma.batch_milkFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$batch_milkPayload>[]
+          }
+          create: {
+            args: Prisma.batch_milkCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$batch_milkPayload>
+          }
+          createMany: {
+            args: Prisma.batch_milkCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.batch_milkCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$batch_milkPayload>[]
+          }
+          delete: {
+            args: Prisma.batch_milkDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$batch_milkPayload>
+          }
+          update: {
+            args: Prisma.batch_milkUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$batch_milkPayload>
+          }
+          deleteMany: {
+            args: Prisma.batch_milkDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.batch_milkUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.batch_milkUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$batch_milkPayload>[]
+          }
+          upsert: {
+            args: Prisma.batch_milkUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$batch_milkPayload>
+          }
+          aggregate: {
+            args: Prisma.Batch_milkAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBatch_milk>
+          }
+          groupBy: {
+            args: Prisma.batch_milkGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Batch_milkGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.batch_milkCountArgs<ExtArgs>
+            result: $Utils.Optional<Batch_milkCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1728,6 +1818,7 @@ export namespace Prisma {
     request_bottles?: request_bottlesOmit
     user?: userOmit
     notification?: notificationOmit
+    batch_milk?: batch_milkOmit
   }
 
   /* Types for Logging */
@@ -1932,12 +2023,12 @@ export namespace Prisma {
    */
 
   export type Pool_milkCountOutputType = {
-    pasteurized_milk: number
+    batch_milk: number
     raw_milk: number
   }
 
   export type Pool_milkCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    pasteurized_milk?: boolean | Pool_milkCountOutputTypeCountPasteurized_milkArgs
+    batch_milk?: boolean | Pool_milkCountOutputTypeCountBatch_milkArgs
     raw_milk?: boolean | Pool_milkCountOutputTypeCountRaw_milkArgs
   }
 
@@ -1955,8 +2046,8 @@ export namespace Prisma {
   /**
    * Pool_milkCountOutputType without action
    */
-  export type Pool_milkCountOutputTypeCountPasteurized_milkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: pasteurized_milkWhereInput
+  export type Pool_milkCountOutputTypeCountBatch_milkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: batch_milkWhereInput
   }
 
   /**
@@ -1973,12 +2064,12 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     audit_log: number
+    batch_milk: number
     beneficiary: number
     donor: number
     notifications_modified: number
     notifications_received: number
     modified_pasteurized_milk: number
-    processed_pasteurized_milk: number
     modified_pool_milk: number
     pooled_pool_milk: number
     collected_raw_milk: number
@@ -1989,12 +2080,12 @@ export namespace Prisma {
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     audit_log?: boolean | UserCountOutputTypeCountAudit_logArgs
+    batch_milk?: boolean | UserCountOutputTypeCountBatch_milkArgs
     beneficiary?: boolean | UserCountOutputTypeCountBeneficiaryArgs
     donor?: boolean | UserCountOutputTypeCountDonorArgs
     notifications_modified?: boolean | UserCountOutputTypeCountNotifications_modifiedArgs
     notifications_received?: boolean | UserCountOutputTypeCountNotifications_receivedArgs
     modified_pasteurized_milk?: boolean | UserCountOutputTypeCountModified_pasteurized_milkArgs
-    processed_pasteurized_milk?: boolean | UserCountOutputTypeCountProcessed_pasteurized_milkArgs
     modified_pool_milk?: boolean | UserCountOutputTypeCountModified_pool_milkArgs
     pooled_pool_milk?: boolean | UserCountOutputTypeCountPooled_pool_milkArgs
     collected_raw_milk?: boolean | UserCountOutputTypeCountCollected_raw_milkArgs
@@ -2019,6 +2110,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAudit_logArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: audit_logWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBatch_milkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: batch_milkWhereInput
   }
 
   /**
@@ -2053,13 +2151,6 @@ export namespace Prisma {
    * UserCountOutputType without action
    */
   export type UserCountOutputTypeCountModified_pasteurized_milkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: pasteurized_milkWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountProcessed_pasteurized_milkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: pasteurized_milkWhereInput
   }
 
@@ -2103,6 +2194,37 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountModified_usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: userWhereInput
+  }
+
+
+  /**
+   * Count Type Batch_milkCountOutputType
+   */
+
+  export type Batch_milkCountOutputType = {
+    pasteurized_milk: number
+  }
+
+  export type Batch_milkCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pasteurized_milk?: boolean | Batch_milkCountOutputTypeCountPasteurized_milkArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * Batch_milkCountOutputType without action
+   */
+  export type Batch_milkCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Batch_milkCountOutputType
+     */
+    select?: Batch_milkCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * Batch_milkCountOutputType without action
+   */
+  export type Batch_milkCountOutputTypeCountPasteurized_milkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: pasteurized_milkWhereInput
   }
 
 
@@ -6966,7 +7088,6 @@ export namespace Prisma {
 
   export type Pasteurized_milkAvgAggregateOutputType = {
     btl_id: number | null
-    pid: number | null
     batch_number: number | null
     bottle_sequence_number: number | null
     volume_ml: Decimal | null
@@ -6974,7 +7095,6 @@ export namespace Prisma {
 
   export type Pasteurized_milkSumAggregateOutputType = {
     btl_id: number | null
-    pid: number | null
     batch_number: number | null
     bottle_sequence_number: number | null
     volume_ml: Decimal | null
@@ -6982,13 +7102,10 @@ export namespace Prisma {
 
   export type Pasteurized_milkMinAggregateOutputType = {
     btl_id: number | null
-    pid: number | null
-    processed_by: string | null
     batch_number: number | null
     bottle_sequence_number: number | null
     volume_ml: Decimal | null
     bottle: $Enums.bottle_type | null
-    processed_date: Date | null
     expiration_date: Date | null
     mbt_status: $Enums.test_status | null
     dispense_status: $Enums.pasteurized_milk_status | null
@@ -7001,13 +7118,10 @@ export namespace Prisma {
 
   export type Pasteurized_milkMaxAggregateOutputType = {
     btl_id: number | null
-    pid: number | null
-    processed_by: string | null
     batch_number: number | null
     bottle_sequence_number: number | null
     volume_ml: Decimal | null
     bottle: $Enums.bottle_type | null
-    processed_date: Date | null
     expiration_date: Date | null
     mbt_status: $Enums.test_status | null
     dispense_status: $Enums.pasteurized_milk_status | null
@@ -7020,13 +7134,10 @@ export namespace Prisma {
 
   export type Pasteurized_milkCountAggregateOutputType = {
     btl_id: number
-    pid: number
-    processed_by: number
     batch_number: number
     bottle_sequence_number: number
     volume_ml: number
     bottle: number
-    processed_date: number
     expiration_date: number
     mbt_status: number
     dispense_status: number
@@ -7041,7 +7152,6 @@ export namespace Prisma {
 
   export type Pasteurized_milkAvgAggregateInputType = {
     btl_id?: true
-    pid?: true
     batch_number?: true
     bottle_sequence_number?: true
     volume_ml?: true
@@ -7049,7 +7159,6 @@ export namespace Prisma {
 
   export type Pasteurized_milkSumAggregateInputType = {
     btl_id?: true
-    pid?: true
     batch_number?: true
     bottle_sequence_number?: true
     volume_ml?: true
@@ -7057,13 +7166,10 @@ export namespace Prisma {
 
   export type Pasteurized_milkMinAggregateInputType = {
     btl_id?: true
-    pid?: true
-    processed_by?: true
     batch_number?: true
     bottle_sequence_number?: true
     volume_ml?: true
     bottle?: true
-    processed_date?: true
     expiration_date?: true
     mbt_status?: true
     dispense_status?: true
@@ -7076,13 +7182,10 @@ export namespace Prisma {
 
   export type Pasteurized_milkMaxAggregateInputType = {
     btl_id?: true
-    pid?: true
-    processed_by?: true
     batch_number?: true
     bottle_sequence_number?: true
     volume_ml?: true
     bottle?: true
-    processed_date?: true
     expiration_date?: true
     mbt_status?: true
     dispense_status?: true
@@ -7095,13 +7198,10 @@ export namespace Prisma {
 
   export type Pasteurized_milkCountAggregateInputType = {
     btl_id?: true
-    pid?: true
-    processed_by?: true
     batch_number?: true
     bottle_sequence_number?: true
     volume_ml?: true
     bottle?: true
-    processed_date?: true
     expiration_date?: true
     mbt_status?: true
     dispense_status?: true
@@ -7201,13 +7301,10 @@ export namespace Prisma {
 
   export type Pasteurized_milkGroupByOutputType = {
     btl_id: number
-    pid: number
-    processed_by: string | null
     batch_number: number
     bottle_sequence_number: number
     volume_ml: Decimal
     bottle: $Enums.bottle_type | null
-    processed_date: Date | null
     expiration_date: Date
     mbt_status: $Enums.test_status | null
     dispense_status: $Enums.pasteurized_milk_status | null
@@ -7239,13 +7336,10 @@ export namespace Prisma {
 
   export type pasteurized_milkSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     btl_id?: boolean
-    pid?: boolean
-    processed_by?: boolean
     batch_number?: boolean
     bottle_sequence_number?: boolean
     volume_ml?: boolean
     bottle?: boolean
-    processed_date?: boolean
     expiration_date?: boolean
     mbt_status?: boolean
     dispense_status?: boolean
@@ -7254,22 +7348,18 @@ export namespace Prisma {
     created_at?: boolean
     modified_at?: boolean
     modified_by?: boolean
+    batch_milk?: boolean | batch_milkDefaultArgs<ExtArgs>
     modified_by_user?: boolean | pasteurized_milk$modified_by_userArgs<ExtArgs>
-    pool_milk?: boolean | pool_milkDefaultArgs<ExtArgs>
-    processed_by_user?: boolean | pasteurized_milk$processed_by_userArgs<ExtArgs>
     request_bottles?: boolean | pasteurized_milk$request_bottlesArgs<ExtArgs>
     _count?: boolean | Pasteurized_milkCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pasteurized_milk"]>
 
   export type pasteurized_milkSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     btl_id?: boolean
-    pid?: boolean
-    processed_by?: boolean
     batch_number?: boolean
     bottle_sequence_number?: boolean
     volume_ml?: boolean
     bottle?: boolean
-    processed_date?: boolean
     expiration_date?: boolean
     mbt_status?: boolean
     dispense_status?: boolean
@@ -7278,20 +7368,16 @@ export namespace Prisma {
     created_at?: boolean
     modified_at?: boolean
     modified_by?: boolean
+    batch_milk?: boolean | batch_milkDefaultArgs<ExtArgs>
     modified_by_user?: boolean | pasteurized_milk$modified_by_userArgs<ExtArgs>
-    pool_milk?: boolean | pool_milkDefaultArgs<ExtArgs>
-    processed_by_user?: boolean | pasteurized_milk$processed_by_userArgs<ExtArgs>
   }, ExtArgs["result"]["pasteurized_milk"]>
 
   export type pasteurized_milkSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     btl_id?: boolean
-    pid?: boolean
-    processed_by?: boolean
     batch_number?: boolean
     bottle_sequence_number?: boolean
     volume_ml?: boolean
     bottle?: boolean
-    processed_date?: boolean
     expiration_date?: boolean
     mbt_status?: boolean
     dispense_status?: boolean
@@ -7300,20 +7386,16 @@ export namespace Prisma {
     created_at?: boolean
     modified_at?: boolean
     modified_by?: boolean
+    batch_milk?: boolean | batch_milkDefaultArgs<ExtArgs>
     modified_by_user?: boolean | pasteurized_milk$modified_by_userArgs<ExtArgs>
-    pool_milk?: boolean | pool_milkDefaultArgs<ExtArgs>
-    processed_by_user?: boolean | pasteurized_milk$processed_by_userArgs<ExtArgs>
   }, ExtArgs["result"]["pasteurized_milk"]>
 
   export type pasteurized_milkSelectScalar = {
     btl_id?: boolean
-    pid?: boolean
-    processed_by?: boolean
     batch_number?: boolean
     bottle_sequence_number?: boolean
     volume_ml?: boolean
     bottle?: boolean
-    processed_date?: boolean
     expiration_date?: boolean
     mbt_status?: boolean
     dispense_status?: boolean
@@ -7324,42 +7406,35 @@ export namespace Prisma {
     modified_by?: boolean
   }
 
-  export type pasteurized_milkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"btl_id" | "pid" | "processed_by" | "batch_number" | "bottle_sequence_number" | "volume_ml" | "bottle" | "processed_date" | "expiration_date" | "mbt_status" | "dispense_status" | "milk_status" | "remarks" | "created_at" | "modified_at" | "modified_by", ExtArgs["result"]["pasteurized_milk"]>
+  export type pasteurized_milkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"btl_id" | "batch_number" | "bottle_sequence_number" | "volume_ml" | "bottle" | "expiration_date" | "mbt_status" | "dispense_status" | "milk_status" | "remarks" | "created_at" | "modified_at" | "modified_by", ExtArgs["result"]["pasteurized_milk"]>
   export type pasteurized_milkInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    batch_milk?: boolean | batch_milkDefaultArgs<ExtArgs>
     modified_by_user?: boolean | pasteurized_milk$modified_by_userArgs<ExtArgs>
-    pool_milk?: boolean | pool_milkDefaultArgs<ExtArgs>
-    processed_by_user?: boolean | pasteurized_milk$processed_by_userArgs<ExtArgs>
     request_bottles?: boolean | pasteurized_milk$request_bottlesArgs<ExtArgs>
     _count?: boolean | Pasteurized_milkCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type pasteurized_milkIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    batch_milk?: boolean | batch_milkDefaultArgs<ExtArgs>
     modified_by_user?: boolean | pasteurized_milk$modified_by_userArgs<ExtArgs>
-    pool_milk?: boolean | pool_milkDefaultArgs<ExtArgs>
-    processed_by_user?: boolean | pasteurized_milk$processed_by_userArgs<ExtArgs>
   }
   export type pasteurized_milkIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    batch_milk?: boolean | batch_milkDefaultArgs<ExtArgs>
     modified_by_user?: boolean | pasteurized_milk$modified_by_userArgs<ExtArgs>
-    pool_milk?: boolean | pool_milkDefaultArgs<ExtArgs>
-    processed_by_user?: boolean | pasteurized_milk$processed_by_userArgs<ExtArgs>
   }
 
   export type $pasteurized_milkPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "pasteurized_milk"
     objects: {
+      batch_milk: Prisma.$batch_milkPayload<ExtArgs>
       modified_by_user: Prisma.$userPayload<ExtArgs> | null
-      pool_milk: Prisma.$pool_milkPayload<ExtArgs>
-      processed_by_user: Prisma.$userPayload<ExtArgs> | null
       request_bottles: Prisma.$request_bottlesPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       btl_id: number
-      pid: number
-      processed_by: string | null
       batch_number: number
       bottle_sequence_number: number
       volume_ml: Prisma.Decimal
       bottle: $Enums.bottle_type | null
-      processed_date: Date | null
       expiration_date: Date
       mbt_status: $Enums.test_status | null
       dispense_status: $Enums.pasteurized_milk_status | null
@@ -7762,9 +7837,8 @@ export namespace Prisma {
    */
   export interface Prisma__pasteurized_milkClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    batch_milk<T extends batch_milkDefaultArgs<ExtArgs> = {}>(args?: Subset<T, batch_milkDefaultArgs<ExtArgs>>): Prisma__batch_milkClient<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     modified_by_user<T extends pasteurized_milk$modified_by_userArgs<ExtArgs> = {}>(args?: Subset<T, pasteurized_milk$modified_by_userArgs<ExtArgs>>): Prisma__userClient<$Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    pool_milk<T extends pool_milkDefaultArgs<ExtArgs> = {}>(args?: Subset<T, pool_milkDefaultArgs<ExtArgs>>): Prisma__pool_milkClient<$Result.GetResult<Prisma.$pool_milkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    processed_by_user<T extends pasteurized_milk$processed_by_userArgs<ExtArgs> = {}>(args?: Subset<T, pasteurized_milk$processed_by_userArgs<ExtArgs>>): Prisma__userClient<$Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     request_bottles<T extends pasteurized_milk$request_bottlesArgs<ExtArgs> = {}>(args?: Subset<T, pasteurized_milk$request_bottlesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$request_bottlesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -7796,13 +7870,10 @@ export namespace Prisma {
    */
   interface pasteurized_milkFieldRefs {
     readonly btl_id: FieldRef<"pasteurized_milk", 'Int'>
-    readonly pid: FieldRef<"pasteurized_milk", 'Int'>
-    readonly processed_by: FieldRef<"pasteurized_milk", 'String'>
     readonly batch_number: FieldRef<"pasteurized_milk", 'Int'>
     readonly bottle_sequence_number: FieldRef<"pasteurized_milk", 'Int'>
     readonly volume_ml: FieldRef<"pasteurized_milk", 'Decimal'>
     readonly bottle: FieldRef<"pasteurized_milk", 'bottle_type'>
-    readonly processed_date: FieldRef<"pasteurized_milk", 'DateTime'>
     readonly expiration_date: FieldRef<"pasteurized_milk", 'DateTime'>
     readonly mbt_status: FieldRef<"pasteurized_milk", 'test_status'>
     readonly dispense_status: FieldRef<"pasteurized_milk", 'pasteurized_milk_status'>
@@ -8231,25 +8302,6 @@ export namespace Prisma {
   }
 
   /**
-   * pasteurized_milk.processed_by_user
-   */
-  export type pasteurized_milk$processed_by_userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the user
-     */
-    select?: userSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the user
-     */
-    omit?: userOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: userInclude<ExtArgs> | null
-    where?: userWhereInput
-  }
-
-  /**
    * pasteurized_milk.request_bottles
    */
   export type pasteurized_milk$request_bottlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8308,12 +8360,14 @@ export namespace Prisma {
     pid: number | null
     expected_volume_ml: Decimal | null
     actual_volume_ml: Decimal | null
+    remaining_volume_ml: Decimal | null
   }
 
   export type Pool_milkSumAggregateOutputType = {
     pid: number | null
     expected_volume_ml: Decimal | null
     actual_volume_ml: Decimal | null
+    remaining_volume_ml: Decimal | null
   }
 
   export type Pool_milkMinAggregateOutputType = {
@@ -8323,7 +8377,7 @@ export namespace Prisma {
     expiration_date: Date | null
     expected_volume_ml: Decimal | null
     actual_volume_ml: Decimal | null
-    qat_status: $Enums.test_status | null
+    remaining_volume_ml: Decimal | null
     milk_status: $Enums.milk_status | null
     remarks: string | null
     created_at: Date | null
@@ -8338,7 +8392,7 @@ export namespace Prisma {
     expiration_date: Date | null
     expected_volume_ml: Decimal | null
     actual_volume_ml: Decimal | null
-    qat_status: $Enums.test_status | null
+    remaining_volume_ml: Decimal | null
     milk_status: $Enums.milk_status | null
     remarks: string | null
     created_at: Date | null
@@ -8353,7 +8407,7 @@ export namespace Prisma {
     expiration_date: number
     expected_volume_ml: number
     actual_volume_ml: number
-    qat_status: number
+    remaining_volume_ml: number
     milk_status: number
     remarks: number
     created_at: number
@@ -8367,12 +8421,14 @@ export namespace Prisma {
     pid?: true
     expected_volume_ml?: true
     actual_volume_ml?: true
+    remaining_volume_ml?: true
   }
 
   export type Pool_milkSumAggregateInputType = {
     pid?: true
     expected_volume_ml?: true
     actual_volume_ml?: true
+    remaining_volume_ml?: true
   }
 
   export type Pool_milkMinAggregateInputType = {
@@ -8382,7 +8438,7 @@ export namespace Prisma {
     expiration_date?: true
     expected_volume_ml?: true
     actual_volume_ml?: true
-    qat_status?: true
+    remaining_volume_ml?: true
     milk_status?: true
     remarks?: true
     created_at?: true
@@ -8397,7 +8453,7 @@ export namespace Prisma {
     expiration_date?: true
     expected_volume_ml?: true
     actual_volume_ml?: true
-    qat_status?: true
+    remaining_volume_ml?: true
     milk_status?: true
     remarks?: true
     created_at?: true
@@ -8412,7 +8468,7 @@ export namespace Prisma {
     expiration_date?: true
     expected_volume_ml?: true
     actual_volume_ml?: true
-    qat_status?: true
+    remaining_volume_ml?: true
     milk_status?: true
     remarks?: true
     created_at?: true
@@ -8514,7 +8570,7 @@ export namespace Prisma {
     expiration_date: Date
     expected_volume_ml: Decimal
     actual_volume_ml: Decimal
-    qat_status: $Enums.test_status | null
+    remaining_volume_ml: Decimal | null
     milk_status: $Enums.milk_status | null
     remarks: string | null
     created_at: Date | null
@@ -8548,13 +8604,13 @@ export namespace Prisma {
     expiration_date?: boolean
     expected_volume_ml?: boolean
     actual_volume_ml?: boolean
-    qat_status?: boolean
+    remaining_volume_ml?: boolean
     milk_status?: boolean
     remarks?: boolean
     created_at?: boolean
     modified_at?: boolean
     modified_by?: boolean
-    pasteurized_milk?: boolean | pool_milk$pasteurized_milkArgs<ExtArgs>
+    batch_milk?: boolean | pool_milk$batch_milkArgs<ExtArgs>
     modified_by_user?: boolean | pool_milk$modified_by_userArgs<ExtArgs>
     pooled_by_user?: boolean | userDefaultArgs<ExtArgs>
     raw_milk?: boolean | pool_milk$raw_milkArgs<ExtArgs>
@@ -8568,7 +8624,7 @@ export namespace Prisma {
     expiration_date?: boolean
     expected_volume_ml?: boolean
     actual_volume_ml?: boolean
-    qat_status?: boolean
+    remaining_volume_ml?: boolean
     milk_status?: boolean
     remarks?: boolean
     created_at?: boolean
@@ -8585,7 +8641,7 @@ export namespace Prisma {
     expiration_date?: boolean
     expected_volume_ml?: boolean
     actual_volume_ml?: boolean
-    qat_status?: boolean
+    remaining_volume_ml?: boolean
     milk_status?: boolean
     remarks?: boolean
     created_at?: boolean
@@ -8602,7 +8658,7 @@ export namespace Prisma {
     expiration_date?: boolean
     expected_volume_ml?: boolean
     actual_volume_ml?: boolean
-    qat_status?: boolean
+    remaining_volume_ml?: boolean
     milk_status?: boolean
     remarks?: boolean
     created_at?: boolean
@@ -8610,9 +8666,9 @@ export namespace Prisma {
     modified_by?: boolean
   }
 
-  export type pool_milkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"pid" | "pooled_by" | "pooled_date" | "expiration_date" | "expected_volume_ml" | "actual_volume_ml" | "qat_status" | "milk_status" | "remarks" | "created_at" | "modified_at" | "modified_by", ExtArgs["result"]["pool_milk"]>
+  export type pool_milkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"pid" | "pooled_by" | "pooled_date" | "expiration_date" | "expected_volume_ml" | "actual_volume_ml" | "remaining_volume_ml" | "milk_status" | "remarks" | "created_at" | "modified_at" | "modified_by", ExtArgs["result"]["pool_milk"]>
   export type pool_milkInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    pasteurized_milk?: boolean | pool_milk$pasteurized_milkArgs<ExtArgs>
+    batch_milk?: boolean | pool_milk$batch_milkArgs<ExtArgs>
     modified_by_user?: boolean | pool_milk$modified_by_userArgs<ExtArgs>
     pooled_by_user?: boolean | userDefaultArgs<ExtArgs>
     raw_milk?: boolean | pool_milk$raw_milkArgs<ExtArgs>
@@ -8630,7 +8686,7 @@ export namespace Prisma {
   export type $pool_milkPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "pool_milk"
     objects: {
-      pasteurized_milk: Prisma.$pasteurized_milkPayload<ExtArgs>[]
+      batch_milk: Prisma.$batch_milkPayload<ExtArgs>[]
       modified_by_user: Prisma.$userPayload<ExtArgs> | null
       pooled_by_user: Prisma.$userPayload<ExtArgs>
       raw_milk: Prisma.$raw_milkPayload<ExtArgs>[]
@@ -8642,7 +8698,7 @@ export namespace Prisma {
       expiration_date: Date
       expected_volume_ml: Prisma.Decimal
       actual_volume_ml: Prisma.Decimal
-      qat_status: $Enums.test_status | null
+      remaining_volume_ml: Prisma.Decimal | null
       milk_status: $Enums.milk_status | null
       remarks: string | null
       created_at: Date | null
@@ -9042,7 +9098,7 @@ export namespace Prisma {
    */
   export interface Prisma__pool_milkClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    pasteurized_milk<T extends pool_milk$pasteurized_milkArgs<ExtArgs> = {}>(args?: Subset<T, pool_milk$pasteurized_milkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pasteurized_milkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    batch_milk<T extends pool_milk$batch_milkArgs<ExtArgs> = {}>(args?: Subset<T, pool_milk$batch_milkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     modified_by_user<T extends pool_milk$modified_by_userArgs<ExtArgs> = {}>(args?: Subset<T, pool_milk$modified_by_userArgs<ExtArgs>>): Prisma__userClient<$Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     pooled_by_user<T extends userDefaultArgs<ExtArgs> = {}>(args?: Subset<T, userDefaultArgs<ExtArgs>>): Prisma__userClient<$Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     raw_milk<T extends pool_milk$raw_milkArgs<ExtArgs> = {}>(args?: Subset<T, pool_milk$raw_milkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$raw_milkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -9081,7 +9137,7 @@ export namespace Prisma {
     readonly expiration_date: FieldRef<"pool_milk", 'DateTime'>
     readonly expected_volume_ml: FieldRef<"pool_milk", 'Decimal'>
     readonly actual_volume_ml: FieldRef<"pool_milk", 'Decimal'>
-    readonly qat_status: FieldRef<"pool_milk", 'test_status'>
+    readonly remaining_volume_ml: FieldRef<"pool_milk", 'Decimal'>
     readonly milk_status: FieldRef<"pool_milk", 'milk_status'>
     readonly remarks: FieldRef<"pool_milk", 'String'>
     readonly created_at: FieldRef<"pool_milk", 'DateTime'>
@@ -9488,27 +9544,27 @@ export namespace Prisma {
   }
 
   /**
-   * pool_milk.pasteurized_milk
+   * pool_milk.batch_milk
    */
-  export type pool_milk$pasteurized_milkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type pool_milk$batch_milkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the pasteurized_milk
+     * Select specific fields to fetch from the batch_milk
      */
-    select?: pasteurized_milkSelect<ExtArgs> | null
+    select?: batch_milkSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the pasteurized_milk
+     * Omit specific fields from the batch_milk
      */
-    omit?: pasteurized_milkOmit<ExtArgs> | null
+    omit?: batch_milkOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: pasteurized_milkInclude<ExtArgs> | null
-    where?: pasteurized_milkWhereInput
-    orderBy?: pasteurized_milkOrderByWithRelationInput | pasteurized_milkOrderByWithRelationInput[]
-    cursor?: pasteurized_milkWhereUniqueInput
+    include?: batch_milkInclude<ExtArgs> | null
+    where?: batch_milkWhereInput
+    orderBy?: batch_milkOrderByWithRelationInput | batch_milkOrderByWithRelationInput[]
+    cursor?: batch_milkWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: Pasteurized_milkScalarFieldEnum | Pasteurized_milkScalarFieldEnum[]
+    distinct?: Batch_milkScalarFieldEnum | Batch_milkScalarFieldEnum[]
   }
 
   /**
@@ -12202,12 +12258,12 @@ export namespace Prisma {
     modified_by?: boolean
     profile_image_url?: boolean
     audit_log?: boolean | user$audit_logArgs<ExtArgs>
+    batch_milk?: boolean | user$batch_milkArgs<ExtArgs>
     beneficiary?: boolean | user$beneficiaryArgs<ExtArgs>
     donor?: boolean | user$donorArgs<ExtArgs>
     notifications_modified?: boolean | user$notifications_modifiedArgs<ExtArgs>
     notifications_received?: boolean | user$notifications_receivedArgs<ExtArgs>
     modified_pasteurized_milk?: boolean | user$modified_pasteurized_milkArgs<ExtArgs>
-    processed_pasteurized_milk?: boolean | user$processed_pasteurized_milkArgs<ExtArgs>
     modified_pool_milk?: boolean | user$modified_pool_milkArgs<ExtArgs>
     pooled_pool_milk?: boolean | user$pooled_pool_milkArgs<ExtArgs>
     collected_raw_milk?: boolean | user$collected_raw_milkArgs<ExtArgs>
@@ -12265,12 +12321,12 @@ export namespace Prisma {
   export type userOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "role" | "name" | "email" | "phone" | "password" | "status" | "created_at" | "modified_at" | "modified_by" | "profile_image_url", ExtArgs["result"]["user"]>
   export type userInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     audit_log?: boolean | user$audit_logArgs<ExtArgs>
+    batch_milk?: boolean | user$batch_milkArgs<ExtArgs>
     beneficiary?: boolean | user$beneficiaryArgs<ExtArgs>
     donor?: boolean | user$donorArgs<ExtArgs>
     notifications_modified?: boolean | user$notifications_modifiedArgs<ExtArgs>
     notifications_received?: boolean | user$notifications_receivedArgs<ExtArgs>
     modified_pasteurized_milk?: boolean | user$modified_pasteurized_milkArgs<ExtArgs>
-    processed_pasteurized_milk?: boolean | user$processed_pasteurized_milkArgs<ExtArgs>
     modified_pool_milk?: boolean | user$modified_pool_milkArgs<ExtArgs>
     pooled_pool_milk?: boolean | user$pooled_pool_milkArgs<ExtArgs>
     collected_raw_milk?: boolean | user$collected_raw_milkArgs<ExtArgs>
@@ -12291,12 +12347,12 @@ export namespace Prisma {
     name: "user"
     objects: {
       audit_log: Prisma.$audit_logPayload<ExtArgs>[]
+      batch_milk: Prisma.$batch_milkPayload<ExtArgs>[]
       beneficiary: Prisma.$beneficiaryPayload<ExtArgs>[]
       donor: Prisma.$donorPayload<ExtArgs>[]
       notifications_modified: Prisma.$notificationPayload<ExtArgs>[]
       notifications_received: Prisma.$notificationPayload<ExtArgs>[]
       modified_pasteurized_milk: Prisma.$pasteurized_milkPayload<ExtArgs>[]
-      processed_pasteurized_milk: Prisma.$pasteurized_milkPayload<ExtArgs>[]
       modified_pool_milk: Prisma.$pool_milkPayload<ExtArgs>[]
       pooled_pool_milk: Prisma.$pool_milkPayload<ExtArgs>[]
       collected_raw_milk: Prisma.$raw_milkPayload<ExtArgs>[]
@@ -12712,12 +12768,12 @@ export namespace Prisma {
   export interface Prisma__userClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     audit_log<T extends user$audit_logArgs<ExtArgs> = {}>(args?: Subset<T, user$audit_logArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$audit_logPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    batch_milk<T extends user$batch_milkArgs<ExtArgs> = {}>(args?: Subset<T, user$batch_milkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     beneficiary<T extends user$beneficiaryArgs<ExtArgs> = {}>(args?: Subset<T, user$beneficiaryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$beneficiaryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     donor<T extends user$donorArgs<ExtArgs> = {}>(args?: Subset<T, user$donorArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$donorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications_modified<T extends user$notifications_modifiedArgs<ExtArgs> = {}>(args?: Subset<T, user$notifications_modifiedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications_received<T extends user$notifications_receivedArgs<ExtArgs> = {}>(args?: Subset<T, user$notifications_receivedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     modified_pasteurized_milk<T extends user$modified_pasteurized_milkArgs<ExtArgs> = {}>(args?: Subset<T, user$modified_pasteurized_milkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pasteurized_milkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    processed_pasteurized_milk<T extends user$processed_pasteurized_milkArgs<ExtArgs> = {}>(args?: Subset<T, user$processed_pasteurized_milkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pasteurized_milkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     modified_pool_milk<T extends user$modified_pool_milkArgs<ExtArgs> = {}>(args?: Subset<T, user$modified_pool_milkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pool_milkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pooled_pool_milk<T extends user$pooled_pool_milkArgs<ExtArgs> = {}>(args?: Subset<T, user$pooled_pool_milkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pool_milkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     collected_raw_milk<T extends user$collected_raw_milkArgs<ExtArgs> = {}>(args?: Subset<T, user$collected_raw_milkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$raw_milkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -13190,6 +13246,30 @@ export namespace Prisma {
   }
 
   /**
+   * user.batch_milk
+   */
+  export type user$batch_milkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the batch_milk
+     */
+    select?: batch_milkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the batch_milk
+     */
+    omit?: batch_milkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: batch_milkInclude<ExtArgs> | null
+    where?: batch_milkWhereInput
+    orderBy?: batch_milkOrderByWithRelationInput | batch_milkOrderByWithRelationInput[]
+    cursor?: batch_milkWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Batch_milkScalarFieldEnum | Batch_milkScalarFieldEnum[]
+  }
+
+  /**
    * user.beneficiary
    */
   export type user$beneficiaryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13289,30 +13369,6 @@ export namespace Prisma {
    * user.modified_pasteurized_milk
    */
   export type user$modified_pasteurized_milkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the pasteurized_milk
-     */
-    select?: pasteurized_milkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the pasteurized_milk
-     */
-    omit?: pasteurized_milkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: pasteurized_milkInclude<ExtArgs> | null
-    where?: pasteurized_milkWhereInput
-    orderBy?: pasteurized_milkOrderByWithRelationInput | pasteurized_milkOrderByWithRelationInput[]
-    cursor?: pasteurized_milkWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Pasteurized_milkScalarFieldEnum | Pasteurized_milkScalarFieldEnum[]
-  }
-
-  /**
-   * user.processed_pasteurized_milk
-   */
-  export type user$processed_pasteurized_milkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the pasteurized_milk
      */
@@ -14735,6 +14791,1149 @@ export namespace Prisma {
 
 
   /**
+   * Model batch_milk
+   */
+
+  export type AggregateBatch_milk = {
+    _count: Batch_milkCountAggregateOutputType | null
+    _avg: Batch_milkAvgAggregateOutputType | null
+    _sum: Batch_milkSumAggregateOutputType | null
+    _min: Batch_milkMinAggregateOutputType | null
+    _max: Batch_milkMaxAggregateOutputType | null
+  }
+
+  export type Batch_milkAvgAggregateOutputType = {
+    batch_id: number | null
+    source: number | null
+    bottle_count: number | null
+  }
+
+  export type Batch_milkSumAggregateOutputType = {
+    batch_id: number | null
+    source: number | null
+    bottle_count: number | null
+  }
+
+  export type Batch_milkMinAggregateOutputType = {
+    batch_id: number | null
+    processed_date: Date | null
+    processed_by: string | null
+    source: number | null
+    bottle_count: number | null
+  }
+
+  export type Batch_milkMaxAggregateOutputType = {
+    batch_id: number | null
+    processed_date: Date | null
+    processed_by: string | null
+    source: number | null
+    bottle_count: number | null
+  }
+
+  export type Batch_milkCountAggregateOutputType = {
+    batch_id: number
+    processed_date: number
+    processed_by: number
+    source: number
+    bottle_count: number
+    _all: number
+  }
+
+
+  export type Batch_milkAvgAggregateInputType = {
+    batch_id?: true
+    source?: true
+    bottle_count?: true
+  }
+
+  export type Batch_milkSumAggregateInputType = {
+    batch_id?: true
+    source?: true
+    bottle_count?: true
+  }
+
+  export type Batch_milkMinAggregateInputType = {
+    batch_id?: true
+    processed_date?: true
+    processed_by?: true
+    source?: true
+    bottle_count?: true
+  }
+
+  export type Batch_milkMaxAggregateInputType = {
+    batch_id?: true
+    processed_date?: true
+    processed_by?: true
+    source?: true
+    bottle_count?: true
+  }
+
+  export type Batch_milkCountAggregateInputType = {
+    batch_id?: true
+    processed_date?: true
+    processed_by?: true
+    source?: true
+    bottle_count?: true
+    _all?: true
+  }
+
+  export type Batch_milkAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which batch_milk to aggregate.
+     */
+    where?: batch_milkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of batch_milks to fetch.
+     */
+    orderBy?: batch_milkOrderByWithRelationInput | batch_milkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: batch_milkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` batch_milks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` batch_milks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned batch_milks
+    **/
+    _count?: true | Batch_milkCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Batch_milkAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Batch_milkSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Batch_milkMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Batch_milkMaxAggregateInputType
+  }
+
+  export type GetBatch_milkAggregateType<T extends Batch_milkAggregateArgs> = {
+        [P in keyof T & keyof AggregateBatch_milk]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBatch_milk[P]>
+      : GetScalarType<T[P], AggregateBatch_milk[P]>
+  }
+
+
+
+
+  export type batch_milkGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: batch_milkWhereInput
+    orderBy?: batch_milkOrderByWithAggregationInput | batch_milkOrderByWithAggregationInput[]
+    by: Batch_milkScalarFieldEnum[] | Batch_milkScalarFieldEnum
+    having?: batch_milkScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Batch_milkCountAggregateInputType | true
+    _avg?: Batch_milkAvgAggregateInputType
+    _sum?: Batch_milkSumAggregateInputType
+    _min?: Batch_milkMinAggregateInputType
+    _max?: Batch_milkMaxAggregateInputType
+  }
+
+  export type Batch_milkGroupByOutputType = {
+    batch_id: number
+    processed_date: Date
+    processed_by: string
+    source: number
+    bottle_count: number
+    _count: Batch_milkCountAggregateOutputType | null
+    _avg: Batch_milkAvgAggregateOutputType | null
+    _sum: Batch_milkSumAggregateOutputType | null
+    _min: Batch_milkMinAggregateOutputType | null
+    _max: Batch_milkMaxAggregateOutputType | null
+  }
+
+  type GetBatch_milkGroupByPayload<T extends batch_milkGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Batch_milkGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Batch_milkGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Batch_milkGroupByOutputType[P]>
+            : GetScalarType<T[P], Batch_milkGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type batch_milkSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    batch_id?: boolean
+    processed_date?: boolean
+    processed_by?: boolean
+    source?: boolean
+    bottle_count?: boolean
+    user?: boolean | userDefaultArgs<ExtArgs>
+    pool_milk?: boolean | pool_milkDefaultArgs<ExtArgs>
+    pasteurized_milk?: boolean | batch_milk$pasteurized_milkArgs<ExtArgs>
+    _count?: boolean | Batch_milkCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["batch_milk"]>
+
+  export type batch_milkSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    batch_id?: boolean
+    processed_date?: boolean
+    processed_by?: boolean
+    source?: boolean
+    bottle_count?: boolean
+    user?: boolean | userDefaultArgs<ExtArgs>
+    pool_milk?: boolean | pool_milkDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["batch_milk"]>
+
+  export type batch_milkSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    batch_id?: boolean
+    processed_date?: boolean
+    processed_by?: boolean
+    source?: boolean
+    bottle_count?: boolean
+    user?: boolean | userDefaultArgs<ExtArgs>
+    pool_milk?: boolean | pool_milkDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["batch_milk"]>
+
+  export type batch_milkSelectScalar = {
+    batch_id?: boolean
+    processed_date?: boolean
+    processed_by?: boolean
+    source?: boolean
+    bottle_count?: boolean
+  }
+
+  export type batch_milkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"batch_id" | "processed_date" | "processed_by" | "source" | "bottle_count", ExtArgs["result"]["batch_milk"]>
+  export type batch_milkInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | userDefaultArgs<ExtArgs>
+    pool_milk?: boolean | pool_milkDefaultArgs<ExtArgs>
+    pasteurized_milk?: boolean | batch_milk$pasteurized_milkArgs<ExtArgs>
+    _count?: boolean | Batch_milkCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type batch_milkIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | userDefaultArgs<ExtArgs>
+    pool_milk?: boolean | pool_milkDefaultArgs<ExtArgs>
+  }
+  export type batch_milkIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | userDefaultArgs<ExtArgs>
+    pool_milk?: boolean | pool_milkDefaultArgs<ExtArgs>
+  }
+
+  export type $batch_milkPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "batch_milk"
+    objects: {
+      user: Prisma.$userPayload<ExtArgs>
+      pool_milk: Prisma.$pool_milkPayload<ExtArgs>
+      pasteurized_milk: Prisma.$pasteurized_milkPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      batch_id: number
+      processed_date: Date
+      processed_by: string
+      source: number
+      bottle_count: number
+    }, ExtArgs["result"]["batch_milk"]>
+    composites: {}
+  }
+
+  type batch_milkGetPayload<S extends boolean | null | undefined | batch_milkDefaultArgs> = $Result.GetResult<Prisma.$batch_milkPayload, S>
+
+  type batch_milkCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<batch_milkFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Batch_milkCountAggregateInputType | true
+    }
+
+  export interface batch_milkDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['batch_milk'], meta: { name: 'batch_milk' } }
+    /**
+     * Find zero or one Batch_milk that matches the filter.
+     * @param {batch_milkFindUniqueArgs} args - Arguments to find a Batch_milk
+     * @example
+     * // Get one Batch_milk
+     * const batch_milk = await prisma.batch_milk.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends batch_milkFindUniqueArgs>(args: SelectSubset<T, batch_milkFindUniqueArgs<ExtArgs>>): Prisma__batch_milkClient<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Batch_milk that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {batch_milkFindUniqueOrThrowArgs} args - Arguments to find a Batch_milk
+     * @example
+     * // Get one Batch_milk
+     * const batch_milk = await prisma.batch_milk.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends batch_milkFindUniqueOrThrowArgs>(args: SelectSubset<T, batch_milkFindUniqueOrThrowArgs<ExtArgs>>): Prisma__batch_milkClient<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Batch_milk that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {batch_milkFindFirstArgs} args - Arguments to find a Batch_milk
+     * @example
+     * // Get one Batch_milk
+     * const batch_milk = await prisma.batch_milk.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends batch_milkFindFirstArgs>(args?: SelectSubset<T, batch_milkFindFirstArgs<ExtArgs>>): Prisma__batch_milkClient<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Batch_milk that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {batch_milkFindFirstOrThrowArgs} args - Arguments to find a Batch_milk
+     * @example
+     * // Get one Batch_milk
+     * const batch_milk = await prisma.batch_milk.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends batch_milkFindFirstOrThrowArgs>(args?: SelectSubset<T, batch_milkFindFirstOrThrowArgs<ExtArgs>>): Prisma__batch_milkClient<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Batch_milks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {batch_milkFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Batch_milks
+     * const batch_milks = await prisma.batch_milk.findMany()
+     * 
+     * // Get first 10 Batch_milks
+     * const batch_milks = await prisma.batch_milk.findMany({ take: 10 })
+     * 
+     * // Only select the `batch_id`
+     * const batch_milkWithBatch_idOnly = await prisma.batch_milk.findMany({ select: { batch_id: true } })
+     * 
+     */
+    findMany<T extends batch_milkFindManyArgs>(args?: SelectSubset<T, batch_milkFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Batch_milk.
+     * @param {batch_milkCreateArgs} args - Arguments to create a Batch_milk.
+     * @example
+     * // Create one Batch_milk
+     * const Batch_milk = await prisma.batch_milk.create({
+     *   data: {
+     *     // ... data to create a Batch_milk
+     *   }
+     * })
+     * 
+     */
+    create<T extends batch_milkCreateArgs>(args: SelectSubset<T, batch_milkCreateArgs<ExtArgs>>): Prisma__batch_milkClient<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Batch_milks.
+     * @param {batch_milkCreateManyArgs} args - Arguments to create many Batch_milks.
+     * @example
+     * // Create many Batch_milks
+     * const batch_milk = await prisma.batch_milk.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends batch_milkCreateManyArgs>(args?: SelectSubset<T, batch_milkCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Batch_milks and returns the data saved in the database.
+     * @param {batch_milkCreateManyAndReturnArgs} args - Arguments to create many Batch_milks.
+     * @example
+     * // Create many Batch_milks
+     * const batch_milk = await prisma.batch_milk.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Batch_milks and only return the `batch_id`
+     * const batch_milkWithBatch_idOnly = await prisma.batch_milk.createManyAndReturn({
+     *   select: { batch_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends batch_milkCreateManyAndReturnArgs>(args?: SelectSubset<T, batch_milkCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Batch_milk.
+     * @param {batch_milkDeleteArgs} args - Arguments to delete one Batch_milk.
+     * @example
+     * // Delete one Batch_milk
+     * const Batch_milk = await prisma.batch_milk.delete({
+     *   where: {
+     *     // ... filter to delete one Batch_milk
+     *   }
+     * })
+     * 
+     */
+    delete<T extends batch_milkDeleteArgs>(args: SelectSubset<T, batch_milkDeleteArgs<ExtArgs>>): Prisma__batch_milkClient<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Batch_milk.
+     * @param {batch_milkUpdateArgs} args - Arguments to update one Batch_milk.
+     * @example
+     * // Update one Batch_milk
+     * const batch_milk = await prisma.batch_milk.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends batch_milkUpdateArgs>(args: SelectSubset<T, batch_milkUpdateArgs<ExtArgs>>): Prisma__batch_milkClient<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Batch_milks.
+     * @param {batch_milkDeleteManyArgs} args - Arguments to filter Batch_milks to delete.
+     * @example
+     * // Delete a few Batch_milks
+     * const { count } = await prisma.batch_milk.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends batch_milkDeleteManyArgs>(args?: SelectSubset<T, batch_milkDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Batch_milks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {batch_milkUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Batch_milks
+     * const batch_milk = await prisma.batch_milk.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends batch_milkUpdateManyArgs>(args: SelectSubset<T, batch_milkUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Batch_milks and returns the data updated in the database.
+     * @param {batch_milkUpdateManyAndReturnArgs} args - Arguments to update many Batch_milks.
+     * @example
+     * // Update many Batch_milks
+     * const batch_milk = await prisma.batch_milk.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Batch_milks and only return the `batch_id`
+     * const batch_milkWithBatch_idOnly = await prisma.batch_milk.updateManyAndReturn({
+     *   select: { batch_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends batch_milkUpdateManyAndReturnArgs>(args: SelectSubset<T, batch_milkUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Batch_milk.
+     * @param {batch_milkUpsertArgs} args - Arguments to update or create a Batch_milk.
+     * @example
+     * // Update or create a Batch_milk
+     * const batch_milk = await prisma.batch_milk.upsert({
+     *   create: {
+     *     // ... data to create a Batch_milk
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Batch_milk we want to update
+     *   }
+     * })
+     */
+    upsert<T extends batch_milkUpsertArgs>(args: SelectSubset<T, batch_milkUpsertArgs<ExtArgs>>): Prisma__batch_milkClient<$Result.GetResult<Prisma.$batch_milkPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Batch_milks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {batch_milkCountArgs} args - Arguments to filter Batch_milks to count.
+     * @example
+     * // Count the number of Batch_milks
+     * const count = await prisma.batch_milk.count({
+     *   where: {
+     *     // ... the filter for the Batch_milks we want to count
+     *   }
+     * })
+    **/
+    count<T extends batch_milkCountArgs>(
+      args?: Subset<T, batch_milkCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Batch_milkCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Batch_milk.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Batch_milkAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Batch_milkAggregateArgs>(args: Subset<T, Batch_milkAggregateArgs>): Prisma.PrismaPromise<GetBatch_milkAggregateType<T>>
+
+    /**
+     * Group by Batch_milk.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {batch_milkGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends batch_milkGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: batch_milkGroupByArgs['orderBy'] }
+        : { orderBy?: batch_milkGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, batch_milkGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBatch_milkGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the batch_milk model
+   */
+  readonly fields: batch_milkFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for batch_milk.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__batch_milkClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends userDefaultArgs<ExtArgs> = {}>(args?: Subset<T, userDefaultArgs<ExtArgs>>): Prisma__userClient<$Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    pool_milk<T extends pool_milkDefaultArgs<ExtArgs> = {}>(args?: Subset<T, pool_milkDefaultArgs<ExtArgs>>): Prisma__pool_milkClient<$Result.GetResult<Prisma.$pool_milkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    pasteurized_milk<T extends batch_milk$pasteurized_milkArgs<ExtArgs> = {}>(args?: Subset<T, batch_milk$pasteurized_milkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pasteurized_milkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the batch_milk model
+   */
+  interface batch_milkFieldRefs {
+    readonly batch_id: FieldRef<"batch_milk", 'Int'>
+    readonly processed_date: FieldRef<"batch_milk", 'DateTime'>
+    readonly processed_by: FieldRef<"batch_milk", 'String'>
+    readonly source: FieldRef<"batch_milk", 'Int'>
+    readonly bottle_count: FieldRef<"batch_milk", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * batch_milk findUnique
+   */
+  export type batch_milkFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the batch_milk
+     */
+    select?: batch_milkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the batch_milk
+     */
+    omit?: batch_milkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: batch_milkInclude<ExtArgs> | null
+    /**
+     * Filter, which batch_milk to fetch.
+     */
+    where: batch_milkWhereUniqueInput
+  }
+
+  /**
+   * batch_milk findUniqueOrThrow
+   */
+  export type batch_milkFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the batch_milk
+     */
+    select?: batch_milkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the batch_milk
+     */
+    omit?: batch_milkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: batch_milkInclude<ExtArgs> | null
+    /**
+     * Filter, which batch_milk to fetch.
+     */
+    where: batch_milkWhereUniqueInput
+  }
+
+  /**
+   * batch_milk findFirst
+   */
+  export type batch_milkFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the batch_milk
+     */
+    select?: batch_milkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the batch_milk
+     */
+    omit?: batch_milkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: batch_milkInclude<ExtArgs> | null
+    /**
+     * Filter, which batch_milk to fetch.
+     */
+    where?: batch_milkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of batch_milks to fetch.
+     */
+    orderBy?: batch_milkOrderByWithRelationInput | batch_milkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for batch_milks.
+     */
+    cursor?: batch_milkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` batch_milks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` batch_milks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of batch_milks.
+     */
+    distinct?: Batch_milkScalarFieldEnum | Batch_milkScalarFieldEnum[]
+  }
+
+  /**
+   * batch_milk findFirstOrThrow
+   */
+  export type batch_milkFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the batch_milk
+     */
+    select?: batch_milkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the batch_milk
+     */
+    omit?: batch_milkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: batch_milkInclude<ExtArgs> | null
+    /**
+     * Filter, which batch_milk to fetch.
+     */
+    where?: batch_milkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of batch_milks to fetch.
+     */
+    orderBy?: batch_milkOrderByWithRelationInput | batch_milkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for batch_milks.
+     */
+    cursor?: batch_milkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` batch_milks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` batch_milks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of batch_milks.
+     */
+    distinct?: Batch_milkScalarFieldEnum | Batch_milkScalarFieldEnum[]
+  }
+
+  /**
+   * batch_milk findMany
+   */
+  export type batch_milkFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the batch_milk
+     */
+    select?: batch_milkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the batch_milk
+     */
+    omit?: batch_milkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: batch_milkInclude<ExtArgs> | null
+    /**
+     * Filter, which batch_milks to fetch.
+     */
+    where?: batch_milkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of batch_milks to fetch.
+     */
+    orderBy?: batch_milkOrderByWithRelationInput | batch_milkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing batch_milks.
+     */
+    cursor?: batch_milkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` batch_milks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` batch_milks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of batch_milks.
+     */
+    distinct?: Batch_milkScalarFieldEnum | Batch_milkScalarFieldEnum[]
+  }
+
+  /**
+   * batch_milk create
+   */
+  export type batch_milkCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the batch_milk
+     */
+    select?: batch_milkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the batch_milk
+     */
+    omit?: batch_milkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: batch_milkInclude<ExtArgs> | null
+    /**
+     * The data needed to create a batch_milk.
+     */
+    data: XOR<batch_milkCreateInput, batch_milkUncheckedCreateInput>
+  }
+
+  /**
+   * batch_milk createMany
+   */
+  export type batch_milkCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many batch_milks.
+     */
+    data: batch_milkCreateManyInput | batch_milkCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * batch_milk createManyAndReturn
+   */
+  export type batch_milkCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the batch_milk
+     */
+    select?: batch_milkSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the batch_milk
+     */
+    omit?: batch_milkOmit<ExtArgs> | null
+    /**
+     * The data used to create many batch_milks.
+     */
+    data: batch_milkCreateManyInput | batch_milkCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: batch_milkIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * batch_milk update
+   */
+  export type batch_milkUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the batch_milk
+     */
+    select?: batch_milkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the batch_milk
+     */
+    omit?: batch_milkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: batch_milkInclude<ExtArgs> | null
+    /**
+     * The data needed to update a batch_milk.
+     */
+    data: XOR<batch_milkUpdateInput, batch_milkUncheckedUpdateInput>
+    /**
+     * Choose, which batch_milk to update.
+     */
+    where: batch_milkWhereUniqueInput
+  }
+
+  /**
+   * batch_milk updateMany
+   */
+  export type batch_milkUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update batch_milks.
+     */
+    data: XOR<batch_milkUpdateManyMutationInput, batch_milkUncheckedUpdateManyInput>
+    /**
+     * Filter which batch_milks to update
+     */
+    where?: batch_milkWhereInput
+    /**
+     * Limit how many batch_milks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * batch_milk updateManyAndReturn
+   */
+  export type batch_milkUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the batch_milk
+     */
+    select?: batch_milkSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the batch_milk
+     */
+    omit?: batch_milkOmit<ExtArgs> | null
+    /**
+     * The data used to update batch_milks.
+     */
+    data: XOR<batch_milkUpdateManyMutationInput, batch_milkUncheckedUpdateManyInput>
+    /**
+     * Filter which batch_milks to update
+     */
+    where?: batch_milkWhereInput
+    /**
+     * Limit how many batch_milks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: batch_milkIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * batch_milk upsert
+   */
+  export type batch_milkUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the batch_milk
+     */
+    select?: batch_milkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the batch_milk
+     */
+    omit?: batch_milkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: batch_milkInclude<ExtArgs> | null
+    /**
+     * The filter to search for the batch_milk to update in case it exists.
+     */
+    where: batch_milkWhereUniqueInput
+    /**
+     * In case the batch_milk found by the `where` argument doesn't exist, create a new batch_milk with this data.
+     */
+    create: XOR<batch_milkCreateInput, batch_milkUncheckedCreateInput>
+    /**
+     * In case the batch_milk was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<batch_milkUpdateInput, batch_milkUncheckedUpdateInput>
+  }
+
+  /**
+   * batch_milk delete
+   */
+  export type batch_milkDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the batch_milk
+     */
+    select?: batch_milkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the batch_milk
+     */
+    omit?: batch_milkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: batch_milkInclude<ExtArgs> | null
+    /**
+     * Filter which batch_milk to delete.
+     */
+    where: batch_milkWhereUniqueInput
+  }
+
+  /**
+   * batch_milk deleteMany
+   */
+  export type batch_milkDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which batch_milks to delete
+     */
+    where?: batch_milkWhereInput
+    /**
+     * Limit how many batch_milks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * batch_milk.pasteurized_milk
+   */
+  export type batch_milk$pasteurized_milkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasteurized_milk
+     */
+    select?: pasteurized_milkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasteurized_milk
+     */
+    omit?: pasteurized_milkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pasteurized_milkInclude<ExtArgs> | null
+    where?: pasteurized_milkWhereInput
+    orderBy?: pasteurized_milkOrderByWithRelationInput | pasteurized_milkOrderByWithRelationInput[]
+    cursor?: pasteurized_milkWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Pasteurized_milkScalarFieldEnum | Pasteurized_milkScalarFieldEnum[]
+  }
+
+  /**
+   * batch_milk without action
+   */
+  export type batch_milkDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the batch_milk
+     */
+    select?: batch_milkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the batch_milk
+     */
+    omit?: batch_milkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: batch_milkInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -14817,13 +16016,10 @@ export namespace Prisma {
 
   export const Pasteurized_milkScalarFieldEnum: {
     btl_id: 'btl_id',
-    pid: 'pid',
-    processed_by: 'processed_by',
     batch_number: 'batch_number',
     bottle_sequence_number: 'bottle_sequence_number',
     volume_ml: 'volume_ml',
     bottle: 'bottle',
-    processed_date: 'processed_date',
     expiration_date: 'expiration_date',
     mbt_status: 'mbt_status',
     dispense_status: 'dispense_status',
@@ -14844,7 +16040,7 @@ export namespace Prisma {
     expiration_date: 'expiration_date',
     expected_volume_ml: 'expected_volume_ml',
     actual_volume_ml: 'actual_volume_ml',
-    qat_status: 'qat_status',
+    remaining_volume_ml: 'remaining_volume_ml',
     milk_status: 'milk_status',
     remarks: 'remarks',
     created_at: 'created_at',
@@ -14919,6 +16115,17 @@ export namespace Prisma {
   };
 
   export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+  export const Batch_milkScalarFieldEnum: {
+    batch_id: 'batch_id',
+    processed_date: 'processed_date',
+    processed_by: 'processed_by',
+    source: 'source',
+    bottle_count: 'bottle_count'
+  };
+
+  export type Batch_milkScalarFieldEnum = (typeof Batch_milkScalarFieldEnum)[keyof typeof Batch_milkScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -15554,13 +16761,10 @@ export namespace Prisma {
     OR?: pasteurized_milkWhereInput[]
     NOT?: pasteurized_milkWhereInput | pasteurized_milkWhereInput[]
     btl_id?: IntFilter<"pasteurized_milk"> | number
-    pid?: IntFilter<"pasteurized_milk"> | number
-    processed_by?: UuidNullableFilter<"pasteurized_milk"> | string | null
     batch_number?: IntFilter<"pasteurized_milk"> | number
     bottle_sequence_number?: IntFilter<"pasteurized_milk"> | number
     volume_ml?: DecimalFilter<"pasteurized_milk"> | Decimal | DecimalJsLike | number | string
     bottle?: Enumbottle_typeNullableFilter<"pasteurized_milk"> | $Enums.bottle_type | null
-    processed_date?: DateTimeNullableFilter<"pasteurized_milk"> | Date | string | null
     expiration_date?: DateTimeFilter<"pasteurized_milk"> | Date | string
     mbt_status?: Enumtest_statusNullableFilter<"pasteurized_milk"> | $Enums.test_status | null
     dispense_status?: Enumpasteurized_milk_statusNullableFilter<"pasteurized_milk"> | $Enums.pasteurized_milk_status | null
@@ -15569,21 +16773,17 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"pasteurized_milk"> | Date | string | null
     modified_at?: DateTimeNullableFilter<"pasteurized_milk"> | Date | string | null
     modified_by?: UuidNullableFilter<"pasteurized_milk"> | string | null
+    batch_milk?: XOR<Batch_milkScalarRelationFilter, batch_milkWhereInput>
     modified_by_user?: XOR<UserNullableScalarRelationFilter, userWhereInput> | null
-    pool_milk?: XOR<Pool_milkScalarRelationFilter, pool_milkWhereInput>
-    processed_by_user?: XOR<UserNullableScalarRelationFilter, userWhereInput> | null
     request_bottles?: Request_bottlesListRelationFilter
   }
 
   export type pasteurized_milkOrderByWithRelationInput = {
     btl_id?: SortOrder
-    pid?: SortOrder
-    processed_by?: SortOrderInput | SortOrder
     batch_number?: SortOrder
     bottle_sequence_number?: SortOrder
     volume_ml?: SortOrder
     bottle?: SortOrderInput | SortOrder
-    processed_date?: SortOrderInput | SortOrder
     expiration_date?: SortOrder
     mbt_status?: SortOrderInput | SortOrder
     dispense_status?: SortOrderInput | SortOrder
@@ -15592,9 +16792,8 @@ export namespace Prisma {
     created_at?: SortOrderInput | SortOrder
     modified_at?: SortOrderInput | SortOrder
     modified_by?: SortOrderInput | SortOrder
+    batch_milk?: batch_milkOrderByWithRelationInput
     modified_by_user?: userOrderByWithRelationInput
-    pool_milk?: pool_milkOrderByWithRelationInput
-    processed_by_user?: userOrderByWithRelationInput
     request_bottles?: request_bottlesOrderByRelationAggregateInput
   }
 
@@ -15603,13 +16802,10 @@ export namespace Prisma {
     AND?: pasteurized_milkWhereInput | pasteurized_milkWhereInput[]
     OR?: pasteurized_milkWhereInput[]
     NOT?: pasteurized_milkWhereInput | pasteurized_milkWhereInput[]
-    pid?: IntFilter<"pasteurized_milk"> | number
-    processed_by?: UuidNullableFilter<"pasteurized_milk"> | string | null
     batch_number?: IntFilter<"pasteurized_milk"> | number
     bottle_sequence_number?: IntFilter<"pasteurized_milk"> | number
     volume_ml?: DecimalFilter<"pasteurized_milk"> | Decimal | DecimalJsLike | number | string
     bottle?: Enumbottle_typeNullableFilter<"pasteurized_milk"> | $Enums.bottle_type | null
-    processed_date?: DateTimeNullableFilter<"pasteurized_milk"> | Date | string | null
     expiration_date?: DateTimeFilter<"pasteurized_milk"> | Date | string
     mbt_status?: Enumtest_statusNullableFilter<"pasteurized_milk"> | $Enums.test_status | null
     dispense_status?: Enumpasteurized_milk_statusNullableFilter<"pasteurized_milk"> | $Enums.pasteurized_milk_status | null
@@ -15618,21 +16814,17 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"pasteurized_milk"> | Date | string | null
     modified_at?: DateTimeNullableFilter<"pasteurized_milk"> | Date | string | null
     modified_by?: UuidNullableFilter<"pasteurized_milk"> | string | null
+    batch_milk?: XOR<Batch_milkScalarRelationFilter, batch_milkWhereInput>
     modified_by_user?: XOR<UserNullableScalarRelationFilter, userWhereInput> | null
-    pool_milk?: XOR<Pool_milkScalarRelationFilter, pool_milkWhereInput>
-    processed_by_user?: XOR<UserNullableScalarRelationFilter, userWhereInput> | null
     request_bottles?: Request_bottlesListRelationFilter
   }, "btl_id">
 
   export type pasteurized_milkOrderByWithAggregationInput = {
     btl_id?: SortOrder
-    pid?: SortOrder
-    processed_by?: SortOrderInput | SortOrder
     batch_number?: SortOrder
     bottle_sequence_number?: SortOrder
     volume_ml?: SortOrder
     bottle?: SortOrderInput | SortOrder
-    processed_date?: SortOrderInput | SortOrder
     expiration_date?: SortOrder
     mbt_status?: SortOrderInput | SortOrder
     dispense_status?: SortOrderInput | SortOrder
@@ -15653,13 +16845,10 @@ export namespace Prisma {
     OR?: pasteurized_milkScalarWhereWithAggregatesInput[]
     NOT?: pasteurized_milkScalarWhereWithAggregatesInput | pasteurized_milkScalarWhereWithAggregatesInput[]
     btl_id?: IntWithAggregatesFilter<"pasteurized_milk"> | number
-    pid?: IntWithAggregatesFilter<"pasteurized_milk"> | number
-    processed_by?: UuidNullableWithAggregatesFilter<"pasteurized_milk"> | string | null
     batch_number?: IntWithAggregatesFilter<"pasteurized_milk"> | number
     bottle_sequence_number?: IntWithAggregatesFilter<"pasteurized_milk"> | number
     volume_ml?: DecimalWithAggregatesFilter<"pasteurized_milk"> | Decimal | DecimalJsLike | number | string
     bottle?: Enumbottle_typeNullableWithAggregatesFilter<"pasteurized_milk"> | $Enums.bottle_type | null
-    processed_date?: DateTimeNullableWithAggregatesFilter<"pasteurized_milk"> | Date | string | null
     expiration_date?: DateTimeWithAggregatesFilter<"pasteurized_milk"> | Date | string
     mbt_status?: Enumtest_statusNullableWithAggregatesFilter<"pasteurized_milk"> | $Enums.test_status | null
     dispense_status?: Enumpasteurized_milk_statusNullableWithAggregatesFilter<"pasteurized_milk"> | $Enums.pasteurized_milk_status | null
@@ -15680,13 +16869,13 @@ export namespace Prisma {
     expiration_date?: DateTimeFilter<"pool_milk"> | Date | string
     expected_volume_ml?: DecimalFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
-    qat_status?: Enumtest_statusNullableFilter<"pool_milk"> | $Enums.test_status | null
+    remaining_volume_ml?: DecimalNullableFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string | null
     milk_status?: Enummilk_statusNullableFilter<"pool_milk"> | $Enums.milk_status | null
     remarks?: StringNullableFilter<"pool_milk"> | string | null
     created_at?: DateTimeNullableFilter<"pool_milk"> | Date | string | null
     modified_at?: DateTimeNullableFilter<"pool_milk"> | Date | string | null
     modified_by?: UuidNullableFilter<"pool_milk"> | string | null
-    pasteurized_milk?: Pasteurized_milkListRelationFilter
+    batch_milk?: Batch_milkListRelationFilter
     modified_by_user?: XOR<UserNullableScalarRelationFilter, userWhereInput> | null
     pooled_by_user?: XOR<UserScalarRelationFilter, userWhereInput>
     raw_milk?: Raw_milkListRelationFilter
@@ -15699,13 +16888,13 @@ export namespace Prisma {
     expiration_date?: SortOrder
     expected_volume_ml?: SortOrder
     actual_volume_ml?: SortOrder
-    qat_status?: SortOrderInput | SortOrder
+    remaining_volume_ml?: SortOrderInput | SortOrder
     milk_status?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     modified_at?: SortOrderInput | SortOrder
     modified_by?: SortOrderInput | SortOrder
-    pasteurized_milk?: pasteurized_milkOrderByRelationAggregateInput
+    batch_milk?: batch_milkOrderByRelationAggregateInput
     modified_by_user?: userOrderByWithRelationInput
     pooled_by_user?: userOrderByWithRelationInput
     raw_milk?: raw_milkOrderByRelationAggregateInput
@@ -15721,13 +16910,13 @@ export namespace Prisma {
     expiration_date?: DateTimeFilter<"pool_milk"> | Date | string
     expected_volume_ml?: DecimalFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
-    qat_status?: Enumtest_statusNullableFilter<"pool_milk"> | $Enums.test_status | null
+    remaining_volume_ml?: DecimalNullableFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string | null
     milk_status?: Enummilk_statusNullableFilter<"pool_milk"> | $Enums.milk_status | null
     remarks?: StringNullableFilter<"pool_milk"> | string | null
     created_at?: DateTimeNullableFilter<"pool_milk"> | Date | string | null
     modified_at?: DateTimeNullableFilter<"pool_milk"> | Date | string | null
     modified_by?: UuidNullableFilter<"pool_milk"> | string | null
-    pasteurized_milk?: Pasteurized_milkListRelationFilter
+    batch_milk?: Batch_milkListRelationFilter
     modified_by_user?: XOR<UserNullableScalarRelationFilter, userWhereInput> | null
     pooled_by_user?: XOR<UserScalarRelationFilter, userWhereInput>
     raw_milk?: Raw_milkListRelationFilter
@@ -15740,7 +16929,7 @@ export namespace Prisma {
     expiration_date?: SortOrder
     expected_volume_ml?: SortOrder
     actual_volume_ml?: SortOrder
-    qat_status?: SortOrderInput | SortOrder
+    remaining_volume_ml?: SortOrderInput | SortOrder
     milk_status?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
@@ -15763,7 +16952,7 @@ export namespace Prisma {
     expiration_date?: DateTimeWithAggregatesFilter<"pool_milk"> | Date | string
     expected_volume_ml?: DecimalWithAggregatesFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalWithAggregatesFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
-    qat_status?: Enumtest_statusNullableWithAggregatesFilter<"pool_milk"> | $Enums.test_status | null
+    remaining_volume_ml?: DecimalNullableWithAggregatesFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string | null
     milk_status?: Enummilk_statusNullableWithAggregatesFilter<"pool_milk"> | $Enums.milk_status | null
     remarks?: StringNullableWithAggregatesFilter<"pool_milk"> | string | null
     created_at?: DateTimeNullableWithAggregatesFilter<"pool_milk"> | Date | string | null
@@ -15959,12 +17148,12 @@ export namespace Prisma {
     modified_by?: UuidNullableFilter<"user"> | string | null
     profile_image_url?: StringNullableFilter<"user"> | string | null
     audit_log?: Audit_logListRelationFilter
+    batch_milk?: Batch_milkListRelationFilter
     beneficiary?: BeneficiaryListRelationFilter
     donor?: DonorListRelationFilter
     notifications_modified?: NotificationListRelationFilter
     notifications_received?: NotificationListRelationFilter
     modified_pasteurized_milk?: Pasteurized_milkListRelationFilter
-    processed_pasteurized_milk?: Pasteurized_milkListRelationFilter
     modified_pool_milk?: Pool_milkListRelationFilter
     pooled_pool_milk?: Pool_milkListRelationFilter
     collected_raw_milk?: Raw_milkListRelationFilter
@@ -15987,12 +17176,12 @@ export namespace Prisma {
     modified_by?: SortOrderInput | SortOrder
     profile_image_url?: SortOrderInput | SortOrder
     audit_log?: audit_logOrderByRelationAggregateInput
+    batch_milk?: batch_milkOrderByRelationAggregateInput
     beneficiary?: beneficiaryOrderByRelationAggregateInput
     donor?: donorOrderByRelationAggregateInput
     notifications_modified?: notificationOrderByRelationAggregateInput
     notifications_received?: notificationOrderByRelationAggregateInput
     modified_pasteurized_milk?: pasteurized_milkOrderByRelationAggregateInput
-    processed_pasteurized_milk?: pasteurized_milkOrderByRelationAggregateInput
     modified_pool_milk?: pool_milkOrderByRelationAggregateInput
     pooled_pool_milk?: pool_milkOrderByRelationAggregateInput
     collected_raw_milk?: raw_milkOrderByRelationAggregateInput
@@ -16018,12 +17207,12 @@ export namespace Prisma {
     modified_by?: UuidNullableFilter<"user"> | string | null
     profile_image_url?: StringNullableFilter<"user"> | string | null
     audit_log?: Audit_logListRelationFilter
+    batch_milk?: Batch_milkListRelationFilter
     beneficiary?: BeneficiaryListRelationFilter
     donor?: DonorListRelationFilter
     notifications_modified?: NotificationListRelationFilter
     notifications_received?: NotificationListRelationFilter
     modified_pasteurized_milk?: Pasteurized_milkListRelationFilter
-    processed_pasteurized_milk?: Pasteurized_milkListRelationFilter
     modified_pool_milk?: Pool_milkListRelationFilter
     pooled_pool_milk?: Pool_milkListRelationFilter
     collected_raw_milk?: Raw_milkListRelationFilter
@@ -16160,6 +17349,69 @@ export namespace Prisma {
     created_at?: DateTimeNullableWithAggregatesFilter<"notification"> | Date | string | null
     modified_at?: DateTimeNullableWithAggregatesFilter<"notification"> | Date | string | null
     modified_by?: UuidNullableWithAggregatesFilter<"notification"> | string | null
+  }
+
+  export type batch_milkWhereInput = {
+    AND?: batch_milkWhereInput | batch_milkWhereInput[]
+    OR?: batch_milkWhereInput[]
+    NOT?: batch_milkWhereInput | batch_milkWhereInput[]
+    batch_id?: IntFilter<"batch_milk"> | number
+    processed_date?: DateTimeFilter<"batch_milk"> | Date | string
+    processed_by?: UuidFilter<"batch_milk"> | string
+    source?: IntFilter<"batch_milk"> | number
+    bottle_count?: IntFilter<"batch_milk"> | number
+    user?: XOR<UserScalarRelationFilter, userWhereInput>
+    pool_milk?: XOR<Pool_milkScalarRelationFilter, pool_milkWhereInput>
+    pasteurized_milk?: Pasteurized_milkListRelationFilter
+  }
+
+  export type batch_milkOrderByWithRelationInput = {
+    batch_id?: SortOrder
+    processed_date?: SortOrder
+    processed_by?: SortOrder
+    source?: SortOrder
+    bottle_count?: SortOrder
+    user?: userOrderByWithRelationInput
+    pool_milk?: pool_milkOrderByWithRelationInput
+    pasteurized_milk?: pasteurized_milkOrderByRelationAggregateInput
+  }
+
+  export type batch_milkWhereUniqueInput = Prisma.AtLeast<{
+    batch_id?: number
+    AND?: batch_milkWhereInput | batch_milkWhereInput[]
+    OR?: batch_milkWhereInput[]
+    NOT?: batch_milkWhereInput | batch_milkWhereInput[]
+    processed_date?: DateTimeFilter<"batch_milk"> | Date | string
+    processed_by?: UuidFilter<"batch_milk"> | string
+    source?: IntFilter<"batch_milk"> | number
+    bottle_count?: IntFilter<"batch_milk"> | number
+    user?: XOR<UserScalarRelationFilter, userWhereInput>
+    pool_milk?: XOR<Pool_milkScalarRelationFilter, pool_milkWhereInput>
+    pasteurized_milk?: Pasteurized_milkListRelationFilter
+  }, "batch_id">
+
+  export type batch_milkOrderByWithAggregationInput = {
+    batch_id?: SortOrder
+    processed_date?: SortOrder
+    processed_by?: SortOrder
+    source?: SortOrder
+    bottle_count?: SortOrder
+    _count?: batch_milkCountOrderByAggregateInput
+    _avg?: batch_milkAvgOrderByAggregateInput
+    _max?: batch_milkMaxOrderByAggregateInput
+    _min?: batch_milkMinOrderByAggregateInput
+    _sum?: batch_milkSumOrderByAggregateInput
+  }
+
+  export type batch_milkScalarWhereWithAggregatesInput = {
+    AND?: batch_milkScalarWhereWithAggregatesInput | batch_milkScalarWhereWithAggregatesInput[]
+    OR?: batch_milkScalarWhereWithAggregatesInput[]
+    NOT?: batch_milkScalarWhereWithAggregatesInput | batch_milkScalarWhereWithAggregatesInput[]
+    batch_id?: IntWithAggregatesFilter<"batch_milk"> | number
+    processed_date?: DateTimeWithAggregatesFilter<"batch_milk"> | Date | string
+    processed_by?: UuidWithAggregatesFilter<"batch_milk"> | string
+    source?: IntWithAggregatesFilter<"batch_milk"> | number
+    bottle_count?: IntWithAggregatesFilter<"batch_milk"> | number
   }
 
   export type audit_logCreateInput = {
@@ -16543,11 +17795,9 @@ export namespace Prisma {
   }
 
   export type pasteurized_milkCreateInput = {
-    batch_number: number
     bottle_sequence_number: number
     volume_ml: Decimal | DecimalJsLike | number | string
     bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
     expiration_date: Date | string
     mbt_status?: $Enums.test_status | null
     dispense_status?: $Enums.pasteurized_milk_status | null
@@ -16555,21 +17805,17 @@ export namespace Prisma {
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
+    batch_milk: batch_milkCreateNestedOneWithoutPasteurized_milkInput
     modified_by_user?: userCreateNestedOneWithoutModified_pasteurized_milkInput
-    pool_milk: pool_milkCreateNestedOneWithoutPasteurized_milkInput
-    processed_by_user?: userCreateNestedOneWithoutProcessed_pasteurized_milkInput
     request_bottles?: request_bottlesCreateNestedManyWithoutPasteurized_milkInput
   }
 
   export type pasteurized_milkUncheckedCreateInput = {
     btl_id?: number
-    pid: number
-    processed_by?: string | null
     batch_number: number
     bottle_sequence_number: number
     volume_ml: Decimal | DecimalJsLike | number | string
     bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
     expiration_date: Date | string
     mbt_status?: $Enums.test_status | null
     dispense_status?: $Enums.pasteurized_milk_status | null
@@ -16582,11 +17828,9 @@ export namespace Prisma {
   }
 
   export type pasteurized_milkUpdateInput = {
-    batch_number?: IntFieldUpdateOperationsInput | number
     bottle_sequence_number?: IntFieldUpdateOperationsInput | number
     volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
     dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
@@ -16594,21 +17838,17 @@ export namespace Prisma {
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    batch_milk?: batch_milkUpdateOneRequiredWithoutPasteurized_milkNestedInput
     modified_by_user?: userUpdateOneWithoutModified_pasteurized_milkNestedInput
-    pool_milk?: pool_milkUpdateOneRequiredWithoutPasteurized_milkNestedInput
-    processed_by_user?: userUpdateOneWithoutProcessed_pasteurized_milkNestedInput
     request_bottles?: request_bottlesUpdateManyWithoutPasteurized_milkNestedInput
   }
 
   export type pasteurized_milkUncheckedUpdateInput = {
     btl_id?: IntFieldUpdateOperationsInput | number
-    pid?: IntFieldUpdateOperationsInput | number
-    processed_by?: NullableStringFieldUpdateOperationsInput | string | null
     batch_number?: IntFieldUpdateOperationsInput | number
     bottle_sequence_number?: IntFieldUpdateOperationsInput | number
     volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
     dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
@@ -16622,13 +17862,10 @@ export namespace Prisma {
 
   export type pasteurized_milkCreateManyInput = {
     btl_id?: number
-    pid: number
-    processed_by?: string | null
     batch_number: number
     bottle_sequence_number: number
     volume_ml: Decimal | DecimalJsLike | number | string
     bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
     expiration_date: Date | string
     mbt_status?: $Enums.test_status | null
     dispense_status?: $Enums.pasteurized_milk_status | null
@@ -16640,11 +17877,9 @@ export namespace Prisma {
   }
 
   export type pasteurized_milkUpdateManyMutationInput = {
-    batch_number?: IntFieldUpdateOperationsInput | number
     bottle_sequence_number?: IntFieldUpdateOperationsInput | number
     volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
     dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
@@ -16656,13 +17891,10 @@ export namespace Prisma {
 
   export type pasteurized_milkUncheckedUpdateManyInput = {
     btl_id?: IntFieldUpdateOperationsInput | number
-    pid?: IntFieldUpdateOperationsInput | number
-    processed_by?: NullableStringFieldUpdateOperationsInput | string | null
     batch_number?: IntFieldUpdateOperationsInput | number
     bottle_sequence_number?: IntFieldUpdateOperationsInput | number
     volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
     dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
@@ -16678,12 +17910,12 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    qat_status?: $Enums.test_status | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
-    pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutPool_milkInput
+    batch_milk?: batch_milkCreateNestedManyWithoutPool_milkInput
     modified_by_user?: userCreateNestedOneWithoutModified_pool_milkInput
     pooled_by_user: userCreateNestedOneWithoutPooled_pool_milkInput
     raw_milk?: raw_milkCreateNestedManyWithoutPool_milkInput
@@ -16696,13 +17928,13 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    qat_status?: $Enums.test_status | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
     modified_by?: string | null
-    pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutPool_milkInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutPool_milkInput
     raw_milk?: raw_milkUncheckedCreateNestedManyWithoutPool_milkInput
   }
 
@@ -16711,12 +17943,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    pasteurized_milk?: pasteurized_milkUpdateManyWithoutPool_milkNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutPool_milkNestedInput
     modified_by_user?: userUpdateOneWithoutModified_pool_milkNestedInput
     pooled_by_user?: userUpdateOneRequiredWithoutPooled_pool_milkNestedInput
     raw_milk?: raw_milkUpdateManyWithoutPool_milkNestedInput
@@ -16729,13 +17961,13 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
-    pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutPool_milkNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutPool_milkNestedInput
     raw_milk?: raw_milkUncheckedUpdateManyWithoutPool_milkNestedInput
   }
 
@@ -16746,7 +17978,7 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    qat_status?: $Enums.test_status | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
@@ -16759,7 +17991,7 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16773,7 +18005,7 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16960,12 +18192,12 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
     donor?: donorCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
@@ -16988,12 +18220,12 @@ export namespace Prisma {
     modified_by?: string | null
     profile_image_url?: string | null
     audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
     donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
@@ -17014,12 +18246,12 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
@@ -17042,12 +18274,12 @@ export namespace Prisma {
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
@@ -17195,6 +18427,61 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type batch_milkCreateInput = {
+    processed_date?: Date | string
+    bottle_count: number
+    user: userCreateNestedOneWithoutBatch_milkInput
+    pool_milk: pool_milkCreateNestedOneWithoutBatch_milkInput
+    pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutBatch_milkInput
+  }
+
+  export type batch_milkUncheckedCreateInput = {
+    batch_id?: number
+    processed_date?: Date | string
+    processed_by: string
+    source: number
+    bottle_count: number
+    pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutBatch_milkInput
+  }
+
+  export type batch_milkUpdateInput = {
+    processed_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    bottle_count?: IntFieldUpdateOperationsInput | number
+    user?: userUpdateOneRequiredWithoutBatch_milkNestedInput
+    pool_milk?: pool_milkUpdateOneRequiredWithoutBatch_milkNestedInput
+    pasteurized_milk?: pasteurized_milkUpdateManyWithoutBatch_milkNestedInput
+  }
+
+  export type batch_milkUncheckedUpdateInput = {
+    batch_id?: IntFieldUpdateOperationsInput | number
+    processed_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    processed_by?: StringFieldUpdateOperationsInput | string
+    source?: IntFieldUpdateOperationsInput | number
+    bottle_count?: IntFieldUpdateOperationsInput | number
+    pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutBatch_milkNestedInput
+  }
+
+  export type batch_milkCreateManyInput = {
+    batch_id?: number
+    processed_date?: Date | string
+    processed_by: string
+    source: number
+    bottle_count: number
+  }
+
+  export type batch_milkUpdateManyMutationInput = {
+    processed_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    bottle_count?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type batch_milkUncheckedUpdateManyInput = {
+    batch_id?: IntFieldUpdateOperationsInput | number
+    processed_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    processed_by?: StringFieldUpdateOperationsInput | string
+    source?: IntFieldUpdateOperationsInput | number
+    bottle_count?: IntFieldUpdateOperationsInput | number
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -17845,20 +19132,17 @@ export namespace Prisma {
     not?: NestedEnummilk_statusNullableFilter<$PrismaModel> | $Enums.milk_status | null
   }
 
-  export type Pool_milkScalarRelationFilter = {
-    is?: pool_milkWhereInput
-    isNot?: pool_milkWhereInput
+  export type Batch_milkScalarRelationFilter = {
+    is?: batch_milkWhereInput
+    isNot?: batch_milkWhereInput
   }
 
   export type pasteurized_milkCountOrderByAggregateInput = {
     btl_id?: SortOrder
-    pid?: SortOrder
-    processed_by?: SortOrder
     batch_number?: SortOrder
     bottle_sequence_number?: SortOrder
     volume_ml?: SortOrder
     bottle?: SortOrder
-    processed_date?: SortOrder
     expiration_date?: SortOrder
     mbt_status?: SortOrder
     dispense_status?: SortOrder
@@ -17871,7 +19155,6 @@ export namespace Prisma {
 
   export type pasteurized_milkAvgOrderByAggregateInput = {
     btl_id?: SortOrder
-    pid?: SortOrder
     batch_number?: SortOrder
     bottle_sequence_number?: SortOrder
     volume_ml?: SortOrder
@@ -17879,13 +19162,10 @@ export namespace Prisma {
 
   export type pasteurized_milkMaxOrderByAggregateInput = {
     btl_id?: SortOrder
-    pid?: SortOrder
-    processed_by?: SortOrder
     batch_number?: SortOrder
     bottle_sequence_number?: SortOrder
     volume_ml?: SortOrder
     bottle?: SortOrder
-    processed_date?: SortOrder
     expiration_date?: SortOrder
     mbt_status?: SortOrder
     dispense_status?: SortOrder
@@ -17898,13 +19178,10 @@ export namespace Prisma {
 
   export type pasteurized_milkMinOrderByAggregateInput = {
     btl_id?: SortOrder
-    pid?: SortOrder
-    processed_by?: SortOrder
     batch_number?: SortOrder
     bottle_sequence_number?: SortOrder
     volume_ml?: SortOrder
     bottle?: SortOrder
-    processed_date?: SortOrder
     expiration_date?: SortOrder
     mbt_status?: SortOrder
     dispense_status?: SortOrder
@@ -17917,7 +19194,6 @@ export namespace Prisma {
 
   export type pasteurized_milkSumOrderByAggregateInput = {
     btl_id?: SortOrder
-    pid?: SortOrder
     batch_number?: SortOrder
     bottle_sequence_number?: SortOrder
     volume_ml?: SortOrder
@@ -17963,13 +19239,24 @@ export namespace Prisma {
     _max?: NestedEnummilk_statusNullableFilter<$PrismaModel>
   }
 
-  export type Pasteurized_milkListRelationFilter = {
-    every?: pasteurized_milkWhereInput
-    some?: pasteurized_milkWhereInput
-    none?: pasteurized_milkWhereInput
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
-  export type pasteurized_milkOrderByRelationAggregateInput = {
+  export type Batch_milkListRelationFilter = {
+    every?: batch_milkWhereInput
+    some?: batch_milkWhereInput
+    none?: batch_milkWhereInput
+  }
+
+  export type batch_milkOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17980,7 +19267,7 @@ export namespace Prisma {
     expiration_date?: SortOrder
     expected_volume_ml?: SortOrder
     actual_volume_ml?: SortOrder
-    qat_status?: SortOrder
+    remaining_volume_ml?: SortOrder
     milk_status?: SortOrder
     remarks?: SortOrder
     created_at?: SortOrder
@@ -17992,6 +19279,7 @@ export namespace Prisma {
     pid?: SortOrder
     expected_volume_ml?: SortOrder
     actual_volume_ml?: SortOrder
+    remaining_volume_ml?: SortOrder
   }
 
   export type pool_milkMaxOrderByAggregateInput = {
@@ -18001,7 +19289,7 @@ export namespace Prisma {
     expiration_date?: SortOrder
     expected_volume_ml?: SortOrder
     actual_volume_ml?: SortOrder
-    qat_status?: SortOrder
+    remaining_volume_ml?: SortOrder
     milk_status?: SortOrder
     remarks?: SortOrder
     created_at?: SortOrder
@@ -18016,7 +19304,7 @@ export namespace Prisma {
     expiration_date?: SortOrder
     expected_volume_ml?: SortOrder
     actual_volume_ml?: SortOrder
-    qat_status?: SortOrder
+    remaining_volume_ml?: SortOrder
     milk_status?: SortOrder
     remarks?: SortOrder
     created_at?: SortOrder
@@ -18028,6 +19316,23 @@ export namespace Prisma {
     pid?: SortOrder
     expected_volume_ml?: SortOrder
     actual_volume_ml?: SortOrder
+    remaining_volume_ml?: SortOrder
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -18229,6 +19534,12 @@ export namespace Prisma {
     none?: notificationWhereInput
   }
 
+  export type Pasteurized_milkListRelationFilter = {
+    every?: pasteurized_milkWhereInput
+    some?: pasteurized_milkWhereInput
+    none?: pasteurized_milkWhereInput
+  }
+
   export type Pool_milkListRelationFilter = {
     every?: pool_milkWhereInput
     some?: pool_milkWhereInput
@@ -18254,6 +19565,10 @@ export namespace Prisma {
   }
 
   export type notificationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type pasteurized_milkOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18383,6 +19698,47 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type Pool_milkScalarRelationFilter = {
+    is?: pool_milkWhereInput
+    isNot?: pool_milkWhereInput
+  }
+
+  export type batch_milkCountOrderByAggregateInput = {
+    batch_id?: SortOrder
+    processed_date?: SortOrder
+    processed_by?: SortOrder
+    source?: SortOrder
+    bottle_count?: SortOrder
+  }
+
+  export type batch_milkAvgOrderByAggregateInput = {
+    batch_id?: SortOrder
+    source?: SortOrder
+    bottle_count?: SortOrder
+  }
+
+  export type batch_milkMaxOrderByAggregateInput = {
+    batch_id?: SortOrder
+    processed_date?: SortOrder
+    processed_by?: SortOrder
+    source?: SortOrder
+    bottle_count?: SortOrder
+  }
+
+  export type batch_milkMinOrderByAggregateInput = {
+    batch_id?: SortOrder
+    processed_date?: SortOrder
+    processed_by?: SortOrder
+    source?: SortOrder
+    bottle_count?: SortOrder
+  }
+
+  export type batch_milkSumOrderByAggregateInput = {
+    batch_id?: SortOrder
+    source?: SortOrder
+    bottle_count?: SortOrder
   }
 
   export type userCreateNestedOneWithoutAudit_logInput = {
@@ -18631,21 +19987,15 @@ export namespace Prisma {
     deleteMany?: request_bottlesScalarWhereInput | request_bottlesScalarWhereInput[]
   }
 
+  export type batch_milkCreateNestedOneWithoutPasteurized_milkInput = {
+    create?: XOR<batch_milkCreateWithoutPasteurized_milkInput, batch_milkUncheckedCreateWithoutPasteurized_milkInput>
+    connectOrCreate?: batch_milkCreateOrConnectWithoutPasteurized_milkInput
+    connect?: batch_milkWhereUniqueInput
+  }
+
   export type userCreateNestedOneWithoutModified_pasteurized_milkInput = {
     create?: XOR<userCreateWithoutModified_pasteurized_milkInput, userUncheckedCreateWithoutModified_pasteurized_milkInput>
     connectOrCreate?: userCreateOrConnectWithoutModified_pasteurized_milkInput
-    connect?: userWhereUniqueInput
-  }
-
-  export type pool_milkCreateNestedOneWithoutPasteurized_milkInput = {
-    create?: XOR<pool_milkCreateWithoutPasteurized_milkInput, pool_milkUncheckedCreateWithoutPasteurized_milkInput>
-    connectOrCreate?: pool_milkCreateOrConnectWithoutPasteurized_milkInput
-    connect?: pool_milkWhereUniqueInput
-  }
-
-  export type userCreateNestedOneWithoutProcessed_pasteurized_milkInput = {
-    create?: XOR<userCreateWithoutProcessed_pasteurized_milkInput, userUncheckedCreateWithoutProcessed_pasteurized_milkInput>
-    connectOrCreate?: userCreateOrConnectWithoutProcessed_pasteurized_milkInput
     connect?: userWhereUniqueInput
   }
 
@@ -18679,6 +20029,14 @@ export namespace Prisma {
     set?: $Enums.milk_status | null
   }
 
+  export type batch_milkUpdateOneRequiredWithoutPasteurized_milkNestedInput = {
+    create?: XOR<batch_milkCreateWithoutPasteurized_milkInput, batch_milkUncheckedCreateWithoutPasteurized_milkInput>
+    connectOrCreate?: batch_milkCreateOrConnectWithoutPasteurized_milkInput
+    upsert?: batch_milkUpsertWithoutPasteurized_milkInput
+    connect?: batch_milkWhereUniqueInput
+    update?: XOR<XOR<batch_milkUpdateToOneWithWhereWithoutPasteurized_milkInput, batch_milkUpdateWithoutPasteurized_milkInput>, batch_milkUncheckedUpdateWithoutPasteurized_milkInput>
+  }
+
   export type userUpdateOneWithoutModified_pasteurized_milkNestedInput = {
     create?: XOR<userCreateWithoutModified_pasteurized_milkInput, userUncheckedCreateWithoutModified_pasteurized_milkInput>
     connectOrCreate?: userCreateOrConnectWithoutModified_pasteurized_milkInput
@@ -18687,24 +20045,6 @@ export namespace Prisma {
     delete?: userWhereInput | boolean
     connect?: userWhereUniqueInput
     update?: XOR<XOR<userUpdateToOneWithWhereWithoutModified_pasteurized_milkInput, userUpdateWithoutModified_pasteurized_milkInput>, userUncheckedUpdateWithoutModified_pasteurized_milkInput>
-  }
-
-  export type pool_milkUpdateOneRequiredWithoutPasteurized_milkNestedInput = {
-    create?: XOR<pool_milkCreateWithoutPasteurized_milkInput, pool_milkUncheckedCreateWithoutPasteurized_milkInput>
-    connectOrCreate?: pool_milkCreateOrConnectWithoutPasteurized_milkInput
-    upsert?: pool_milkUpsertWithoutPasteurized_milkInput
-    connect?: pool_milkWhereUniqueInput
-    update?: XOR<XOR<pool_milkUpdateToOneWithWhereWithoutPasteurized_milkInput, pool_milkUpdateWithoutPasteurized_milkInput>, pool_milkUncheckedUpdateWithoutPasteurized_milkInput>
-  }
-
-  export type userUpdateOneWithoutProcessed_pasteurized_milkNestedInput = {
-    create?: XOR<userCreateWithoutProcessed_pasteurized_milkInput, userUncheckedCreateWithoutProcessed_pasteurized_milkInput>
-    connectOrCreate?: userCreateOrConnectWithoutProcessed_pasteurized_milkInput
-    upsert?: userUpsertWithoutProcessed_pasteurized_milkInput
-    disconnect?: userWhereInput | boolean
-    delete?: userWhereInput | boolean
-    connect?: userWhereUniqueInput
-    update?: XOR<XOR<userUpdateToOneWithWhereWithoutProcessed_pasteurized_milkInput, userUpdateWithoutProcessed_pasteurized_milkInput>, userUncheckedUpdateWithoutProcessed_pasteurized_milkInput>
   }
 
   export type request_bottlesUpdateManyWithoutPasteurized_milkNestedInput = {
@@ -18735,11 +20075,11 @@ export namespace Prisma {
     deleteMany?: request_bottlesScalarWhereInput | request_bottlesScalarWhereInput[]
   }
 
-  export type pasteurized_milkCreateNestedManyWithoutPool_milkInput = {
-    create?: XOR<pasteurized_milkCreateWithoutPool_milkInput, pasteurized_milkUncheckedCreateWithoutPool_milkInput> | pasteurized_milkCreateWithoutPool_milkInput[] | pasteurized_milkUncheckedCreateWithoutPool_milkInput[]
-    connectOrCreate?: pasteurized_milkCreateOrConnectWithoutPool_milkInput | pasteurized_milkCreateOrConnectWithoutPool_milkInput[]
-    createMany?: pasteurized_milkCreateManyPool_milkInputEnvelope
-    connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
+  export type batch_milkCreateNestedManyWithoutPool_milkInput = {
+    create?: XOR<batch_milkCreateWithoutPool_milkInput, batch_milkUncheckedCreateWithoutPool_milkInput> | batch_milkCreateWithoutPool_milkInput[] | batch_milkUncheckedCreateWithoutPool_milkInput[]
+    connectOrCreate?: batch_milkCreateOrConnectWithoutPool_milkInput | batch_milkCreateOrConnectWithoutPool_milkInput[]
+    createMany?: batch_milkCreateManyPool_milkInputEnvelope
+    connect?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
   }
 
   export type userCreateNestedOneWithoutModified_pool_milkInput = {
@@ -18761,11 +20101,11 @@ export namespace Prisma {
     connect?: raw_milkWhereUniqueInput | raw_milkWhereUniqueInput[]
   }
 
-  export type pasteurized_milkUncheckedCreateNestedManyWithoutPool_milkInput = {
-    create?: XOR<pasteurized_milkCreateWithoutPool_milkInput, pasteurized_milkUncheckedCreateWithoutPool_milkInput> | pasteurized_milkCreateWithoutPool_milkInput[] | pasteurized_milkUncheckedCreateWithoutPool_milkInput[]
-    connectOrCreate?: pasteurized_milkCreateOrConnectWithoutPool_milkInput | pasteurized_milkCreateOrConnectWithoutPool_milkInput[]
-    createMany?: pasteurized_milkCreateManyPool_milkInputEnvelope
-    connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
+  export type batch_milkUncheckedCreateNestedManyWithoutPool_milkInput = {
+    create?: XOR<batch_milkCreateWithoutPool_milkInput, batch_milkUncheckedCreateWithoutPool_milkInput> | batch_milkCreateWithoutPool_milkInput[] | batch_milkUncheckedCreateWithoutPool_milkInput[]
+    connectOrCreate?: batch_milkCreateOrConnectWithoutPool_milkInput | batch_milkCreateOrConnectWithoutPool_milkInput[]
+    createMany?: batch_milkCreateManyPool_milkInputEnvelope
+    connect?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
   }
 
   export type raw_milkUncheckedCreateNestedManyWithoutPool_milkInput = {
@@ -18775,18 +20115,26 @@ export namespace Prisma {
     connect?: raw_milkWhereUniqueInput | raw_milkWhereUniqueInput[]
   }
 
-  export type pasteurized_milkUpdateManyWithoutPool_milkNestedInput = {
-    create?: XOR<pasteurized_milkCreateWithoutPool_milkInput, pasteurized_milkUncheckedCreateWithoutPool_milkInput> | pasteurized_milkCreateWithoutPool_milkInput[] | pasteurized_milkUncheckedCreateWithoutPool_milkInput[]
-    connectOrCreate?: pasteurized_milkCreateOrConnectWithoutPool_milkInput | pasteurized_milkCreateOrConnectWithoutPool_milkInput[]
-    upsert?: pasteurized_milkUpsertWithWhereUniqueWithoutPool_milkInput | pasteurized_milkUpsertWithWhereUniqueWithoutPool_milkInput[]
-    createMany?: pasteurized_milkCreateManyPool_milkInputEnvelope
-    set?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    disconnect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    delete?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    update?: pasteurized_milkUpdateWithWhereUniqueWithoutPool_milkInput | pasteurized_milkUpdateWithWhereUniqueWithoutPool_milkInput[]
-    updateMany?: pasteurized_milkUpdateManyWithWhereWithoutPool_milkInput | pasteurized_milkUpdateManyWithWhereWithoutPool_milkInput[]
-    deleteMany?: pasteurized_milkScalarWhereInput | pasteurized_milkScalarWhereInput[]
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type batch_milkUpdateManyWithoutPool_milkNestedInput = {
+    create?: XOR<batch_milkCreateWithoutPool_milkInput, batch_milkUncheckedCreateWithoutPool_milkInput> | batch_milkCreateWithoutPool_milkInput[] | batch_milkUncheckedCreateWithoutPool_milkInput[]
+    connectOrCreate?: batch_milkCreateOrConnectWithoutPool_milkInput | batch_milkCreateOrConnectWithoutPool_milkInput[]
+    upsert?: batch_milkUpsertWithWhereUniqueWithoutPool_milkInput | batch_milkUpsertWithWhereUniqueWithoutPool_milkInput[]
+    createMany?: batch_milkCreateManyPool_milkInputEnvelope
+    set?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    disconnect?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    delete?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    connect?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    update?: batch_milkUpdateWithWhereUniqueWithoutPool_milkInput | batch_milkUpdateWithWhereUniqueWithoutPool_milkInput[]
+    updateMany?: batch_milkUpdateManyWithWhereWithoutPool_milkInput | batch_milkUpdateManyWithWhereWithoutPool_milkInput[]
+    deleteMany?: batch_milkScalarWhereInput | batch_milkScalarWhereInput[]
   }
 
   export type userUpdateOneWithoutModified_pool_milkNestedInput = {
@@ -18821,18 +20169,18 @@ export namespace Prisma {
     deleteMany?: raw_milkScalarWhereInput | raw_milkScalarWhereInput[]
   }
 
-  export type pasteurized_milkUncheckedUpdateManyWithoutPool_milkNestedInput = {
-    create?: XOR<pasteurized_milkCreateWithoutPool_milkInput, pasteurized_milkUncheckedCreateWithoutPool_milkInput> | pasteurized_milkCreateWithoutPool_milkInput[] | pasteurized_milkUncheckedCreateWithoutPool_milkInput[]
-    connectOrCreate?: pasteurized_milkCreateOrConnectWithoutPool_milkInput | pasteurized_milkCreateOrConnectWithoutPool_milkInput[]
-    upsert?: pasteurized_milkUpsertWithWhereUniqueWithoutPool_milkInput | pasteurized_milkUpsertWithWhereUniqueWithoutPool_milkInput[]
-    createMany?: pasteurized_milkCreateManyPool_milkInputEnvelope
-    set?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    disconnect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    delete?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    update?: pasteurized_milkUpdateWithWhereUniqueWithoutPool_milkInput | pasteurized_milkUpdateWithWhereUniqueWithoutPool_milkInput[]
-    updateMany?: pasteurized_milkUpdateManyWithWhereWithoutPool_milkInput | pasteurized_milkUpdateManyWithWhereWithoutPool_milkInput[]
-    deleteMany?: pasteurized_milkScalarWhereInput | pasteurized_milkScalarWhereInput[]
+  export type batch_milkUncheckedUpdateManyWithoutPool_milkNestedInput = {
+    create?: XOR<batch_milkCreateWithoutPool_milkInput, batch_milkUncheckedCreateWithoutPool_milkInput> | batch_milkCreateWithoutPool_milkInput[] | batch_milkUncheckedCreateWithoutPool_milkInput[]
+    connectOrCreate?: batch_milkCreateOrConnectWithoutPool_milkInput | batch_milkCreateOrConnectWithoutPool_milkInput[]
+    upsert?: batch_milkUpsertWithWhereUniqueWithoutPool_milkInput | batch_milkUpsertWithWhereUniqueWithoutPool_milkInput[]
+    createMany?: batch_milkCreateManyPool_milkInputEnvelope
+    set?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    disconnect?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    delete?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    connect?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    update?: batch_milkUpdateWithWhereUniqueWithoutPool_milkInput | batch_milkUpdateWithWhereUniqueWithoutPool_milkInput[]
+    updateMany?: batch_milkUpdateManyWithWhereWithoutPool_milkInput | batch_milkUpdateManyWithWhereWithoutPool_milkInput[]
+    deleteMany?: batch_milkScalarWhereInput | batch_milkScalarWhereInput[]
   }
 
   export type raw_milkUncheckedUpdateManyWithoutPool_milkNestedInput = {
@@ -18958,6 +20306,13 @@ export namespace Prisma {
     connect?: audit_logWhereUniqueInput | audit_logWhereUniqueInput[]
   }
 
+  export type batch_milkCreateNestedManyWithoutUserInput = {
+    create?: XOR<batch_milkCreateWithoutUserInput, batch_milkUncheckedCreateWithoutUserInput> | batch_milkCreateWithoutUserInput[] | batch_milkUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: batch_milkCreateOrConnectWithoutUserInput | batch_milkCreateOrConnectWithoutUserInput[]
+    createMany?: batch_milkCreateManyUserInputEnvelope
+    connect?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+  }
+
   export type beneficiaryCreateNestedManyWithoutModified_by_userInput = {
     create?: XOR<beneficiaryCreateWithoutModified_by_userInput, beneficiaryUncheckedCreateWithoutModified_by_userInput> | beneficiaryCreateWithoutModified_by_userInput[] | beneficiaryUncheckedCreateWithoutModified_by_userInput[]
     connectOrCreate?: beneficiaryCreateOrConnectWithoutModified_by_userInput | beneficiaryCreateOrConnectWithoutModified_by_userInput[]
@@ -18990,13 +20345,6 @@ export namespace Prisma {
     create?: XOR<pasteurized_milkCreateWithoutModified_by_userInput, pasteurized_milkUncheckedCreateWithoutModified_by_userInput> | pasteurized_milkCreateWithoutModified_by_userInput[] | pasteurized_milkUncheckedCreateWithoutModified_by_userInput[]
     connectOrCreate?: pasteurized_milkCreateOrConnectWithoutModified_by_userInput | pasteurized_milkCreateOrConnectWithoutModified_by_userInput[]
     createMany?: pasteurized_milkCreateManyModified_by_userInputEnvelope
-    connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-  }
-
-  export type pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput = {
-    create?: XOR<pasteurized_milkCreateWithoutProcessed_by_userInput, pasteurized_milkUncheckedCreateWithoutProcessed_by_userInput> | pasteurized_milkCreateWithoutProcessed_by_userInput[] | pasteurized_milkUncheckedCreateWithoutProcessed_by_userInput[]
-    connectOrCreate?: pasteurized_milkCreateOrConnectWithoutProcessed_by_userInput | pasteurized_milkCreateOrConnectWithoutProcessed_by_userInput[]
-    createMany?: pasteurized_milkCreateManyProcessed_by_userInputEnvelope
     connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
   }
 
@@ -19055,6 +20403,13 @@ export namespace Prisma {
     connect?: audit_logWhereUniqueInput | audit_logWhereUniqueInput[]
   }
 
+  export type batch_milkUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<batch_milkCreateWithoutUserInput, batch_milkUncheckedCreateWithoutUserInput> | batch_milkCreateWithoutUserInput[] | batch_milkUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: batch_milkCreateOrConnectWithoutUserInput | batch_milkCreateOrConnectWithoutUserInput[]
+    createMany?: batch_milkCreateManyUserInputEnvelope
+    connect?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+  }
+
   export type beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput = {
     create?: XOR<beneficiaryCreateWithoutModified_by_userInput, beneficiaryUncheckedCreateWithoutModified_by_userInput> | beneficiaryCreateWithoutModified_by_userInput[] | beneficiaryUncheckedCreateWithoutModified_by_userInput[]
     connectOrCreate?: beneficiaryCreateOrConnectWithoutModified_by_userInput | beneficiaryCreateOrConnectWithoutModified_by_userInput[]
@@ -19087,13 +20442,6 @@ export namespace Prisma {
     create?: XOR<pasteurized_milkCreateWithoutModified_by_userInput, pasteurized_milkUncheckedCreateWithoutModified_by_userInput> | pasteurized_milkCreateWithoutModified_by_userInput[] | pasteurized_milkUncheckedCreateWithoutModified_by_userInput[]
     connectOrCreate?: pasteurized_milkCreateOrConnectWithoutModified_by_userInput | pasteurized_milkCreateOrConnectWithoutModified_by_userInput[]
     createMany?: pasteurized_milkCreateManyModified_by_userInputEnvelope
-    connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-  }
-
-  export type pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput = {
-    create?: XOR<pasteurized_milkCreateWithoutProcessed_by_userInput, pasteurized_milkUncheckedCreateWithoutProcessed_by_userInput> | pasteurized_milkCreateWithoutProcessed_by_userInput[] | pasteurized_milkUncheckedCreateWithoutProcessed_by_userInput[]
-    connectOrCreate?: pasteurized_milkCreateOrConnectWithoutProcessed_by_userInput | pasteurized_milkCreateOrConnectWithoutProcessed_by_userInput[]
-    createMany?: pasteurized_milkCreateManyProcessed_by_userInputEnvelope
     connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
   }
 
@@ -19155,6 +20503,20 @@ export namespace Prisma {
     update?: audit_logUpdateWithWhereUniqueWithoutUserInput | audit_logUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: audit_logUpdateManyWithWhereWithoutUserInput | audit_logUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: audit_logScalarWhereInput | audit_logScalarWhereInput[]
+  }
+
+  export type batch_milkUpdateManyWithoutUserNestedInput = {
+    create?: XOR<batch_milkCreateWithoutUserInput, batch_milkUncheckedCreateWithoutUserInput> | batch_milkCreateWithoutUserInput[] | batch_milkUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: batch_milkCreateOrConnectWithoutUserInput | batch_milkCreateOrConnectWithoutUserInput[]
+    upsert?: batch_milkUpsertWithWhereUniqueWithoutUserInput | batch_milkUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: batch_milkCreateManyUserInputEnvelope
+    set?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    disconnect?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    delete?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    connect?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    update?: batch_milkUpdateWithWhereUniqueWithoutUserInput | batch_milkUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: batch_milkUpdateManyWithWhereWithoutUserInput | batch_milkUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: batch_milkScalarWhereInput | batch_milkScalarWhereInput[]
   }
 
   export type beneficiaryUpdateManyWithoutModified_by_userNestedInput = {
@@ -19224,20 +20586,6 @@ export namespace Prisma {
     connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
     update?: pasteurized_milkUpdateWithWhereUniqueWithoutModified_by_userInput | pasteurized_milkUpdateWithWhereUniqueWithoutModified_by_userInput[]
     updateMany?: pasteurized_milkUpdateManyWithWhereWithoutModified_by_userInput | pasteurized_milkUpdateManyWithWhereWithoutModified_by_userInput[]
-    deleteMany?: pasteurized_milkScalarWhereInput | pasteurized_milkScalarWhereInput[]
-  }
-
-  export type pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput = {
-    create?: XOR<pasteurized_milkCreateWithoutProcessed_by_userInput, pasteurized_milkUncheckedCreateWithoutProcessed_by_userInput> | pasteurized_milkCreateWithoutProcessed_by_userInput[] | pasteurized_milkUncheckedCreateWithoutProcessed_by_userInput[]
-    connectOrCreate?: pasteurized_milkCreateOrConnectWithoutProcessed_by_userInput | pasteurized_milkCreateOrConnectWithoutProcessed_by_userInput[]
-    upsert?: pasteurized_milkUpsertWithWhereUniqueWithoutProcessed_by_userInput | pasteurized_milkUpsertWithWhereUniqueWithoutProcessed_by_userInput[]
-    createMany?: pasteurized_milkCreateManyProcessed_by_userInputEnvelope
-    set?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    disconnect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    delete?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    update?: pasteurized_milkUpdateWithWhereUniqueWithoutProcessed_by_userInput | pasteurized_milkUpdateWithWhereUniqueWithoutProcessed_by_userInput[]
-    updateMany?: pasteurized_milkUpdateManyWithWhereWithoutProcessed_by_userInput | pasteurized_milkUpdateManyWithWhereWithoutProcessed_by_userInput[]
     deleteMany?: pasteurized_milkScalarWhereInput | pasteurized_milkScalarWhereInput[]
   }
 
@@ -19349,6 +20697,20 @@ export namespace Prisma {
     deleteMany?: audit_logScalarWhereInput | audit_logScalarWhereInput[]
   }
 
+  export type batch_milkUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<batch_milkCreateWithoutUserInput, batch_milkUncheckedCreateWithoutUserInput> | batch_milkCreateWithoutUserInput[] | batch_milkUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: batch_milkCreateOrConnectWithoutUserInput | batch_milkCreateOrConnectWithoutUserInput[]
+    upsert?: batch_milkUpsertWithWhereUniqueWithoutUserInput | batch_milkUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: batch_milkCreateManyUserInputEnvelope
+    set?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    disconnect?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    delete?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    connect?: batch_milkWhereUniqueInput | batch_milkWhereUniqueInput[]
+    update?: batch_milkUpdateWithWhereUniqueWithoutUserInput | batch_milkUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: batch_milkUpdateManyWithWhereWithoutUserInput | batch_milkUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: batch_milkScalarWhereInput | batch_milkScalarWhereInput[]
+  }
+
   export type beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput = {
     create?: XOR<beneficiaryCreateWithoutModified_by_userInput, beneficiaryUncheckedCreateWithoutModified_by_userInput> | beneficiaryCreateWithoutModified_by_userInput[] | beneficiaryUncheckedCreateWithoutModified_by_userInput[]
     connectOrCreate?: beneficiaryCreateOrConnectWithoutModified_by_userInput | beneficiaryCreateOrConnectWithoutModified_by_userInput[]
@@ -19416,20 +20778,6 @@ export namespace Prisma {
     connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
     update?: pasteurized_milkUpdateWithWhereUniqueWithoutModified_by_userInput | pasteurized_milkUpdateWithWhereUniqueWithoutModified_by_userInput[]
     updateMany?: pasteurized_milkUpdateManyWithWhereWithoutModified_by_userInput | pasteurized_milkUpdateManyWithWhereWithoutModified_by_userInput[]
-    deleteMany?: pasteurized_milkScalarWhereInput | pasteurized_milkScalarWhereInput[]
-  }
-
-  export type pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput = {
-    create?: XOR<pasteurized_milkCreateWithoutProcessed_by_userInput, pasteurized_milkUncheckedCreateWithoutProcessed_by_userInput> | pasteurized_milkCreateWithoutProcessed_by_userInput[] | pasteurized_milkUncheckedCreateWithoutProcessed_by_userInput[]
-    connectOrCreate?: pasteurized_milkCreateOrConnectWithoutProcessed_by_userInput | pasteurized_milkCreateOrConnectWithoutProcessed_by_userInput[]
-    upsert?: pasteurized_milkUpsertWithWhereUniqueWithoutProcessed_by_userInput | pasteurized_milkUpsertWithWhereUniqueWithoutProcessed_by_userInput[]
-    createMany?: pasteurized_milkCreateManyProcessed_by_userInputEnvelope
-    set?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    disconnect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    delete?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
-    update?: pasteurized_milkUpdateWithWhereUniqueWithoutProcessed_by_userInput | pasteurized_milkUpdateWithWhereUniqueWithoutProcessed_by_userInput[]
-    updateMany?: pasteurized_milkUpdateManyWithWhereWithoutProcessed_by_userInput | pasteurized_milkUpdateManyWithWhereWithoutProcessed_by_userInput[]
     deleteMany?: pasteurized_milkScalarWhereInput | pasteurized_milkScalarWhereInput[]
   }
 
@@ -19549,6 +20897,76 @@ export namespace Prisma {
     upsert?: userUpsertWithoutNotifications_receivedInput
     connect?: userWhereUniqueInput
     update?: XOR<XOR<userUpdateToOneWithWhereWithoutNotifications_receivedInput, userUpdateWithoutNotifications_receivedInput>, userUncheckedUpdateWithoutNotifications_receivedInput>
+  }
+
+  export type userCreateNestedOneWithoutBatch_milkInput = {
+    create?: XOR<userCreateWithoutBatch_milkInput, userUncheckedCreateWithoutBatch_milkInput>
+    connectOrCreate?: userCreateOrConnectWithoutBatch_milkInput
+    connect?: userWhereUniqueInput
+  }
+
+  export type pool_milkCreateNestedOneWithoutBatch_milkInput = {
+    create?: XOR<pool_milkCreateWithoutBatch_milkInput, pool_milkUncheckedCreateWithoutBatch_milkInput>
+    connectOrCreate?: pool_milkCreateOrConnectWithoutBatch_milkInput
+    connect?: pool_milkWhereUniqueInput
+  }
+
+  export type pasteurized_milkCreateNestedManyWithoutBatch_milkInput = {
+    create?: XOR<pasteurized_milkCreateWithoutBatch_milkInput, pasteurized_milkUncheckedCreateWithoutBatch_milkInput> | pasteurized_milkCreateWithoutBatch_milkInput[] | pasteurized_milkUncheckedCreateWithoutBatch_milkInput[]
+    connectOrCreate?: pasteurized_milkCreateOrConnectWithoutBatch_milkInput | pasteurized_milkCreateOrConnectWithoutBatch_milkInput[]
+    createMany?: pasteurized_milkCreateManyBatch_milkInputEnvelope
+    connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
+  }
+
+  export type pasteurized_milkUncheckedCreateNestedManyWithoutBatch_milkInput = {
+    create?: XOR<pasteurized_milkCreateWithoutBatch_milkInput, pasteurized_milkUncheckedCreateWithoutBatch_milkInput> | pasteurized_milkCreateWithoutBatch_milkInput[] | pasteurized_milkUncheckedCreateWithoutBatch_milkInput[]
+    connectOrCreate?: pasteurized_milkCreateOrConnectWithoutBatch_milkInput | pasteurized_milkCreateOrConnectWithoutBatch_milkInput[]
+    createMany?: pasteurized_milkCreateManyBatch_milkInputEnvelope
+    connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
+  }
+
+  export type userUpdateOneRequiredWithoutBatch_milkNestedInput = {
+    create?: XOR<userCreateWithoutBatch_milkInput, userUncheckedCreateWithoutBatch_milkInput>
+    connectOrCreate?: userCreateOrConnectWithoutBatch_milkInput
+    upsert?: userUpsertWithoutBatch_milkInput
+    connect?: userWhereUniqueInput
+    update?: XOR<XOR<userUpdateToOneWithWhereWithoutBatch_milkInput, userUpdateWithoutBatch_milkInput>, userUncheckedUpdateWithoutBatch_milkInput>
+  }
+
+  export type pool_milkUpdateOneRequiredWithoutBatch_milkNestedInput = {
+    create?: XOR<pool_milkCreateWithoutBatch_milkInput, pool_milkUncheckedCreateWithoutBatch_milkInput>
+    connectOrCreate?: pool_milkCreateOrConnectWithoutBatch_milkInput
+    upsert?: pool_milkUpsertWithoutBatch_milkInput
+    connect?: pool_milkWhereUniqueInput
+    update?: XOR<XOR<pool_milkUpdateToOneWithWhereWithoutBatch_milkInput, pool_milkUpdateWithoutBatch_milkInput>, pool_milkUncheckedUpdateWithoutBatch_milkInput>
+  }
+
+  export type pasteurized_milkUpdateManyWithoutBatch_milkNestedInput = {
+    create?: XOR<pasteurized_milkCreateWithoutBatch_milkInput, pasteurized_milkUncheckedCreateWithoutBatch_milkInput> | pasteurized_milkCreateWithoutBatch_milkInput[] | pasteurized_milkUncheckedCreateWithoutBatch_milkInput[]
+    connectOrCreate?: pasteurized_milkCreateOrConnectWithoutBatch_milkInput | pasteurized_milkCreateOrConnectWithoutBatch_milkInput[]
+    upsert?: pasteurized_milkUpsertWithWhereUniqueWithoutBatch_milkInput | pasteurized_milkUpsertWithWhereUniqueWithoutBatch_milkInput[]
+    createMany?: pasteurized_milkCreateManyBatch_milkInputEnvelope
+    set?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
+    disconnect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
+    delete?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
+    connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
+    update?: pasteurized_milkUpdateWithWhereUniqueWithoutBatch_milkInput | pasteurized_milkUpdateWithWhereUniqueWithoutBatch_milkInput[]
+    updateMany?: pasteurized_milkUpdateManyWithWhereWithoutBatch_milkInput | pasteurized_milkUpdateManyWithWhereWithoutBatch_milkInput[]
+    deleteMany?: pasteurized_milkScalarWhereInput | pasteurized_milkScalarWhereInput[]
+  }
+
+  export type pasteurized_milkUncheckedUpdateManyWithoutBatch_milkNestedInput = {
+    create?: XOR<pasteurized_milkCreateWithoutBatch_milkInput, pasteurized_milkUncheckedCreateWithoutBatch_milkInput> | pasteurized_milkCreateWithoutBatch_milkInput[] | pasteurized_milkUncheckedCreateWithoutBatch_milkInput[]
+    connectOrCreate?: pasteurized_milkCreateOrConnectWithoutBatch_milkInput | pasteurized_milkCreateOrConnectWithoutBatch_milkInput[]
+    upsert?: pasteurized_milkUpsertWithWhereUniqueWithoutBatch_milkInput | pasteurized_milkUpsertWithWhereUniqueWithoutBatch_milkInput[]
+    createMany?: pasteurized_milkCreateManyBatch_milkInputEnvelope
+    set?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
+    disconnect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
+    delete?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
+    connect?: pasteurized_milkWhereUniqueInput | pasteurized_milkWhereUniqueInput[]
+    update?: pasteurized_milkUpdateWithWhereUniqueWithoutBatch_milkInput | pasteurized_milkUpdateWithWhereUniqueWithoutBatch_milkInput[]
+    updateMany?: pasteurized_milkUpdateManyWithWhereWithoutBatch_milkInput | pasteurized_milkUpdateManyWithWhereWithoutBatch_milkInput[]
+    deleteMany?: pasteurized_milkScalarWhereInput | pasteurized_milkScalarWhereInput[]
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -19954,6 +21372,33 @@ export namespace Prisma {
     _max?: NestedEnummilk_statusNullableFilter<$PrismaModel>
   }
 
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
   export type NestedEnumcollection_programNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.collection_program | Enumcollection_programFieldRefInput<$PrismaModel> | null
     in?: $Enums.collection_program[] | ListEnumcollection_programFieldRefInput<$PrismaModel> | null
@@ -20039,12 +21484,12 @@ export namespace Prisma {
     created_at?: Date | string | null
     modified_at?: Date | string | null
     profile_image_url?: string | null
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
     donor?: donorCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
@@ -20066,12 +21511,12 @@ export namespace Prisma {
     modified_at?: Date | string | null
     modified_by?: string | null
     profile_image_url?: string | null
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
     donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
@@ -20107,12 +21552,12 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
@@ -20134,12 +21579,12 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
@@ -20160,11 +21605,11 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     donor?: donorCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
@@ -20187,11 +21632,11 @@ export namespace Prisma {
     modified_by?: string | null
     profile_image_url?: string | null
     audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
@@ -20261,11 +21706,11 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     donor?: donorUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
@@ -20288,11 +21733,11 @@ export namespace Prisma {
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
@@ -20344,11 +21789,11 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
@@ -20371,11 +21816,11 @@ export namespace Prisma {
     modified_by?: string | null
     profile_image_url?: string | null
     audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
@@ -20459,11 +21904,11 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
@@ -20486,11 +21931,11 @@ export namespace Prisma {
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
@@ -20590,12 +22035,12 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
     donor?: donorCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
@@ -20617,12 +22062,12 @@ export namespace Prisma {
     modified_by?: string | null
     profile_image_url?: string | null
     audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
     donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
@@ -20722,12 +22167,12 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
@@ -20749,12 +22194,12 @@ export namespace Prisma {
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
@@ -20786,6 +22231,26 @@ export namespace Prisma {
     btl_id?: IntFilter<"request_bottles"> | number
   }
 
+  export type batch_milkCreateWithoutPasteurized_milkInput = {
+    processed_date?: Date | string
+    bottle_count: number
+    user: userCreateNestedOneWithoutBatch_milkInput
+    pool_milk: pool_milkCreateNestedOneWithoutBatch_milkInput
+  }
+
+  export type batch_milkUncheckedCreateWithoutPasteurized_milkInput = {
+    batch_id?: number
+    processed_date?: Date | string
+    processed_by: string
+    source: number
+    bottle_count: number
+  }
+
+  export type batch_milkCreateOrConnectWithoutPasteurized_milkInput = {
+    where: batch_milkWhereUniqueInput
+    create: XOR<batch_milkCreateWithoutPasteurized_milkInput, batch_milkUncheckedCreateWithoutPasteurized_milkInput>
+  }
+
   export type userCreateWithoutModified_pasteurized_milkInput = {
     user_id?: string
     role?: $Enums.user_role | null
@@ -20798,11 +22263,11 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
     donor?: donorCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
@@ -20825,11 +22290,11 @@ export namespace Prisma {
     modified_by?: string | null
     profile_image_url?: string | null
     audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
     donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
@@ -20841,99 +22306,6 @@ export namespace Prisma {
   export type userCreateOrConnectWithoutModified_pasteurized_milkInput = {
     where: userWhereUniqueInput
     create: XOR<userCreateWithoutModified_pasteurized_milkInput, userUncheckedCreateWithoutModified_pasteurized_milkInput>
-  }
-
-  export type pool_milkCreateWithoutPasteurized_milkInput = {
-    pooled_date?: Date | string | null
-    expiration_date: Date | string
-    expected_volume_ml: Decimal | DecimalJsLike | number | string
-    actual_volume_ml: Decimal | DecimalJsLike | number | string
-    qat_status?: $Enums.test_status | null
-    milk_status?: $Enums.milk_status | null
-    remarks?: string | null
-    created_at?: Date | string | null
-    modified_at?: Date | string | null
-    modified_by_user?: userCreateNestedOneWithoutModified_pool_milkInput
-    pooled_by_user: userCreateNestedOneWithoutPooled_pool_milkInput
-    raw_milk?: raw_milkCreateNestedManyWithoutPool_milkInput
-  }
-
-  export type pool_milkUncheckedCreateWithoutPasteurized_milkInput = {
-    pid?: number
-    pooled_by: string
-    pooled_date?: Date | string | null
-    expiration_date: Date | string
-    expected_volume_ml: Decimal | DecimalJsLike | number | string
-    actual_volume_ml: Decimal | DecimalJsLike | number | string
-    qat_status?: $Enums.test_status | null
-    milk_status?: $Enums.milk_status | null
-    remarks?: string | null
-    created_at?: Date | string | null
-    modified_at?: Date | string | null
-    modified_by?: string | null
-    raw_milk?: raw_milkUncheckedCreateNestedManyWithoutPool_milkInput
-  }
-
-  export type pool_milkCreateOrConnectWithoutPasteurized_milkInput = {
-    where: pool_milkWhereUniqueInput
-    create: XOR<pool_milkCreateWithoutPasteurized_milkInput, pool_milkUncheckedCreateWithoutPasteurized_milkInput>
-  }
-
-  export type userCreateWithoutProcessed_pasteurized_milkInput = {
-    user_id?: string
-    role?: $Enums.user_role | null
-    name: string
-    email: string
-    phone: string
-    password: string
-    status?: $Enums.account_status | null
-    created_at?: Date | string | null
-    modified_at?: Date | string | null
-    profile_image_url?: string | null
-    audit_log?: audit_logCreateNestedManyWithoutUserInput
-    beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
-    donor?: donorCreateNestedManyWithoutModified_by_userInput
-    notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
-    notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
-    modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
-    pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
-    collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
-    modified_raw_milk?: raw_milkCreateNestedManyWithoutModified_by_userInput
-    request?: requestCreateNestedManyWithoutModified_by_userInput
-    modified_by_user?: userCreateNestedOneWithoutModified_usersInput
-    modified_users?: userCreateNestedManyWithoutModified_by_userInput
-  }
-
-  export type userUncheckedCreateWithoutProcessed_pasteurized_milkInput = {
-    user_id?: string
-    role?: $Enums.user_role | null
-    name: string
-    email: string
-    phone: string
-    password: string
-    status?: $Enums.account_status | null
-    created_at?: Date | string | null
-    modified_at?: Date | string | null
-    modified_by?: string | null
-    profile_image_url?: string | null
-    audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
-    beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
-    donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
-    notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
-    notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
-    modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
-    collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
-    modified_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    request?: requestUncheckedCreateNestedManyWithoutModified_by_userInput
-    modified_users?: userUncheckedCreateNestedManyWithoutModified_by_userInput
-  }
-
-  export type userCreateOrConnectWithoutProcessed_pasteurized_milkInput = {
-    where: userWhereUniqueInput
-    create: XOR<userCreateWithoutProcessed_pasteurized_milkInput, userUncheckedCreateWithoutProcessed_pasteurized_milkInput>
   }
 
   export type request_bottlesCreateWithoutPasteurized_milkInput = {
@@ -20952,6 +22324,32 @@ export namespace Prisma {
   export type request_bottlesCreateManyPasteurized_milkInputEnvelope = {
     data: request_bottlesCreateManyPasteurized_milkInput | request_bottlesCreateManyPasteurized_milkInput[]
     skipDuplicates?: boolean
+  }
+
+  export type batch_milkUpsertWithoutPasteurized_milkInput = {
+    update: XOR<batch_milkUpdateWithoutPasteurized_milkInput, batch_milkUncheckedUpdateWithoutPasteurized_milkInput>
+    create: XOR<batch_milkCreateWithoutPasteurized_milkInput, batch_milkUncheckedCreateWithoutPasteurized_milkInput>
+    where?: batch_milkWhereInput
+  }
+
+  export type batch_milkUpdateToOneWithWhereWithoutPasteurized_milkInput = {
+    where?: batch_milkWhereInput
+    data: XOR<batch_milkUpdateWithoutPasteurized_milkInput, batch_milkUncheckedUpdateWithoutPasteurized_milkInput>
+  }
+
+  export type batch_milkUpdateWithoutPasteurized_milkInput = {
+    processed_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    bottle_count?: IntFieldUpdateOperationsInput | number
+    user?: userUpdateOneRequiredWithoutBatch_milkNestedInput
+    pool_milk?: pool_milkUpdateOneRequiredWithoutBatch_milkNestedInput
+  }
+
+  export type batch_milkUncheckedUpdateWithoutPasteurized_milkInput = {
+    batch_id?: IntFieldUpdateOperationsInput | number
+    processed_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    processed_by?: StringFieldUpdateOperationsInput | string
+    source?: IntFieldUpdateOperationsInput | number
+    bottle_count?: IntFieldUpdateOperationsInput | number
   }
 
   export type userUpsertWithoutModified_pasteurized_milkInput = {
@@ -20977,11 +22375,11 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
@@ -21004,116 +22402,11 @@ export namespace Prisma {
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
-    modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
-    collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
-    modified_raw_milk?: raw_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    request?: requestUncheckedUpdateManyWithoutModified_by_userNestedInput
-    modified_users?: userUncheckedUpdateManyWithoutModified_by_userNestedInput
-  }
-
-  export type pool_milkUpsertWithoutPasteurized_milkInput = {
-    update: XOR<pool_milkUpdateWithoutPasteurized_milkInput, pool_milkUncheckedUpdateWithoutPasteurized_milkInput>
-    create: XOR<pool_milkCreateWithoutPasteurized_milkInput, pool_milkUncheckedCreateWithoutPasteurized_milkInput>
-    where?: pool_milkWhereInput
-  }
-
-  export type pool_milkUpdateToOneWithWhereWithoutPasteurized_milkInput = {
-    where?: pool_milkWhereInput
-    data: XOR<pool_milkUpdateWithoutPasteurized_milkInput, pool_milkUncheckedUpdateWithoutPasteurized_milkInput>
-  }
-
-  export type pool_milkUpdateWithoutPasteurized_milkInput = {
-    pooled_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
-    milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_by_user?: userUpdateOneWithoutModified_pool_milkNestedInput
-    pooled_by_user?: userUpdateOneRequiredWithoutPooled_pool_milkNestedInput
-    raw_milk?: raw_milkUpdateManyWithoutPool_milkNestedInput
-  }
-
-  export type pool_milkUncheckedUpdateWithoutPasteurized_milkInput = {
-    pid?: IntFieldUpdateOperationsInput | number
-    pooled_by?: StringFieldUpdateOperationsInput | string
-    pooled_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
-    milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_by?: NullableStringFieldUpdateOperationsInput | string | null
-    raw_milk?: raw_milkUncheckedUpdateManyWithoutPool_milkNestedInput
-  }
-
-  export type userUpsertWithoutProcessed_pasteurized_milkInput = {
-    update: XOR<userUpdateWithoutProcessed_pasteurized_milkInput, userUncheckedUpdateWithoutProcessed_pasteurized_milkInput>
-    create: XOR<userCreateWithoutProcessed_pasteurized_milkInput, userUncheckedCreateWithoutProcessed_pasteurized_milkInput>
-    where?: userWhereInput
-  }
-
-  export type userUpdateToOneWithWhereWithoutProcessed_pasteurized_milkInput = {
-    where?: userWhereInput
-    data: XOR<userUpdateWithoutProcessed_pasteurized_milkInput, userUncheckedUpdateWithoutProcessed_pasteurized_milkInput>
-  }
-
-  export type userUpdateWithoutProcessed_pasteurized_milkInput = {
-    user_id?: StringFieldUpdateOperationsInput | string
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    status?: NullableEnumaccount_statusFieldUpdateOperationsInput | $Enums.account_status | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
-    audit_log?: audit_logUpdateManyWithoutUserNestedInput
-    beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
-    donor?: donorUpdateManyWithoutModified_by_userNestedInput
-    notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
-    notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
-    modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
-    pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
-    collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
-    modified_raw_milk?: raw_milkUpdateManyWithoutModified_by_userNestedInput
-    request?: requestUpdateManyWithoutModified_by_userNestedInput
-    modified_by_user?: userUpdateOneWithoutModified_usersNestedInput
-    modified_users?: userUpdateManyWithoutModified_by_userNestedInput
-  }
-
-  export type userUncheckedUpdateWithoutProcessed_pasteurized_milkInput = {
-    user_id?: StringFieldUpdateOperationsInput | string
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    status?: NullableEnumaccount_statusFieldUpdateOperationsInput | $Enums.account_status | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_by?: NullableStringFieldUpdateOperationsInput | string | null
-    profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
-    audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
-    beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
-    donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
-    notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
-    notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
-    modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
@@ -21138,50 +22431,28 @@ export namespace Prisma {
     data: XOR<request_bottlesUpdateManyMutationInput, request_bottlesUncheckedUpdateManyWithoutPasteurized_milkInput>
   }
 
-  export type pasteurized_milkCreateWithoutPool_milkInput = {
-    batch_number: number
-    bottle_sequence_number: number
-    volume_ml: Decimal | DecimalJsLike | number | string
-    bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
-    expiration_date: Date | string
-    mbt_status?: $Enums.test_status | null
-    dispense_status?: $Enums.pasteurized_milk_status | null
-    milk_status?: $Enums.milk_status | null
-    remarks?: string | null
-    created_at?: Date | string | null
-    modified_at?: Date | string | null
-    modified_by_user?: userCreateNestedOneWithoutModified_pasteurized_milkInput
-    processed_by_user?: userCreateNestedOneWithoutProcessed_pasteurized_milkInput
-    request_bottles?: request_bottlesCreateNestedManyWithoutPasteurized_milkInput
+  export type batch_milkCreateWithoutPool_milkInput = {
+    processed_date?: Date | string
+    bottle_count: number
+    user: userCreateNestedOneWithoutBatch_milkInput
+    pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutBatch_milkInput
   }
 
-  export type pasteurized_milkUncheckedCreateWithoutPool_milkInput = {
-    btl_id?: number
-    processed_by?: string | null
-    batch_number: number
-    bottle_sequence_number: number
-    volume_ml: Decimal | DecimalJsLike | number | string
-    bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
-    expiration_date: Date | string
-    mbt_status?: $Enums.test_status | null
-    dispense_status?: $Enums.pasteurized_milk_status | null
-    milk_status?: $Enums.milk_status | null
-    remarks?: string | null
-    created_at?: Date | string | null
-    modified_at?: Date | string | null
-    modified_by?: string | null
-    request_bottles?: request_bottlesUncheckedCreateNestedManyWithoutPasteurized_milkInput
+  export type batch_milkUncheckedCreateWithoutPool_milkInput = {
+    batch_id?: number
+    processed_date?: Date | string
+    processed_by: string
+    bottle_count: number
+    pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutBatch_milkInput
   }
 
-  export type pasteurized_milkCreateOrConnectWithoutPool_milkInput = {
-    where: pasteurized_milkWhereUniqueInput
-    create: XOR<pasteurized_milkCreateWithoutPool_milkInput, pasteurized_milkUncheckedCreateWithoutPool_milkInput>
+  export type batch_milkCreateOrConnectWithoutPool_milkInput = {
+    where: batch_milkWhereUniqueInput
+    create: XOR<batch_milkCreateWithoutPool_milkInput, batch_milkUncheckedCreateWithoutPool_milkInput>
   }
 
-  export type pasteurized_milkCreateManyPool_milkInputEnvelope = {
-    data: pasteurized_milkCreateManyPool_milkInput | pasteurized_milkCreateManyPool_milkInput[]
+  export type batch_milkCreateManyPool_milkInputEnvelope = {
+    data: batch_milkCreateManyPool_milkInput | batch_milkCreateManyPool_milkInput[]
     skipDuplicates?: boolean
   }
 
@@ -21197,12 +22468,12 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
     donor?: donorCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
     modified_raw_milk?: raw_milkCreateNestedManyWithoutModified_by_userInput
@@ -21224,12 +22495,12 @@ export namespace Prisma {
     modified_by?: string | null
     profile_image_url?: string | null
     audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
     donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
     modified_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutModified_by_userInput
@@ -21254,12 +22525,12 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
     donor?: donorCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
     collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
     modified_raw_milk?: raw_milkCreateNestedManyWithoutModified_by_userInput
@@ -21281,12 +22552,12 @@ export namespace Prisma {
     modified_by?: string | null
     profile_image_url?: string | null
     audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
     donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
     collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
     modified_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutModified_by_userInput
@@ -21346,42 +22617,31 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type pasteurized_milkUpsertWithWhereUniqueWithoutPool_milkInput = {
-    where: pasteurized_milkWhereUniqueInput
-    update: XOR<pasteurized_milkUpdateWithoutPool_milkInput, pasteurized_milkUncheckedUpdateWithoutPool_milkInput>
-    create: XOR<pasteurized_milkCreateWithoutPool_milkInput, pasteurized_milkUncheckedCreateWithoutPool_milkInput>
+  export type batch_milkUpsertWithWhereUniqueWithoutPool_milkInput = {
+    where: batch_milkWhereUniqueInput
+    update: XOR<batch_milkUpdateWithoutPool_milkInput, batch_milkUncheckedUpdateWithoutPool_milkInput>
+    create: XOR<batch_milkCreateWithoutPool_milkInput, batch_milkUncheckedCreateWithoutPool_milkInput>
   }
 
-  export type pasteurized_milkUpdateWithWhereUniqueWithoutPool_milkInput = {
-    where: pasteurized_milkWhereUniqueInput
-    data: XOR<pasteurized_milkUpdateWithoutPool_milkInput, pasteurized_milkUncheckedUpdateWithoutPool_milkInput>
+  export type batch_milkUpdateWithWhereUniqueWithoutPool_milkInput = {
+    where: batch_milkWhereUniqueInput
+    data: XOR<batch_milkUpdateWithoutPool_milkInput, batch_milkUncheckedUpdateWithoutPool_milkInput>
   }
 
-  export type pasteurized_milkUpdateManyWithWhereWithoutPool_milkInput = {
-    where: pasteurized_milkScalarWhereInput
-    data: XOR<pasteurized_milkUpdateManyMutationInput, pasteurized_milkUncheckedUpdateManyWithoutPool_milkInput>
+  export type batch_milkUpdateManyWithWhereWithoutPool_milkInput = {
+    where: batch_milkScalarWhereInput
+    data: XOR<batch_milkUpdateManyMutationInput, batch_milkUncheckedUpdateManyWithoutPool_milkInput>
   }
 
-  export type pasteurized_milkScalarWhereInput = {
-    AND?: pasteurized_milkScalarWhereInput | pasteurized_milkScalarWhereInput[]
-    OR?: pasteurized_milkScalarWhereInput[]
-    NOT?: pasteurized_milkScalarWhereInput | pasteurized_milkScalarWhereInput[]
-    btl_id?: IntFilter<"pasteurized_milk"> | number
-    pid?: IntFilter<"pasteurized_milk"> | number
-    processed_by?: UuidNullableFilter<"pasteurized_milk"> | string | null
-    batch_number?: IntFilter<"pasteurized_milk"> | number
-    bottle_sequence_number?: IntFilter<"pasteurized_milk"> | number
-    volume_ml?: DecimalFilter<"pasteurized_milk"> | Decimal | DecimalJsLike | number | string
-    bottle?: Enumbottle_typeNullableFilter<"pasteurized_milk"> | $Enums.bottle_type | null
-    processed_date?: DateTimeNullableFilter<"pasteurized_milk"> | Date | string | null
-    expiration_date?: DateTimeFilter<"pasteurized_milk"> | Date | string
-    mbt_status?: Enumtest_statusNullableFilter<"pasteurized_milk"> | $Enums.test_status | null
-    dispense_status?: Enumpasteurized_milk_statusNullableFilter<"pasteurized_milk"> | $Enums.pasteurized_milk_status | null
-    milk_status?: Enummilk_statusNullableFilter<"pasteurized_milk"> | $Enums.milk_status | null
-    remarks?: StringNullableFilter<"pasteurized_milk"> | string | null
-    created_at?: DateTimeNullableFilter<"pasteurized_milk"> | Date | string | null
-    modified_at?: DateTimeNullableFilter<"pasteurized_milk"> | Date | string | null
-    modified_by?: UuidNullableFilter<"pasteurized_milk"> | string | null
+  export type batch_milkScalarWhereInput = {
+    AND?: batch_milkScalarWhereInput | batch_milkScalarWhereInput[]
+    OR?: batch_milkScalarWhereInput[]
+    NOT?: batch_milkScalarWhereInput | batch_milkScalarWhereInput[]
+    batch_id?: IntFilter<"batch_milk"> | number
+    processed_date?: DateTimeFilter<"batch_milk"> | Date | string
+    processed_by?: UuidFilter<"batch_milk"> | string
+    source?: IntFilter<"batch_milk"> | number
+    bottle_count?: IntFilter<"batch_milk"> | number
   }
 
   export type userUpsertWithoutModified_pool_milkInput = {
@@ -21407,12 +22667,12 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
     modified_raw_milk?: raw_milkUpdateManyWithoutModified_by_userNestedInput
@@ -21434,12 +22694,12 @@ export namespace Prisma {
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
     pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
     modified_raw_milk?: raw_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
@@ -21470,12 +22730,12 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
     collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
     modified_raw_milk?: raw_milkUpdateManyWithoutModified_by_userNestedInput
@@ -21497,12 +22757,12 @@ export namespace Prisma {
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
     modified_raw_milk?: raw_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
@@ -21538,12 +22798,12 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
     donor?: donorCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
     modified_raw_milk?: raw_milkCreateNestedManyWithoutModified_by_userInput
@@ -21565,12 +22825,12 @@ export namespace Prisma {
     modified_by?: string | null
     profile_image_url?: string | null
     audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
     donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
     modified_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutModified_by_userInput
@@ -21629,12 +22889,12 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
     donor?: donorCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
@@ -21656,12 +22916,12 @@ export namespace Prisma {
     modified_by?: string | null
     profile_image_url?: string | null
     audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
     donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
@@ -21679,12 +22939,12 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    qat_status?: $Enums.test_status | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
-    pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutPool_milkInput
+    batch_milk?: batch_milkCreateNestedManyWithoutPool_milkInput
     modified_by_user?: userCreateNestedOneWithoutModified_pool_milkInput
     pooled_by_user: userCreateNestedOneWithoutPooled_pool_milkInput
   }
@@ -21696,13 +22956,13 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    qat_status?: $Enums.test_status | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
     modified_by?: string | null
-    pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutPool_milkInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutPool_milkInput
   }
 
   export type pool_milkCreateOrConnectWithoutRaw_milkInput = {
@@ -21733,12 +22993,12 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
     modified_raw_milk?: raw_milkUpdateManyWithoutModified_by_userNestedInput
@@ -21760,12 +23020,12 @@ export namespace Prisma {
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
     modified_raw_milk?: raw_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
@@ -21836,12 +23096,12 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
@@ -21863,12 +23123,12 @@ export namespace Prisma {
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
@@ -21892,12 +23152,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    pasteurized_milk?: pasteurized_milkUpdateManyWithoutPool_milkNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutPool_milkNestedInput
     modified_by_user?: userUpdateOneWithoutModified_pool_milkNestedInput
     pooled_by_user?: userUpdateOneRequiredWithoutPooled_pool_milkNestedInput
   }
@@ -21909,21 +23169,19 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
-    pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutPool_milkNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutPool_milkNestedInput
   }
 
   export type pasteurized_milkCreateWithoutRequest_bottlesInput = {
-    batch_number: number
     bottle_sequence_number: number
     volume_ml: Decimal | DecimalJsLike | number | string
     bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
     expiration_date: Date | string
     mbt_status?: $Enums.test_status | null
     dispense_status?: $Enums.pasteurized_milk_status | null
@@ -21931,20 +23189,16 @@ export namespace Prisma {
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
+    batch_milk: batch_milkCreateNestedOneWithoutPasteurized_milkInput
     modified_by_user?: userCreateNestedOneWithoutModified_pasteurized_milkInput
-    pool_milk: pool_milkCreateNestedOneWithoutPasteurized_milkInput
-    processed_by_user?: userCreateNestedOneWithoutProcessed_pasteurized_milkInput
   }
 
   export type pasteurized_milkUncheckedCreateWithoutRequest_bottlesInput = {
     btl_id?: number
-    pid: number
-    processed_by?: string | null
     batch_number: number
     bottle_sequence_number: number
     volume_ml: Decimal | DecimalJsLike | number | string
     bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
     expiration_date: Date | string
     mbt_status?: $Enums.test_status | null
     dispense_status?: $Enums.pasteurized_milk_status | null
@@ -22000,11 +23254,9 @@ export namespace Prisma {
   }
 
   export type pasteurized_milkUpdateWithoutRequest_bottlesInput = {
-    batch_number?: IntFieldUpdateOperationsInput | number
     bottle_sequence_number?: IntFieldUpdateOperationsInput | number
     volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
     dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
@@ -22012,20 +23264,16 @@ export namespace Prisma {
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    batch_milk?: batch_milkUpdateOneRequiredWithoutPasteurized_milkNestedInput
     modified_by_user?: userUpdateOneWithoutModified_pasteurized_milkNestedInput
-    pool_milk?: pool_milkUpdateOneRequiredWithoutPasteurized_milkNestedInput
-    processed_by_user?: userUpdateOneWithoutProcessed_pasteurized_milkNestedInput
   }
 
   export type pasteurized_milkUncheckedUpdateWithoutRequest_bottlesInput = {
     btl_id?: IntFieldUpdateOperationsInput | number
-    pid?: IntFieldUpdateOperationsInput | number
-    processed_by?: NullableStringFieldUpdateOperationsInput | string | null
     batch_number?: IntFieldUpdateOperationsInput | number
     bottle_sequence_number?: IntFieldUpdateOperationsInput | number
     volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
     dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
@@ -22094,6 +23342,31 @@ export namespace Prisma {
 
   export type audit_logCreateManyUserInputEnvelope = {
     data: audit_logCreateManyUserInput | audit_logCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type batch_milkCreateWithoutUserInput = {
+    processed_date?: Date | string
+    bottle_count: number
+    pool_milk: pool_milkCreateNestedOneWithoutBatch_milkInput
+    pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutBatch_milkInput
+  }
+
+  export type batch_milkUncheckedCreateWithoutUserInput = {
+    batch_id?: number
+    processed_date?: Date | string
+    source: number
+    bottle_count: number
+    pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutBatch_milkInput
+  }
+
+  export type batch_milkCreateOrConnectWithoutUserInput = {
+    where: batch_milkWhereUniqueInput
+    create: XOR<batch_milkCreateWithoutUserInput, batch_milkUncheckedCreateWithoutUserInput>
+  }
+
+  export type batch_milkCreateManyUserInputEnvelope = {
+    data: batch_milkCreateManyUserInput | batch_milkCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -22256,11 +23529,9 @@ export namespace Prisma {
   }
 
   export type pasteurized_milkCreateWithoutModified_by_userInput = {
-    batch_number: number
     bottle_sequence_number: number
     volume_ml: Decimal | DecimalJsLike | number | string
     bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
     expiration_date: Date | string
     mbt_status?: $Enums.test_status | null
     dispense_status?: $Enums.pasteurized_milk_status | null
@@ -22268,20 +23539,16 @@ export namespace Prisma {
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
-    pool_milk: pool_milkCreateNestedOneWithoutPasteurized_milkInput
-    processed_by_user?: userCreateNestedOneWithoutProcessed_pasteurized_milkInput
+    batch_milk: batch_milkCreateNestedOneWithoutPasteurized_milkInput
     request_bottles?: request_bottlesCreateNestedManyWithoutPasteurized_milkInput
   }
 
   export type pasteurized_milkUncheckedCreateWithoutModified_by_userInput = {
     btl_id?: number
-    pid: number
-    processed_by?: string | null
     batch_number: number
     bottle_sequence_number: number
     volume_ml: Decimal | DecimalJsLike | number | string
     bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
     expiration_date: Date | string
     mbt_status?: $Enums.test_status | null
     dispense_status?: $Enums.pasteurized_milk_status | null
@@ -22302,64 +23569,17 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type pasteurized_milkCreateWithoutProcessed_by_userInput = {
-    batch_number: number
-    bottle_sequence_number: number
-    volume_ml: Decimal | DecimalJsLike | number | string
-    bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
-    expiration_date: Date | string
-    mbt_status?: $Enums.test_status | null
-    dispense_status?: $Enums.pasteurized_milk_status | null
-    milk_status?: $Enums.milk_status | null
-    remarks?: string | null
-    created_at?: Date | string | null
-    modified_at?: Date | string | null
-    modified_by_user?: userCreateNestedOneWithoutModified_pasteurized_milkInput
-    pool_milk: pool_milkCreateNestedOneWithoutPasteurized_milkInput
-    request_bottles?: request_bottlesCreateNestedManyWithoutPasteurized_milkInput
-  }
-
-  export type pasteurized_milkUncheckedCreateWithoutProcessed_by_userInput = {
-    btl_id?: number
-    pid: number
-    batch_number: number
-    bottle_sequence_number: number
-    volume_ml: Decimal | DecimalJsLike | number | string
-    bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
-    expiration_date: Date | string
-    mbt_status?: $Enums.test_status | null
-    dispense_status?: $Enums.pasteurized_milk_status | null
-    milk_status?: $Enums.milk_status | null
-    remarks?: string | null
-    created_at?: Date | string | null
-    modified_at?: Date | string | null
-    modified_by?: string | null
-    request_bottles?: request_bottlesUncheckedCreateNestedManyWithoutPasteurized_milkInput
-  }
-
-  export type pasteurized_milkCreateOrConnectWithoutProcessed_by_userInput = {
-    where: pasteurized_milkWhereUniqueInput
-    create: XOR<pasteurized_milkCreateWithoutProcessed_by_userInput, pasteurized_milkUncheckedCreateWithoutProcessed_by_userInput>
-  }
-
-  export type pasteurized_milkCreateManyProcessed_by_userInputEnvelope = {
-    data: pasteurized_milkCreateManyProcessed_by_userInput | pasteurized_milkCreateManyProcessed_by_userInput[]
-    skipDuplicates?: boolean
-  }
-
   export type pool_milkCreateWithoutModified_by_userInput = {
     pooled_date?: Date | string | null
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    qat_status?: $Enums.test_status | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
-    pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutPool_milkInput
+    batch_milk?: batch_milkCreateNestedManyWithoutPool_milkInput
     pooled_by_user: userCreateNestedOneWithoutPooled_pool_milkInput
     raw_milk?: raw_milkCreateNestedManyWithoutPool_milkInput
   }
@@ -22371,12 +23591,12 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    qat_status?: $Enums.test_status | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
-    pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutPool_milkInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutPool_milkInput
     raw_milk?: raw_milkUncheckedCreateNestedManyWithoutPool_milkInput
   }
 
@@ -22395,12 +23615,12 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    qat_status?: $Enums.test_status | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
-    pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutPool_milkInput
+    batch_milk?: batch_milkCreateNestedManyWithoutPool_milkInput
     modified_by_user?: userCreateNestedOneWithoutModified_pool_milkInput
     raw_milk?: raw_milkCreateNestedManyWithoutPool_milkInput
   }
@@ -22411,13 +23631,13 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    qat_status?: $Enums.test_status | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
     modified_by?: string | null
-    pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutPool_milkInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutPool_milkInput
     raw_milk?: raw_milkUncheckedCreateNestedManyWithoutPool_milkInput
   }
 
@@ -22570,12 +23790,12 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
     donor?: donorCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
@@ -22597,12 +23817,12 @@ export namespace Prisma {
     modified_by?: string | null
     profile_image_url?: string | null
     audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
     donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
@@ -22627,12 +23847,12 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
     donor?: donorCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
@@ -22653,12 +23873,12 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
     donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
     notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
@@ -22704,6 +23924,22 @@ export namespace Prisma {
     old_data?: JsonNullableFilter<"audit_log">
     new_data?: JsonNullableFilter<"audit_log">
     performed_at?: DateTimeNullableFilter<"audit_log"> | Date | string | null
+  }
+
+  export type batch_milkUpsertWithWhereUniqueWithoutUserInput = {
+    where: batch_milkWhereUniqueInput
+    update: XOR<batch_milkUpdateWithoutUserInput, batch_milkUncheckedUpdateWithoutUserInput>
+    create: XOR<batch_milkCreateWithoutUserInput, batch_milkUncheckedCreateWithoutUserInput>
+  }
+
+  export type batch_milkUpdateWithWhereUniqueWithoutUserInput = {
+    where: batch_milkWhereUniqueInput
+    data: XOR<batch_milkUpdateWithoutUserInput, batch_milkUncheckedUpdateWithoutUserInput>
+  }
+
+  export type batch_milkUpdateManyWithWhereWithoutUserInput = {
+    where: batch_milkScalarWhereInput
+    data: XOR<batch_milkUpdateManyMutationInput, batch_milkUncheckedUpdateManyWithoutUserInput>
   }
 
   export type beneficiaryUpsertWithWhereUniqueWithoutModified_by_userInput = {
@@ -22843,20 +24079,23 @@ export namespace Prisma {
     data: XOR<pasteurized_milkUpdateManyMutationInput, pasteurized_milkUncheckedUpdateManyWithoutModified_by_userInput>
   }
 
-  export type pasteurized_milkUpsertWithWhereUniqueWithoutProcessed_by_userInput = {
-    where: pasteurized_milkWhereUniqueInput
-    update: XOR<pasteurized_milkUpdateWithoutProcessed_by_userInput, pasteurized_milkUncheckedUpdateWithoutProcessed_by_userInput>
-    create: XOR<pasteurized_milkCreateWithoutProcessed_by_userInput, pasteurized_milkUncheckedCreateWithoutProcessed_by_userInput>
-  }
-
-  export type pasteurized_milkUpdateWithWhereUniqueWithoutProcessed_by_userInput = {
-    where: pasteurized_milkWhereUniqueInput
-    data: XOR<pasteurized_milkUpdateWithoutProcessed_by_userInput, pasteurized_milkUncheckedUpdateWithoutProcessed_by_userInput>
-  }
-
-  export type pasteurized_milkUpdateManyWithWhereWithoutProcessed_by_userInput = {
-    where: pasteurized_milkScalarWhereInput
-    data: XOR<pasteurized_milkUpdateManyMutationInput, pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userInput>
+  export type pasteurized_milkScalarWhereInput = {
+    AND?: pasteurized_milkScalarWhereInput | pasteurized_milkScalarWhereInput[]
+    OR?: pasteurized_milkScalarWhereInput[]
+    NOT?: pasteurized_milkScalarWhereInput | pasteurized_milkScalarWhereInput[]
+    btl_id?: IntFilter<"pasteurized_milk"> | number
+    batch_number?: IntFilter<"pasteurized_milk"> | number
+    bottle_sequence_number?: IntFilter<"pasteurized_milk"> | number
+    volume_ml?: DecimalFilter<"pasteurized_milk"> | Decimal | DecimalJsLike | number | string
+    bottle?: Enumbottle_typeNullableFilter<"pasteurized_milk"> | $Enums.bottle_type | null
+    expiration_date?: DateTimeFilter<"pasteurized_milk"> | Date | string
+    mbt_status?: Enumtest_statusNullableFilter<"pasteurized_milk"> | $Enums.test_status | null
+    dispense_status?: Enumpasteurized_milk_statusNullableFilter<"pasteurized_milk"> | $Enums.pasteurized_milk_status | null
+    milk_status?: Enummilk_statusNullableFilter<"pasteurized_milk"> | $Enums.milk_status | null
+    remarks?: StringNullableFilter<"pasteurized_milk"> | string | null
+    created_at?: DateTimeNullableFilter<"pasteurized_milk"> | Date | string | null
+    modified_at?: DateTimeNullableFilter<"pasteurized_milk"> | Date | string | null
+    modified_by?: UuidNullableFilter<"pasteurized_milk"> | string | null
   }
 
   export type pool_milkUpsertWithWhereUniqueWithoutModified_by_userInput = {
@@ -22885,7 +24124,7 @@ export namespace Prisma {
     expiration_date?: DateTimeFilter<"pool_milk"> | Date | string
     expected_volume_ml?: DecimalFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
-    qat_status?: Enumtest_statusNullableFilter<"pool_milk"> | $Enums.test_status | null
+    remaining_volume_ml?: DecimalNullableFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string | null
     milk_status?: Enummilk_statusNullableFilter<"pool_milk"> | $Enums.milk_status | null
     remarks?: StringNullableFilter<"pool_milk"> | string | null
     created_at?: DateTimeNullableFilter<"pool_milk"> | Date | string | null
@@ -22980,12 +24219,12 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
@@ -23007,12 +24246,12 @@ export namespace Prisma {
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
@@ -23065,11 +24304,11 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
     donor?: donorCreateNestedManyWithoutModified_by_userInput
     notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
@@ -23092,11 +24331,11 @@ export namespace Prisma {
     modified_by?: string | null
     profile_image_url?: string | null
     audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
     donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
@@ -23122,11 +24361,11 @@ export namespace Prisma {
     modified_at?: Date | string | null
     profile_image_url?: string | null
     audit_log?: audit_logCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
     donor?: donorCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
     modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
@@ -23149,11 +24388,11 @@ export namespace Prisma {
     modified_by?: string | null
     profile_image_url?: string | null
     audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    batch_milk?: batch_milkUncheckedCreateNestedManyWithoutUserInput
     beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
     donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
     notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutProcessed_by_userInput
     modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
     pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
     collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
@@ -23190,11 +24429,11 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUpdateManyWithoutModified_by_userNestedInput
     notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
@@ -23217,11 +24456,11 @@ export namespace Prisma {
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
@@ -23253,11 +24492,11 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
     modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
@@ -23280,17 +24519,272 @@ export namespace Prisma {
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
     modified_raw_milk?: raw_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     request?: requestUncheckedUpdateManyWithoutModified_by_userNestedInput
     modified_users?: userUncheckedUpdateManyWithoutModified_by_userNestedInput
+  }
+
+  export type userCreateWithoutBatch_milkInput = {
+    user_id?: string
+    role?: $Enums.user_role | null
+    name: string
+    email: string
+    phone: string
+    password: string
+    status?: $Enums.account_status | null
+    created_at?: Date | string | null
+    modified_at?: Date | string | null
+    profile_image_url?: string | null
+    audit_log?: audit_logCreateNestedManyWithoutUserInput
+    beneficiary?: beneficiaryCreateNestedManyWithoutModified_by_userInput
+    donor?: donorCreateNestedManyWithoutModified_by_userInput
+    notifications_modified?: notificationCreateNestedManyWithoutUser_modifierInput
+    notifications_received?: notificationCreateNestedManyWithoutUser_recipientInput
+    modified_pasteurized_milk?: pasteurized_milkCreateNestedManyWithoutModified_by_userInput
+    modified_pool_milk?: pool_milkCreateNestedManyWithoutModified_by_userInput
+    pooled_pool_milk?: pool_milkCreateNestedManyWithoutPooled_by_userInput
+    collected_raw_milk?: raw_milkCreateNestedManyWithoutCollected_by_userInput
+    modified_raw_milk?: raw_milkCreateNestedManyWithoutModified_by_userInput
+    request?: requestCreateNestedManyWithoutModified_by_userInput
+    modified_by_user?: userCreateNestedOneWithoutModified_usersInput
+    modified_users?: userCreateNestedManyWithoutModified_by_userInput
+  }
+
+  export type userUncheckedCreateWithoutBatch_milkInput = {
+    user_id?: string
+    role?: $Enums.user_role | null
+    name: string
+    email: string
+    phone: string
+    password: string
+    status?: $Enums.account_status | null
+    created_at?: Date | string | null
+    modified_at?: Date | string | null
+    modified_by?: string | null
+    profile_image_url?: string | null
+    audit_log?: audit_logUncheckedCreateNestedManyWithoutUserInput
+    beneficiary?: beneficiaryUncheckedCreateNestedManyWithoutModified_by_userInput
+    donor?: donorUncheckedCreateNestedManyWithoutModified_by_userInput
+    notifications_modified?: notificationUncheckedCreateNestedManyWithoutUser_modifierInput
+    notifications_received?: notificationUncheckedCreateNestedManyWithoutUser_recipientInput
+    modified_pasteurized_milk?: pasteurized_milkUncheckedCreateNestedManyWithoutModified_by_userInput
+    modified_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutModified_by_userInput
+    pooled_pool_milk?: pool_milkUncheckedCreateNestedManyWithoutPooled_by_userInput
+    collected_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutCollected_by_userInput
+    modified_raw_milk?: raw_milkUncheckedCreateNestedManyWithoutModified_by_userInput
+    request?: requestUncheckedCreateNestedManyWithoutModified_by_userInput
+    modified_users?: userUncheckedCreateNestedManyWithoutModified_by_userInput
+  }
+
+  export type userCreateOrConnectWithoutBatch_milkInput = {
+    where: userWhereUniqueInput
+    create: XOR<userCreateWithoutBatch_milkInput, userUncheckedCreateWithoutBatch_milkInput>
+  }
+
+  export type pool_milkCreateWithoutBatch_milkInput = {
+    pooled_date?: Date | string | null
+    expiration_date: Date | string
+    expected_volume_ml: Decimal | DecimalJsLike | number | string
+    actual_volume_ml: Decimal | DecimalJsLike | number | string
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
+    milk_status?: $Enums.milk_status | null
+    remarks?: string | null
+    created_at?: Date | string | null
+    modified_at?: Date | string | null
+    modified_by_user?: userCreateNestedOneWithoutModified_pool_milkInput
+    pooled_by_user: userCreateNestedOneWithoutPooled_pool_milkInput
+    raw_milk?: raw_milkCreateNestedManyWithoutPool_milkInput
+  }
+
+  export type pool_milkUncheckedCreateWithoutBatch_milkInput = {
+    pid?: number
+    pooled_by: string
+    pooled_date?: Date | string | null
+    expiration_date: Date | string
+    expected_volume_ml: Decimal | DecimalJsLike | number | string
+    actual_volume_ml: Decimal | DecimalJsLike | number | string
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
+    milk_status?: $Enums.milk_status | null
+    remarks?: string | null
+    created_at?: Date | string | null
+    modified_at?: Date | string | null
+    modified_by?: string | null
+    raw_milk?: raw_milkUncheckedCreateNestedManyWithoutPool_milkInput
+  }
+
+  export type pool_milkCreateOrConnectWithoutBatch_milkInput = {
+    where: pool_milkWhereUniqueInput
+    create: XOR<pool_milkCreateWithoutBatch_milkInput, pool_milkUncheckedCreateWithoutBatch_milkInput>
+  }
+
+  export type pasteurized_milkCreateWithoutBatch_milkInput = {
+    bottle_sequence_number: number
+    volume_ml: Decimal | DecimalJsLike | number | string
+    bottle?: $Enums.bottle_type | null
+    expiration_date: Date | string
+    mbt_status?: $Enums.test_status | null
+    dispense_status?: $Enums.pasteurized_milk_status | null
+    milk_status?: $Enums.milk_status | null
+    remarks?: string | null
+    created_at?: Date | string | null
+    modified_at?: Date | string | null
+    modified_by_user?: userCreateNestedOneWithoutModified_pasteurized_milkInput
+    request_bottles?: request_bottlesCreateNestedManyWithoutPasteurized_milkInput
+  }
+
+  export type pasteurized_milkUncheckedCreateWithoutBatch_milkInput = {
+    btl_id?: number
+    bottle_sequence_number: number
+    volume_ml: Decimal | DecimalJsLike | number | string
+    bottle?: $Enums.bottle_type | null
+    expiration_date: Date | string
+    mbt_status?: $Enums.test_status | null
+    dispense_status?: $Enums.pasteurized_milk_status | null
+    milk_status?: $Enums.milk_status | null
+    remarks?: string | null
+    created_at?: Date | string | null
+    modified_at?: Date | string | null
+    modified_by?: string | null
+    request_bottles?: request_bottlesUncheckedCreateNestedManyWithoutPasteurized_milkInput
+  }
+
+  export type pasteurized_milkCreateOrConnectWithoutBatch_milkInput = {
+    where: pasteurized_milkWhereUniqueInput
+    create: XOR<pasteurized_milkCreateWithoutBatch_milkInput, pasteurized_milkUncheckedCreateWithoutBatch_milkInput>
+  }
+
+  export type pasteurized_milkCreateManyBatch_milkInputEnvelope = {
+    data: pasteurized_milkCreateManyBatch_milkInput | pasteurized_milkCreateManyBatch_milkInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type userUpsertWithoutBatch_milkInput = {
+    update: XOR<userUpdateWithoutBatch_milkInput, userUncheckedUpdateWithoutBatch_milkInput>
+    create: XOR<userCreateWithoutBatch_milkInput, userUncheckedCreateWithoutBatch_milkInput>
+    where?: userWhereInput
+  }
+
+  export type userUpdateToOneWithWhereWithoutBatch_milkInput = {
+    where?: userWhereInput
+    data: XOR<userUpdateWithoutBatch_milkInput, userUncheckedUpdateWithoutBatch_milkInput>
+  }
+
+  export type userUpdateWithoutBatch_milkInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    status?: NullableEnumaccount_statusFieldUpdateOperationsInput | $Enums.account_status | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
+    audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
+    donor?: donorUpdateManyWithoutModified_by_userNestedInput
+    notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
+    notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
+    modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
+    modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
+    pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
+    collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
+    modified_raw_milk?: raw_milkUpdateManyWithoutModified_by_userNestedInput
+    request?: requestUpdateManyWithoutModified_by_userNestedInput
+    modified_by_user?: userUpdateOneWithoutModified_usersNestedInput
+    modified_users?: userUpdateManyWithoutModified_by_userNestedInput
+  }
+
+  export type userUncheckedUpdateWithoutBatch_milkInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    status?: NullableEnumaccount_statusFieldUpdateOperationsInput | $Enums.account_status | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    modified_by?: NullableStringFieldUpdateOperationsInput | string | null
+    profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
+    audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
+    donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
+    notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
+    notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
+    modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
+    modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
+    pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
+    collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
+    modified_raw_milk?: raw_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
+    request?: requestUncheckedUpdateManyWithoutModified_by_userNestedInput
+    modified_users?: userUncheckedUpdateManyWithoutModified_by_userNestedInput
+  }
+
+  export type pool_milkUpsertWithoutBatch_milkInput = {
+    update: XOR<pool_milkUpdateWithoutBatch_milkInput, pool_milkUncheckedUpdateWithoutBatch_milkInput>
+    create: XOR<pool_milkCreateWithoutBatch_milkInput, pool_milkUncheckedCreateWithoutBatch_milkInput>
+    where?: pool_milkWhereInput
+  }
+
+  export type pool_milkUpdateToOneWithWhereWithoutBatch_milkInput = {
+    where?: pool_milkWhereInput
+    data: XOR<pool_milkUpdateWithoutBatch_milkInput, pool_milkUncheckedUpdateWithoutBatch_milkInput>
+  }
+
+  export type pool_milkUpdateWithoutBatch_milkInput = {
+    pooled_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    modified_by_user?: userUpdateOneWithoutModified_pool_milkNestedInput
+    pooled_by_user?: userUpdateOneRequiredWithoutPooled_pool_milkNestedInput
+    raw_milk?: raw_milkUpdateManyWithoutPool_milkNestedInput
+  }
+
+  export type pool_milkUncheckedUpdateWithoutBatch_milkInput = {
+    pid?: IntFieldUpdateOperationsInput | number
+    pooled_by?: StringFieldUpdateOperationsInput | string
+    pooled_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    modified_by?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_milk?: raw_milkUncheckedUpdateManyWithoutPool_milkNestedInput
+  }
+
+  export type pasteurized_milkUpsertWithWhereUniqueWithoutBatch_milkInput = {
+    where: pasteurized_milkWhereUniqueInput
+    update: XOR<pasteurized_milkUpdateWithoutBatch_milkInput, pasteurized_milkUncheckedUpdateWithoutBatch_milkInput>
+    create: XOR<pasteurized_milkCreateWithoutBatch_milkInput, pasteurized_milkUncheckedCreateWithoutBatch_milkInput>
+  }
+
+  export type pasteurized_milkUpdateWithWhereUniqueWithoutBatch_milkInput = {
+    where: pasteurized_milkWhereUniqueInput
+    data: XOR<pasteurized_milkUpdateWithoutBatch_milkInput, pasteurized_milkUncheckedUpdateWithoutBatch_milkInput>
+  }
+
+  export type pasteurized_milkUpdateManyWithWhereWithoutBatch_milkInput = {
+    where: pasteurized_milkScalarWhereInput
+    data: XOR<pasteurized_milkUpdateManyMutationInput, pasteurized_milkUncheckedUpdateManyWithoutBatch_milkInput>
   }
 
   export type requestCreateManyBeneficiaryInput = {
@@ -23445,22 +24939,11 @@ export namespace Prisma {
     rid?: IntFieldUpdateOperationsInput | number
   }
 
-  export type pasteurized_milkCreateManyPool_milkInput = {
-    btl_id?: number
-    processed_by?: string | null
-    batch_number: number
-    bottle_sequence_number: number
-    volume_ml: Decimal | DecimalJsLike | number | string
-    bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
-    expiration_date: Date | string
-    mbt_status?: $Enums.test_status | null
-    dispense_status?: $Enums.pasteurized_milk_status | null
-    milk_status?: $Enums.milk_status | null
-    remarks?: string | null
-    created_at?: Date | string | null
-    modified_at?: Date | string | null
-    modified_by?: string | null
+  export type batch_milkCreateManyPool_milkInput = {
+    batch_id?: number
+    processed_date?: Date | string
+    processed_by: string
+    bottle_count: number
   }
 
   export type raw_milkCreateManyPool_milkInput = {
@@ -23482,59 +24965,26 @@ export namespace Prisma {
     modified_by?: string | null
   }
 
-  export type pasteurized_milkUpdateWithoutPool_milkInput = {
-    batch_number?: IntFieldUpdateOperationsInput | number
-    bottle_sequence_number?: IntFieldUpdateOperationsInput | number
-    volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
-    dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
-    milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_by_user?: userUpdateOneWithoutModified_pasteurized_milkNestedInput
-    processed_by_user?: userUpdateOneWithoutProcessed_pasteurized_milkNestedInput
-    request_bottles?: request_bottlesUpdateManyWithoutPasteurized_milkNestedInput
+  export type batch_milkUpdateWithoutPool_milkInput = {
+    processed_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    bottle_count?: IntFieldUpdateOperationsInput | number
+    user?: userUpdateOneRequiredWithoutBatch_milkNestedInput
+    pasteurized_milk?: pasteurized_milkUpdateManyWithoutBatch_milkNestedInput
   }
 
-  export type pasteurized_milkUncheckedUpdateWithoutPool_milkInput = {
-    btl_id?: IntFieldUpdateOperationsInput | number
-    processed_by?: NullableStringFieldUpdateOperationsInput | string | null
-    batch_number?: IntFieldUpdateOperationsInput | number
-    bottle_sequence_number?: IntFieldUpdateOperationsInput | number
-    volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
-    dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
-    milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_by?: NullableStringFieldUpdateOperationsInput | string | null
-    request_bottles?: request_bottlesUncheckedUpdateManyWithoutPasteurized_milkNestedInput
+  export type batch_milkUncheckedUpdateWithoutPool_milkInput = {
+    batch_id?: IntFieldUpdateOperationsInput | number
+    processed_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    processed_by?: StringFieldUpdateOperationsInput | string
+    bottle_count?: IntFieldUpdateOperationsInput | number
+    pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutBatch_milkNestedInput
   }
 
-  export type pasteurized_milkUncheckedUpdateManyWithoutPool_milkInput = {
-    btl_id?: IntFieldUpdateOperationsInput | number
-    processed_by?: NullableStringFieldUpdateOperationsInput | string | null
-    batch_number?: IntFieldUpdateOperationsInput | number
-    bottle_sequence_number?: IntFieldUpdateOperationsInput | number
-    volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
-    dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
-    milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_by?: NullableStringFieldUpdateOperationsInput | string | null
+  export type batch_milkUncheckedUpdateManyWithoutPool_milkInput = {
+    batch_id?: IntFieldUpdateOperationsInput | number
+    processed_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    processed_by?: StringFieldUpdateOperationsInput | string
+    bottle_count?: IntFieldUpdateOperationsInput | number
   }
 
   export type raw_milkUpdateWithoutPool_milkInput = {
@@ -23602,6 +25052,13 @@ export namespace Prisma {
     performed_at?: Date | string | null
   }
 
+  export type batch_milkCreateManyUserInput = {
+    batch_id?: number
+    processed_date?: Date | string
+    source: number
+    bottle_count: number
+  }
+
   export type beneficiaryCreateManyModified_by_userInput = {
     bid?: number
     name: string
@@ -23663,13 +25120,10 @@ export namespace Prisma {
 
   export type pasteurized_milkCreateManyModified_by_userInput = {
     btl_id?: number
-    pid: number
-    processed_by?: string | null
     batch_number: number
     bottle_sequence_number: number
     volume_ml: Decimal | DecimalJsLike | number | string
     bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
     expiration_date: Date | string
     mbt_status?: $Enums.test_status | null
     dispense_status?: $Enums.pasteurized_milk_status | null
@@ -23677,24 +25131,6 @@ export namespace Prisma {
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
-  }
-
-  export type pasteurized_milkCreateManyProcessed_by_userInput = {
-    btl_id?: number
-    pid: number
-    batch_number: number
-    bottle_sequence_number: number
-    volume_ml: Decimal | DecimalJsLike | number | string
-    bottle?: $Enums.bottle_type | null
-    processed_date?: Date | string | null
-    expiration_date: Date | string
-    mbt_status?: $Enums.test_status | null
-    dispense_status?: $Enums.pasteurized_milk_status | null
-    milk_status?: $Enums.milk_status | null
-    remarks?: string | null
-    created_at?: Date | string | null
-    modified_at?: Date | string | null
-    modified_by?: string | null
   }
 
   export type pool_milkCreateManyModified_by_userInput = {
@@ -23704,7 +25140,7 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    qat_status?: $Enums.test_status | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
@@ -23717,7 +25153,7 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    qat_status?: $Enums.test_status | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
@@ -23811,6 +25247,28 @@ export namespace Prisma {
     old_data?: NullableJsonNullValueInput | InputJsonValue
     new_data?: NullableJsonNullValueInput | InputJsonValue
     performed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type batch_milkUpdateWithoutUserInput = {
+    processed_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    bottle_count?: IntFieldUpdateOperationsInput | number
+    pool_milk?: pool_milkUpdateOneRequiredWithoutBatch_milkNestedInput
+    pasteurized_milk?: pasteurized_milkUpdateManyWithoutBatch_milkNestedInput
+  }
+
+  export type batch_milkUncheckedUpdateWithoutUserInput = {
+    batch_id?: IntFieldUpdateOperationsInput | number
+    processed_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    source?: IntFieldUpdateOperationsInput | number
+    bottle_count?: IntFieldUpdateOperationsInput | number
+    pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutBatch_milkNestedInput
+  }
+
+  export type batch_milkUncheckedUpdateManyWithoutUserInput = {
+    batch_id?: IntFieldUpdateOperationsInput | number
+    processed_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    source?: IntFieldUpdateOperationsInput | number
+    bottle_count?: IntFieldUpdateOperationsInput | number
   }
 
   export type beneficiaryUpdateWithoutModified_by_userInput = {
@@ -23991,11 +25449,9 @@ export namespace Prisma {
   }
 
   export type pasteurized_milkUpdateWithoutModified_by_userInput = {
-    batch_number?: IntFieldUpdateOperationsInput | number
     bottle_sequence_number?: IntFieldUpdateOperationsInput | number
     volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
     dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
@@ -24003,20 +25459,16 @@ export namespace Prisma {
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    pool_milk?: pool_milkUpdateOneRequiredWithoutPasteurized_milkNestedInput
-    processed_by_user?: userUpdateOneWithoutProcessed_pasteurized_milkNestedInput
+    batch_milk?: batch_milkUpdateOneRequiredWithoutPasteurized_milkNestedInput
     request_bottles?: request_bottlesUpdateManyWithoutPasteurized_milkNestedInput
   }
 
   export type pasteurized_milkUncheckedUpdateWithoutModified_by_userInput = {
     btl_id?: IntFieldUpdateOperationsInput | number
-    pid?: IntFieldUpdateOperationsInput | number
-    processed_by?: NullableStringFieldUpdateOperationsInput | string | null
     batch_number?: IntFieldUpdateOperationsInput | number
     bottle_sequence_number?: IntFieldUpdateOperationsInput | number
     volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
     dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
@@ -24029,13 +25481,10 @@ export namespace Prisma {
 
   export type pasteurized_milkUncheckedUpdateManyWithoutModified_by_userInput = {
     btl_id?: IntFieldUpdateOperationsInput | number
-    pid?: IntFieldUpdateOperationsInput | number
-    processed_by?: NullableStringFieldUpdateOperationsInput | string | null
     batch_number?: IntFieldUpdateOperationsInput | number
     bottle_sequence_number?: IntFieldUpdateOperationsInput | number
     volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
     dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
@@ -24043,61 +25492,6 @@ export namespace Prisma {
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type pasteurized_milkUpdateWithoutProcessed_by_userInput = {
-    batch_number?: IntFieldUpdateOperationsInput | number
-    bottle_sequence_number?: IntFieldUpdateOperationsInput | number
-    volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
-    dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
-    milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_by_user?: userUpdateOneWithoutModified_pasteurized_milkNestedInput
-    pool_milk?: pool_milkUpdateOneRequiredWithoutPasteurized_milkNestedInput
-    request_bottles?: request_bottlesUpdateManyWithoutPasteurized_milkNestedInput
-  }
-
-  export type pasteurized_milkUncheckedUpdateWithoutProcessed_by_userInput = {
-    btl_id?: IntFieldUpdateOperationsInput | number
-    pid?: IntFieldUpdateOperationsInput | number
-    batch_number?: IntFieldUpdateOperationsInput | number
-    bottle_sequence_number?: IntFieldUpdateOperationsInput | number
-    volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
-    dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
-    milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_by?: NullableStringFieldUpdateOperationsInput | string | null
-    request_bottles?: request_bottlesUncheckedUpdateManyWithoutPasteurized_milkNestedInput
-  }
-
-  export type pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userInput = {
-    btl_id?: IntFieldUpdateOperationsInput | number
-    pid?: IntFieldUpdateOperationsInput | number
-    batch_number?: IntFieldUpdateOperationsInput | number
-    bottle_sequence_number?: IntFieldUpdateOperationsInput | number
-    volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
-    processed_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
-    dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
-    milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    modified_by?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type pool_milkUpdateWithoutModified_by_userInput = {
@@ -24105,12 +25499,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    pasteurized_milk?: pasteurized_milkUpdateManyWithoutPool_milkNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutPool_milkNestedInput
     pooled_by_user?: userUpdateOneRequiredWithoutPooled_pool_milkNestedInput
     raw_milk?: raw_milkUpdateManyWithoutPool_milkNestedInput
   }
@@ -24122,12 +25516,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutPool_milkNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutPool_milkNestedInput
     raw_milk?: raw_milkUncheckedUpdateManyWithoutPool_milkNestedInput
   }
 
@@ -24138,7 +25532,7 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24150,12 +25544,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    pasteurized_milk?: pasteurized_milkUpdateManyWithoutPool_milkNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutPool_milkNestedInput
     modified_by_user?: userUpdateOneWithoutModified_pool_milkNestedInput
     raw_milk?: raw_milkUpdateManyWithoutPool_milkNestedInput
   }
@@ -24166,13 +25560,13 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
-    pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutPool_milkNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutPool_milkNestedInput
     raw_milk?: raw_milkUncheckedUpdateManyWithoutPool_milkNestedInput
   }
 
@@ -24182,7 +25576,7 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    qat_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24348,12 +25742,12 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUpdateManyWithoutCollected_by_userNestedInput
@@ -24374,12 +25768,12 @@ export namespace Prisma {
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
     audit_log?: audit_logUncheckedUpdateManyWithoutUserNestedInput
+    batch_milk?: batch_milkUncheckedUpdateManyWithoutUserNestedInput
     beneficiary?: beneficiaryUncheckedUpdateManyWithoutModified_by_userNestedInput
     donor?: donorUncheckedUpdateManyWithoutModified_by_userNestedInput
     notifications_modified?: notificationUncheckedUpdateManyWithoutUser_modifierNestedInput
     notifications_received?: notificationUncheckedUpdateManyWithoutUser_recipientNestedInput
     modified_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
-    processed_pasteurized_milk?: pasteurized_milkUncheckedUpdateManyWithoutProcessed_by_userNestedInput
     modified_pool_milk?: pool_milkUncheckedUpdateManyWithoutModified_by_userNestedInput
     pooled_pool_milk?: pool_milkUncheckedUpdateManyWithoutPooled_by_userNestedInput
     collected_raw_milk?: raw_milkUncheckedUpdateManyWithoutCollected_by_userNestedInput
@@ -24399,6 +25793,67 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile_image_url?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type pasteurized_milkCreateManyBatch_milkInput = {
+    btl_id?: number
+    bottle_sequence_number: number
+    volume_ml: Decimal | DecimalJsLike | number | string
+    bottle?: $Enums.bottle_type | null
+    expiration_date: Date | string
+    mbt_status?: $Enums.test_status | null
+    dispense_status?: $Enums.pasteurized_milk_status | null
+    milk_status?: $Enums.milk_status | null
+    remarks?: string | null
+    created_at?: Date | string | null
+    modified_at?: Date | string | null
+    modified_by?: string | null
+  }
+
+  export type pasteurized_milkUpdateWithoutBatch_milkInput = {
+    bottle_sequence_number?: IntFieldUpdateOperationsInput | number
+    volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
+    expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
+    milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    modified_by_user?: userUpdateOneWithoutModified_pasteurized_milkNestedInput
+    request_bottles?: request_bottlesUpdateManyWithoutPasteurized_milkNestedInput
+  }
+
+  export type pasteurized_milkUncheckedUpdateWithoutBatch_milkInput = {
+    btl_id?: IntFieldUpdateOperationsInput | number
+    bottle_sequence_number?: IntFieldUpdateOperationsInput | number
+    volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
+    expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
+    milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    modified_by?: NullableStringFieldUpdateOperationsInput | string | null
+    request_bottles?: request_bottlesUncheckedUpdateManyWithoutPasteurized_milkNestedInput
+  }
+
+  export type pasteurized_milkUncheckedUpdateManyWithoutBatch_milkInput = {
+    btl_id?: IntFieldUpdateOperationsInput | number
+    bottle_sequence_number?: IntFieldUpdateOperationsInput | number
+    volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bottle?: NullableEnumbottle_typeFieldUpdateOperationsInput | $Enums.bottle_type | null
+    expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    mbt_status?: NullableEnumtest_statusFieldUpdateOperationsInput | $Enums.test_status | null
+    dispense_status?: NullableEnumpasteurized_milk_statusFieldUpdateOperationsInput | $Enums.pasteurized_milk_status | null
+    milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    modified_by?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

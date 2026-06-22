@@ -91,7 +91,10 @@ export const donorSchemas = z.object({
 
 export const donorQuerySchema = listQuerySchema.extend({
     application_status: z
-        .enum(["pending", "approved", "rejected"], "Invalid application status")
+        .enum(
+            ["pending", "approved", "rejected"],
+            "Invalid application status. Application status can only be 'pending', 'approved', 'rejected'",
+        )
         .optional(),
     status: z.enum(["active", "inactive"]).optional(),
     search: z.string().optional(),

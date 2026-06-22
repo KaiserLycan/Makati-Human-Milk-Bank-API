@@ -1,10 +1,10 @@
 import {
-    createPasteurizedMilk as createPasteurizedMilkService,
+    createBatchMilk as createBatchMilkService,
     deletePasteurizedMilk as deletePasteurizedMilkService,
     getPasteurizedMilkRecords,
     getPasteurizedMilk,
     updatePasteurizedMilk as updatePasteurizedMilkService,
-    updateQATStatus as updateQATStatusService,
+    updateMBTStatus as updateMBTStatusService,
     updateMilkStatus as updateMilkStatusService,
 } from "../services/pasteurizedMilk.service.js";
 import { APIResponse } from "../library/classes/APIResponse.js";
@@ -22,9 +22,9 @@ export const viewPasteurizedMilk = async (req, res) => {
         .json(new APIResponse(200, record, "Successfully retrieved pasteurized milk record."));
 };
 
-export const createPasteurizedMilk = async (req, res) => {
+export const createBatchMilk = async (req, res) => {
     const modified_by = req.user.user_id;
-    const newRecord = await createPasteurizedMilkService({
+    const newRecord = await createBatchMilkService({
         ...req.body,
         processed_by: modified_by,
         modified_by,
@@ -56,14 +56,14 @@ export const deletePasteurizedMilk = async (req, res) => {
         .json(new APIResponse(200, null, "Successfully deleted pasteurized milk record"));
 };
 
-export const updateQATStatus = async (req, res) => {
+export const updateMBTStatus = async (req, res) => {
     const { btl_id } = req.params;
-    const { qat_status } = req.body;
+    const { mbt_status } = req.body;
     const modified_by = req.user.user_id;
-    const updatedRecord = await updateQATStatusService(parseInt(btl_id), qat_status, modified_by);
+    const updatedRecord = await updateMBTStatusService(parseInt(btl_id), mbt_status, modified_by);
     return res
         .status(200)
-        .json(new APIResponse(200, updatedRecord, "QAT status updated successfully"));
+        .json(new APIResponse(200, updatedRecord, "MBT status updated successfully"));
 };
 
 export const updateMilkStatus = async (req, res) => {

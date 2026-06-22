@@ -76,13 +76,10 @@ model request {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model pasteurized_milk {
   btl_id                 Int                      @id @default(autoincrement())
-  pid                    Int
-  processed_by           String?                  @db.Uuid
   batch_number           Int
   bottle_sequence_number Int
   volume_ml              Decimal                  @db.Decimal(7, 2)
   bottle                 bottle_type?             @default(ameda)
-  processed_date         DateTime?                @default(dbgenerated("CURRENT_DATE")) @db.Date
   expiration_date        DateTime                 @db.Date
   mbt_status             test_status?             @default(pending)
   dispense_status        pasteurized_milk_status? @default(available)
@@ -91,9 +88,8 @@ model pasteurized_milk {
   created_at             DateTime?                @default(now()) @db.Timestamp(6)
   modified_at            DateTime?                @default(now()) @db.Timestamp(6)
   modified_by            String?                  @db.Uuid
+  batch_milk             batch_milk               @relation(fields: [batch_number], references: [batch_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_batch_number_batchOd")
   modified_by_user       user?                    @relation("modified_pasteurized_milk", fields: [modified_by], references: [user_id], onUpdate: NoAction)
-  pool_milk              pool_milk                @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction)
-  processed_by_user      user?                    @relation("processed_pasteurized_milk", fields: [processed_by], references: [user_id], onUpdate: NoAction)
   request_bottles        request_bottles[]
 
   @@index([expiration_date, created_at], map: "idx_milk_fefo_queue", where: raw("((dispense_status = 'available'::pasteurized_milk_status) AND (milk_status = 'good'::milk_status) AND (mbt_status = 'pass'::test_status))"))
@@ -101,22 +97,22 @@ model pasteurized_milk {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model pool_milk {
-  pid                Int                @id @default(autoincrement())
-  pooled_by          String             @db.Uuid
-  pooled_date        DateTime?          @default(dbgenerated("CURRENT_DATE")) @db.Date
-  expiration_date    DateTime           @db.Date
-  expected_volume_ml Decimal            @db.Decimal(7, 2)
-  actual_volume_ml   Decimal            @db.Decimal(7, 2)
-  qat_status         test_status?       @default(pending)
-  milk_status        milk_status?       @default(good)
-  remarks            String?            @db.VarChar(500)
-  created_at         DateTime?          @default(now()) @db.Timestamp(6)
-  modified_at        DateTime?          @default(now()) @db.Timestamp(6)
-  modified_by        String?            @db.Uuid
-  pasteurized_milk   pasteurized_milk[]
-  modified_by_user   user?              @relation("modified_pool_milk", fields: [modified_by], references: [user_id], onUpdate: NoAction)
-  pooled_by_user     user               @relation("pooled_pool_milk", fields: [pooled_by], references: [user_id], onDelete: SetNull, onUpdate: NoAction)
-  raw_milk           raw_milk[]
+  pid                 Int          @id @default(autoincrement())
+  pooled_by           String       @db.Uuid
+  pooled_date         DateTime?    @default(dbgenerated("CURRENT_DATE")) @db.Date
+  expiration_date     DateTime     @db.Date
+  expected_volume_ml  Decimal      @db.Decimal(7, 2)
+  actual_volume_ml    Decimal      @db.Decimal(7, 2)
+  remaining_volume_ml Decimal?     @db.Decimal(7, 2)
+  milk_status         milk_status? @default(good)
+  remarks             String?      @db.VarChar(500)
+  created_at          DateTime?    @default(now()) @db.Timestamp(6)
+  modified_at         DateTime?    @default(now()) @db.Timestamp(6)
+  modified_by         String?      @db.Uuid
+  batch_milk          batch_milk[]
+  modified_by_user    user?        @relation("modified_pool_milk", fields: [modified_by], references: [user_id], onUpdate: NoAction)
+  pooled_by_user      user         @relation("pooled_pool_milk", fields: [pooled_by], references: [user_id], onDelete: SetNull, onUpdate: NoAction)
+  raw_milk            raw_milk[]
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -141,7 +137,7 @@ model raw_milk {
   collected_by_user user?               @relation("collected_raw_milk", fields: [collected_by], references: [user_id], onUpdate: NoAction)
   donor             donor               @relation(fields: [dtn], references: [dtn], onDelete: Cascade, onUpdate: NoAction)
   modified_by_user  user?               @relation("modified_raw_milk", fields: [modified_by], references: [user_id], onUpdate: NoAction)
-  pool_milk         pool_milk?          @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction)
+  pool_milk         pool_milk?          @relation(fields: [pid], references: [pid], onUpdate: NoAction)
 }
 
 model request_bottles {
@@ -154,31 +150,31 @@ model request_bottles {
 }
 
 model user {
-  user_id                    String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  role                       user_role?         @default(staff)
-  name                       String             @db.VarChar
-  email                      String             @unique @db.VarChar
-  phone                      String             @db.VarChar
-  password                   String             @db.VarChar
-  status                     account_status?    @default(active)
-  created_at                 DateTime?          @default(now()) @db.Timestamp(6)
-  modified_at                DateTime?          @default(now()) @db.Timestamp(6)
-  modified_by                String?            @db.Uuid
-  profile_image_url          String?            @db.VarChar
-  audit_log                  audit_log[]
-  beneficiary                beneficiary[]
-  donor                      donor[]
-  notifications_modified     notification[]     @relation("notification_modifier")
-  notifications_received     notification[]     @relation("notification_recipient")
-  modified_pasteurized_milk  pasteurized_milk[] @relation("modified_pasteurized_milk")
-  processed_pasteurized_milk pasteurized_milk[] @relation("processed_pasteurized_milk")
-  modified_pool_milk         pool_milk[]        @relation("modified_pool_milk")
-  pooled_pool_milk           pool_milk[]        @relation("pooled_pool_milk")
-  collected_raw_milk         raw_milk[]         @relation("collected_raw_milk")
-  modified_raw_milk          raw_milk[]         @relation("modified_raw_milk")
-  request                    request[]
-  modified_by_user           user?              @relation("user_modified_by", fields: [modified_by], references: [user_id], onUpdate: NoAction)
-  modified_users             user[]             @relation("user_modified_by")
+  user_id                   String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role                      user_role?         @default(staff)
+  name                      String             @db.VarChar
+  email                     String             @unique @db.VarChar
+  phone                     String             @db.VarChar
+  password                  String             @db.VarChar
+  status                    account_status?    @default(active)
+  created_at                DateTime?          @default(now()) @db.Timestamp(6)
+  modified_at               DateTime?          @default(now()) @db.Timestamp(6)
+  modified_by               String?            @db.Uuid
+  profile_image_url         String?            @db.VarChar
+  audit_log                 audit_log[]
+  batch_milk                batch_milk[]
+  beneficiary               beneficiary[]
+  donor                     donor[]
+  notifications_modified    notification[]     @relation("notification_modifier")
+  notifications_received    notification[]     @relation("notification_recipient")
+  modified_pasteurized_milk pasteurized_milk[] @relation("modified_pasteurized_milk")
+  modified_pool_milk        pool_milk[]        @relation("modified_pool_milk")
+  pooled_pool_milk          pool_milk[]        @relation("pooled_pool_milk")
+  collected_raw_milk        raw_milk[]         @relation("collected_raw_milk")
+  modified_raw_milk         raw_milk[]         @relation("modified_raw_milk")
+  request                   request[]
+  modified_by_user          user?              @relation("user_modified_by", fields: [modified_by], references: [user_id], onUpdate: NoAction)
+  modified_users            user[]             @relation("user_modified_by")
 }
 
 model notification {
@@ -198,6 +194,17 @@ model notification {
   user_recipient    user      @relation("notification_recipient", fields: [recipient_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([recipient_id, is_read])
+}
+
+model batch_milk {
+  batch_id         Int                @id(map: "batch_pkey") @default(autoincrement())
+  processed_date   DateTime           @default(dbgenerated("CURRENT_DATE")) @db.Date
+  processed_by     String             @db.Uuid
+  source           Int
+  bottle_count     Int
+  user             user               @relation(fields: [processed_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_processed_by_user")
+  pool_milk        pool_milk          @relation(fields: [source], references: [pid], onDelete: NoAction, onUpdate: NoAction, map: "fk_source_pid")
+  pasteurized_milk pasteurized_milk[]
 }
 
 enum request_status {

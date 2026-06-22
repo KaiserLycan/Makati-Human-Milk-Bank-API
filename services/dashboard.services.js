@@ -70,7 +70,11 @@ export const getDashboardMetrics = async (range) => {
         }),
         prisma.pasteurized_milk.aggregate({
             _sum: { volume_ml: true },
-            where: { processed_date: dateFilter },
+            where: {
+                batch_milk: {
+                    processed_date: dateFilter,
+                },
+            },
         }),
         prisma.pasteurized_milk.aggregate({
             _sum: { volume_ml: true },
@@ -84,7 +88,7 @@ export const getDashboardMetrics = async (range) => {
             },
         }),
         prisma.pool_milk.aggregate({
-            _sum: { actual_volume_ml: true },
+            _sum: { remaining_volume_ml: true },
             where: {
                 milk_status: { in: ["discarded", "contaminated", "expired"] },
                 pooled_date: dateFilter,
@@ -94,13 +98,15 @@ export const getDashboardMetrics = async (range) => {
             _sum: { volume_ml: true },
             where: {
                 milk_status: { in: ["discarded", "contaminated", "expired"] },
-                processed_date: dateFilter,
+                batch_milk: {
+                    processed_date: dateFilter,
+                },
             },
         }),
     ]);
 
     const totalRawWaste = rawWaste._sum.volume_ml || 0;
-    const totalPoolWaste = poolWaste._sum.actual_volume_ml || 0;
+    const totalPoolWaste = poolWaste._sum.remaining_volume_ml || 0;
     const totalPasteurizedWaste = pasteurizedWaste._sum.volume_ml || 0;
     const totalWaste = totalRawWaste + totalPoolWaste + totalPasteurizedWaste;
 
@@ -148,9 +154,25 @@ export const getDashboardTrends = async (range) => {
             select: { volume_ml: true, collection_date: true },
         }),
         prisma.pasteurized_milk.findMany({
-            where: { processed_date: dateFilter },
-            select: { volume_ml: true, processed_date: true },
-        }),
+            where: {
+                batch_milk: {
+                    processed_date: dateFilter,
+                },
+            },
+            select: {
+                volume_ml: true,
+                batch_milk: {
+                    select: {
+                        processed_date: true,
+                    },
+                },
+            },
+        }).then((records) =>
+            records.map((r) => ({
+                volume_ml: r.volume_ml,
+                processed_date: r.batch_milk.processed_date,
+            }))
+        ),
         prisma.pasteurized_milk.findMany({
             where: { dispense_status: "dispensed", modified_at: dateFilter },
             select: { volume_ml: true, modified_at: true },

@@ -4,6 +4,7 @@ import { AppError } from "../library/classes/AppError.js";
 import { clearCachedData, fetchCachedData, cacheData } from "./redis.services.js";
 import { startOfToday } from "date-fns";
 import { buildStaffNotifications, notifyStaff } from "./notification.services.js";
+import { fetchDonorDetails } from "./donor.services.js";
 
 const RAW_MILK_CACHE_KEY = "rawMilk:*";
 
@@ -17,11 +18,18 @@ export const markExpiredRawMilk = async () => {
         const ids = expiredMilk.map((milk) => milk.ctn);
         await prisma.raw_milk.updateMany({
             where: { ctn: { in: ids } },
-            data: { milk_status: "expired" },
+            data: {
+                milk_status: "expired",
+                qat_status: "fail",
+            },
         });
 
         await notifyStaff(
-            buildStaffNotifications("Raw Milk", ids, (id) => `Raw milk (CTN: ${id}) has expired`),
+            await buildStaffNotifications(
+                "Raw Milk",
+                ids,
+                (id) => `Raw milk (CTN: ${id}) has expired`,
+            ),
         );
     }
 };
@@ -47,12 +55,12 @@ const checkDailyLimit = async (dtn, program, volume_ml, limit) => {
 };
 
 export const getRawMilk = async (params) => {
-    const { milk_status, qat_status, program, page, limit, sortBy, sortOrder } = params;
+    const { milk_status, qat_status, program, page, limit, sortBy, sortOrder, dtn } = params;
     const key = `rawMilk:list:${JSON.stringify(params)}`;
     const cachedData = await fetchCachedData(key);
     if (cachedData) return cachedData;
 
-    const where = { milk_status, qat_status, program };
+    const where = { milk_status, qat_status, program, dtn };
 
     const [total, rawMilks] = await prisma.$transaction([
         prisma.raw_milk.count({ where }),
@@ -145,24 +153,37 @@ export const createCollection = async (data) => {
     const { dtn, program, volume_ml, limit, ...restData } = data;
     if (limit) await checkDailyLimit(dtn, program, volume_ml, limit);
 
+    const donor = await fetchDonorDetails(dtn);
+
+    if (donor.application_status === "rejected") {
+        throw new AppError("Donor cannot donate milk. Their application is rejected.", 400);
+    }
+
     const collection = await prisma.raw_milk.create({
+        select: {
+            ctn: true,
+        },
+        data: { dtn, program, volume_ml, ...restData },
+    });
+
+    await markExpiredRawMilk();
+    await clearCachedData(RAW_MILK_CACHE_KEY);
+    return await getRawMilkById(collection.ctn);
+};
+
+export const updateCollection = async (ctn, data) => {
+    const { dtn, program, volume_ml, limit, ...restData } = data;
+    if (limit) await checkDailyLimit(dtn, program, volume_ml, limit);
+
+    await prisma.raw_milk.update({
+        where: { ctn },
         data: { dtn, program, volume_ml, ...restData },
         omit,
     });
 
+    await markExpiredRawMilk();
     await clearCachedData(RAW_MILK_CACHE_KEY);
-    return collection;
-};
-
-export const updateCollection = async (ctn, data) => {
-    const updatedCollection = await prisma.raw_milk.update({
-        where: { ctn },
-        data,
-        omit,
-    });
-
-    await clearCachedData(RAW_MILK_CACHE_KEY);
-    return updatedCollection;
+    return await getRawMilkById(ctn);
 };
 
 export const deleteCollection = async (ctn) => {
@@ -171,23 +192,47 @@ export const deleteCollection = async (ctn) => {
 };
 
 export const updateMilkStatus = async (ctn, milk_status, modified_by) => {
-    const updatedCollection = await prisma.raw_milk.update({
+    const collection = await prisma.raw_milk.findUniqueOrThrow({ where: { ctn } });
+
+    if (collection.milk_status === milk_status)
+        throw new AppError(`Collection ${ctn} milk_status is already ${milk_status}`, 400);
+
+    if (milk_status !== "discarded" && collection.expiration_date < startOfToday()) {
+        throw new AppError(
+            `Collection ${ctn} expiration date has passed. Milk status can no longer be updated from 'expired' status unless 'discarded'`,
+            400,
+        );
+    }
+
+    await prisma.raw_milk.update({
         where: { ctn },
         data: { milk_status, modified_by },
     });
 
     await clearCachedData(RAW_MILK_CACHE_KEY);
-    return updatedCollection;
+    return getRawMilkById(ctn);
 };
 
 export const updateQATStatus = async (ctn, qat_status, modified_by) => {
-    const updatedCollection = await prisma.raw_milk.update({
+    const collection = await prisma.raw_milk.findUniqueOrThrow({ where: { ctn } });
+
+    if (collection.qat_status === qat_status)
+        throw new AppError(`Collection ${ctn} qat_status is already set to ${qat_status}`, 400);
+
+    if (collection.milk_status === "expired" || collection.milk_status === "contaminated") {
+        throw new AppError(
+            `Cannot update ${ctn} qat_status from 'fail' because it is ${collection.milk_status}.`,
+            400,
+        );
+    }
+
+    await prisma.raw_milk.update({
         where: { ctn },
         data: { qat_status, modified_by },
     });
 
     await clearCachedData(RAW_MILK_CACHE_KEY);
-    return updatedCollection;
+    return getRawMilkById(ctn);
 };
 
 export const validateCollectionsForPooling = async (collectionIds) => {
@@ -196,21 +241,24 @@ export const validateCollectionsForPooling = async (collectionIds) => {
     });
 
     rawMilk.forEach((milk) => {
-        if (milk.qat_status !== "pass") {
+        if (milk.expiration_date < startOfToday() || milk.milk_status === "expired") {
+            throw new AppError(`Cannot pool collection ${milk.ctn} because it is expired.`, 400);
+        }
+
+        if (milk.milk_status === "discarded") {
             throw new AppError(
-                `Cannot pool collection ${milk.ctn} because its QAT status is ${milk.qat_status}.`,
+                `Cannot pool collection ${milk.ctn} because it has been discarded`,
                 400,
             );
         }
+
+        if (milk.qat_status !== "pass" || milk.milk_status === "contaminated") {
+            throw new AppError(`Cannot pool collection ${milk.ctn} because hasn't passed QAT`, 400);
+        }
+
         if (milk.pid !== null) {
             throw new AppError(
                 `Cannot pool collection ${milk.ctn} because it is already part of pool ${milk.pid}.`,
-                400,
-            );
-        }
-        if (milk.milk_status !== "good") {
-            throw new AppError(
-                `Cannot pool collection ${milk.ctn} because its status is ${milk.milk_status}.`,
                 400,
             );
         }

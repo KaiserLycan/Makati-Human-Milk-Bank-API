@@ -1,4 +1,3 @@
-import { prisma } from "../library/db/db.ts";
 import { checkExpirationDate } from "../services/expiration.services.js";
 import { APIResponse } from "../library/classes/APIResponse.js";
 import {

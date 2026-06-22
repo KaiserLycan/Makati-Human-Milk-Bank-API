@@ -24,8 +24,11 @@ export const getCollectionById = async (req, res) => {
 
 export const createCollection = async (req, res) => {
     const modified_by = req.user.user_id;
+    let limit;
+    if (req.body.program === "WI") limit = 800;
     const newCollection = await createCollectionService({
         ...req.body,
+        limit,
         modified_by,
     });
     return res
@@ -36,9 +39,11 @@ export const createCollection = async (req, res) => {
 export const updateCollection = async (req, res) => {
     const { ctn } = req.params;
     const modified_by = req.user.user_id;
-
+    let limit;
+    if (req.body.program === "WI") limit = 800;
     const updatedCollection = await updateCollectionService(parseInt(ctn), {
         ...req.body,
+        limit,
         modified_by,
     });
 

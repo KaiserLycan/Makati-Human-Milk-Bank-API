@@ -11,6 +11,6 @@ export const checkExpirationDate = async () => {
     await markExpiredPoolMilk();
     await processRequestWithExpiredMilk();
     await markExpiredPasteurizedMilk();
-    await prisma.$executeRaw`CALL internal_execute_allocation()`;
+    await prisma.$executeRaw`SELECT internal_execute_allocation()`;
     logger.info("Daily expiration check complete.");
 };

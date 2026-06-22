@@ -1,23 +1,32 @@
 import { z } from "zod";
 import { listQuerySchema } from "./query.schemas.js";
 
-export const pasteurizedMilkSchema = z.object({
+export const createBatchMilkSchema = z.object({
     pid: z.coerce.number().int().positive(),
-    batch_number: z.coerce.number().int().positive(),
     bottle_count: z.coerce.number().int().positive(),
     volume_per_bottle: z.coerce.number().int().positive(),
-    bottle_type: z.string().optional(),
+    bottle_type: z
+        .enum(["korea", "ameda", "red_cap"], {
+            error: "Invalid bottle type. Only korea, ameda, and red_cap are accepted.",
+        })
+        .optional()
+        .default("ameda"),
     pasteurization_date: z.coerce.date(),
+});
+
+export const updatePasteurizedMilkSchema = z.object({
+    volume_per_bottle: z.coerce.number().int().positive().optional(),
+    pasteurization_date: z.coerce.date().optional(),
 });
 
 export const pasteurizedMilkQuerySchema = listQuerySchema.extend({
     milk_status: z.enum(["good", "contaminated", "discarded", "expired"]).optional(),
-    qat_status: z.enum(["pending", "pass", "fail"]).optional(),
+    mbt_status: z.enum(["pending", "pass", "fail"]).optional(),
     dispense_status: z.enum(["available", "reserved", "dispensed"]).optional(),
 });
 
-export const updateQATStatusSchema = z.object({
-    qat_status: z.enum(["pending", "pass", "fail"]),
+export const updateMBTStatusSchema = z.object({
+    mbt_status: z.enum(["pending", "pass", "fail"]),
 });
 
 export const updateMilkStatusSchema = z.object({

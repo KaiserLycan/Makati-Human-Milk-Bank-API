@@ -10,7 +10,7 @@ const OMIT_PASSWORD = { ...omit, password: true };
 
 export const fetchActiveUsers = () => {
     return prisma.user.findMany({
-        where: { role: "staff", status: "active" },
+        where: { status: "active" },
     });
 };
 
@@ -170,6 +170,7 @@ export const validateCredentials = async ({ email, user_id, password }) => {
             OR: [{ email }, { user_id }],
             status: "active",
         },
+        omit,
     });
 
     if (!user) throw new AppError("Invalid Credentials", 400);

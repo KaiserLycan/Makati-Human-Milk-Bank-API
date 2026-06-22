@@ -177,13 +177,10 @@ exports.Prisma.RequestScalarFieldEnum = {
 
 exports.Prisma.Pasteurized_milkScalarFieldEnum = {
   btl_id: 'btl_id',
-  pid: 'pid',
-  processed_by: 'processed_by',
   batch_number: 'batch_number',
   bottle_sequence_number: 'bottle_sequence_number',
   volume_ml: 'volume_ml',
   bottle: 'bottle',
-  processed_date: 'processed_date',
   expiration_date: 'expiration_date',
   mbt_status: 'mbt_status',
   dispense_status: 'dispense_status',
@@ -201,7 +198,7 @@ exports.Prisma.Pool_milkScalarFieldEnum = {
   expiration_date: 'expiration_date',
   expected_volume_ml: 'expected_volume_ml',
   actual_volume_ml: 'actual_volume_ml',
-  qat_status: 'qat_status',
+  remaining_volume_ml: 'remaining_volume_ml',
   milk_status: 'milk_status',
   remarks: 'remarks',
   created_at: 'created_at',
@@ -261,6 +258,14 @@ exports.Prisma.NotificationScalarFieldEnum = {
   created_at: 'created_at',
   modified_at: 'modified_at',
   modified_by: 'modified_by'
+};
+
+exports.Prisma.Batch_milkScalarFieldEnum = {
+  batch_id: 'batch_id',
+  processed_date: 'processed_date',
+  processed_by: 'processed_by',
+  source: 'source',
+  bottle_count: 'bottle_count'
 };
 
 exports.Prisma.SortOrder = {
@@ -357,7 +362,8 @@ exports.Prisma.ModelName = {
   raw_milk: 'raw_milk',
   request_bottles: 'request_bottles',
   user: 'user',
-  notification: 'notification'
+  notification: 'notification',
+  batch_milk: 'batch_milk'
 };
 
 /**

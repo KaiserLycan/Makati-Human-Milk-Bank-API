@@ -16,6 +16,9 @@ export const fetchNotificationsByUserId = async (params) => {
             recipient_id: user_id,
             ...(is_read && { is_read }),
         },
+        orderBy: {
+            created_at: "desc",
+        },
         omit,
     });
 

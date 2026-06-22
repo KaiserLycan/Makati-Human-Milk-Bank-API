@@ -4,7 +4,6 @@ import {
     getMilkPools,
     getMilkPool,
     updateMilkPool as updateMilkPoolService,
-    updateQATStatus as updateQATStatusService,
     updateMilkPoolStatus as updateMilkPoolStatusService,
 } from "../services/poolMilk.services.js";
 import { APIResponse } from "../library/classes/APIResponse.js";
@@ -34,7 +33,7 @@ export const updateMilkPool = async (req, res) => {
     const { pid } = req.params;
     const modified_by = req.user.user_id;
 
-    const updatedPool = await updateMilkPoolService(parseInt(pid), {
+    const updatedPool = await updateMilkPoolService(pid, {
         ...req.body,
         modified_by,
     });
@@ -46,18 +45,8 @@ export const updateMilkPool = async (req, res) => {
 
 export const deleteMilkPool = async (req, res) => {
     const { pid } = req.params;
-    await deleteMilkPoolService(parseInt(pid));
+    await deleteMilkPoolService(pid);
     return res.status(200).json(new APIResponse(200, null, "Successfully deleted milk pool"));
-};
-
-export const updateQATStatus = async (req, res) => {
-    const { pid } = req.params;
-    const { qat_status } = req.body;
-    const modified_by = req.user.user_id;
-    const updatedPool = await updateQATStatusService(parseInt(pid), qat_status, modified_by);
-    return res
-        .status(200)
-        .json(new APIResponse(200, updatedPool, "QAT status updated successfully"));
 };
 
 export const updateMilkPoolStatus = async (req, res) => {

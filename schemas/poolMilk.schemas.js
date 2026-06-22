@@ -5,17 +5,20 @@ export const milkPoolSchema = z.object({
     collections: z
         .array(z.coerce.number().int().positive())
         .min(1, "At least one collection is required"),
-    actual_volume: z.coerce.number().int().positive(),
+    actual_volume_ml: z.coerce.number().int().positive(),
+    remarks: z.string().max(100, "Remarks cannot exceed 100 characters.").optional(),
+});
+
+export const updatePoolSchema = z.object({
+    pooled_by: z.uuid().optional(),
+    pooled_date: z.coerce.date().optional(),
+    expiration_date: z.coerce.date().optional(),
+    actual_volume_ml: z.coerce.number().int().positive().optional(),
     remarks: z.string().max(100, "Remarks cannot exceed 100 characters.").optional(),
 });
 
 export const milkPoolQuerySchema = listQuerySchema.extend({
     milk_status: z.enum(["good", "contaminated", "discarded", "expired"]).optional(),
-    qat_status: z.enum(["pending", "pass", "fail"]).optional(),
-});
-
-export const updateQATStatusSchema = z.object({
-    qat_status: z.enum(["pending", "pass", "fail"]),
 });
 
 export const updateMilkPoolStatusSchema = z.object({
