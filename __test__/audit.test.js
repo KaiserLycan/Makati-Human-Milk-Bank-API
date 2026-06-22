@@ -7,8 +7,13 @@ const mockQueryAuditLogs = jest.fn((req, res) => {
     return res.status(200).json(new APIResponse(200, null, "Query successful"));
 });
 
+const mockGetAuditByID = jest.fn((req, res) => {
+    return res.status(200).json(new APIResponse(200, null, "Get successful"));
+});
+
 jest.mock("../controllers/audit.controllers.js", () => ({
     queryAuditLogs: (req, res) => mockQueryAuditLogs(req, res),
+    getAuditByID: (req, res) => mockGetAuditByID(req, res),
 }));
 
 jest.mock("../middleware/protectRoute.js", () => ({

@@ -3,9 +3,9 @@ import request from "supertest";
 import express from "express";
 
 jest.mock("../controllers/collection.controllers.js", () => ({
-    queryCollections: jest.fn((req, res) => res.status(200).json({ success: true, data: [] })),
-    viewCollection: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
-    logCollection: jest.fn((req, res) => res.status(201).json({ success: true, data: {} })),
+    getCollections: jest.fn((req, res) => res.status(200).json({ success: true, data: [] })),
+    getCollectionById: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
+    createCollection: jest.fn((req, res) => res.status(201).json({ success: true, data: {} })),
     updateCollection: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
     deleteCollection: jest.fn((req, res) =>
         res.status(200).json({ success: true, message: "Collection deleted" }),

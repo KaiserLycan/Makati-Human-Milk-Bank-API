@@ -2,13 +2,17 @@ import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import request from "supertest";
 import express from "express";
 
-const mockGetDispensingQueue = jest.fn((req, res) =>
+const mockGetAllocatedRequests = jest.fn((req, res) =>
     res.status(200).json({ success: true, data: [] }),
+);
+const mockGetAllocatedRequest = jest.fn((req, res) =>
+    res.status(200).json({ success: true, data: {} }),
 );
 const mockDispenseMilk = jest.fn((req, res) => res.status(200).json({ success: true, data: {} }));
 
 jest.mock("../controllers/dispensing.controllers.js", () => ({
-    GetDispensingQueue: (req, res) => mockGetDispensingQueue(req, res),
+    getAllocatedRequests: (req, res) => mockGetAllocatedRequests(req, res),
+    getAllocatedRequest: (req, res) => mockGetAllocatedRequest(req, res),
     DispenseMilk: (req, res) => mockDispenseMilk(req, res),
 }));
 

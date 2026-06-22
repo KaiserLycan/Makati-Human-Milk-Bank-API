@@ -13,8 +13,8 @@ const mockTriggerExpiration = jest.fn((req, res) =>
 );
 
 jest.mock("../controllers/notification.controllers.js", () => ({
-    GetNotifications: (req, res) => mockGetNotifications(req, res),
-    MarkNotificationRead: (req, res) => mockMarkNotificationRead(req, res),
+    getNotifications: (req, res) => mockGetNotifications(req, res),
+    readNotification: (req, res) => mockMarkNotificationRead(req, res),
     triggerExpirationCheck: (req, res) => mockTriggerExpiration(req, res),
 }));
 

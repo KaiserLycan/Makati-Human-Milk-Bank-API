@@ -7,12 +7,12 @@ jest.mock("../controllers/pasteurization.controllers.js", () => ({
         res.status(200).json({ success: true, data: [] }),
     ),
     viewPasteurizedMilk: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
-    createPasteurizedMilk: jest.fn((req, res) => res.status(201).json({ success: true, data: {} })),
+    createBatchMilk: jest.fn((req, res) => res.status(201).json({ success: true, data: {} })),
     updatePasteurizedMilk: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
     deletePasteurizedMilk: jest.fn((req, res) =>
         res.status(200).json({ success: true, message: "Record deleted" }),
     ),
-    updateQATStatus: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
+    updateMBTStatus: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
     updateMilkStatus: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
 }));
 
@@ -65,10 +65,10 @@ describe("Pasteurization Router", () => {
         });
     });
 
-    describe("PUT /:btl_id", () => {
+    describe("PATCH /:btl_id", () => {
         it("should update a pasteurized milk record", async () => {
             const updatedRecord = { volume_per_bottle: 120 };
-            const response = await request(app).put("/pasteurization/1").send(updatedRecord);
+            const response = await request(app).patch("/pasteurization/1").send(updatedRecord);
             expect(response.status).toBe(200);
             expect(response.body.success).toBe(true);
         });
@@ -82,11 +82,11 @@ describe("Pasteurization Router", () => {
         });
     });
 
-    describe("PATCH /:btl_id/qat-status", () => {
-        it("should update the QAT status of a record", async () => {
+    describe("PATCH /:btl_id/mbt-status", () => {
+        it("should update the MBT status of a record", async () => {
             const response = await request(app)
-                .patch("/pasteurization/1/qat-status")
-                .send({ qat_status: "fail" });
+                .patch("/pasteurization/1/mbt-status")
+                .send({ mbt_status: "fail" });
             expect(response.status).toBe(200);
             expect(response.body.success).toBe(true);
         });
