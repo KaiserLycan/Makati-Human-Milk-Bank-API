@@ -75,8 +75,19 @@ export const generateCollectionReport = async (range) => {
 export const getProcessingReportData = async (range) => {
     const { startDate, endDate } = getDateRange(range);
     const processedMilk = await prisma.pasteurized_milk.findMany({
-        where: { processed_date: { gte: startDate, lte: endDate } },
-        orderBy: { processed_date: "desc" },
+        where: {
+            batch_milk: {
+                processed_date: { gte: startDate, lte: endDate },
+            },
+        },
+        include: {
+            batch_milk: true,
+        },
+        orderBy: {
+            batch_milk: {
+                processed_date: "desc",
+            },
+        },
     });
 
     const uniqueBatches = new Set(processedMilk.map((m) => m.batch_number)).size;
@@ -85,7 +96,7 @@ export const getProcessingReportData = async (range) => {
     const passRate = totalBottles > 0 ? ((passedBottles / totalBottles) * 100).toFixed(1) : "0.0";
 
     const formattedRecords = processedMilk.map((record) => ({
-        date: format(new Date(record.processed_date), "MMM dd, yyyy"),
+        date: format(new Date(record.batch_milk.processed_date), "MMM dd, yyyy"),
         batch_number: record.batch_number,
         btl_id: record.btl_id,
         volume_ml: Number(record.volume_ml),
