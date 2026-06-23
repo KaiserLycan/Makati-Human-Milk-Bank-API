@@ -25,7 +25,7 @@ export const generatePDF = async (templateName, data) => {
     const browser = await getBrowser();
     const page = await browser.newPage();
 
-    await page.setContent(finalHtml, { waitUntil: "networkidle0" });
+    await page.setContent(finalHtml, { waitUntil: "domcontentloaded" });
     const pdfBuffer = await page.pdf({
         format: "A4",
         printBackground: true, // Ensures our CSS background colors show up

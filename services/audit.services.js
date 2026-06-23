@@ -1,5 +1,5 @@
 import { prisma } from "../library/db/db.ts";
-import { pgClient } from "../library/db/pgClient.js";
+import { createPgClient } from "../library/db/pgClient.js";
 import { cacheData, clearCachedData, fetchCachedData } from "./redis.services.js";
 import { logger } from "../library/utils/logger.js";
 
@@ -8,8 +8,12 @@ const clearCachedLogs = async () => {
     await clearCachedData(key);
 };
 
-export const subToAuditLogs = async () => {
+let pgClient;
+let reconnectTimeout = null;
+
+const connectToPg = async () => {
     try {
+        pgClient = createPgClient();
         await pgClient.connect();
         logger.info("Successfully connected pgClient for notifications.");
 
@@ -30,10 +34,36 @@ export const subToAuditLogs = async () => {
 
         pgClient.on("error", (err) => {
             logger.error("An error occurred with the pgClient:", err);
+            scheduleReconnect();
+        });
+
+        pgClient.on("end", () => {
+            logger.info("pgClient connection ended.");
+            scheduleReconnect();
         });
     } catch (error) {
         logger.error("Failed to connect or subscribe to audit_channel:", error);
+        scheduleReconnect();
     }
+};
+
+const scheduleReconnect = () => {
+    if (!reconnectTimeout) {
+        reconnectTimeout = setTimeout(async () => {
+            reconnectTimeout = null;
+            logger.info("Attempting to reconnect pgClient...");
+            try {
+                if (pgClient) await pgClient.end().catch(() => {});
+            } catch (e) {
+                logger.error("Error during reconnect cleanup:", e);
+            }
+            await connectToPg();
+        }, 5000);
+    }
+};
+
+export const subToAuditLogs = async () => {
+    await connectToPg();
 };
 
 export const fetchAuditLogs = async (params) => {
