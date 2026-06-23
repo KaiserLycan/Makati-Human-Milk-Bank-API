@@ -111,9 +111,9 @@ export const getDashboardMetrics = async (range) => {
         }),
     ]);
 
-    const totalRawWaste = rawWaste._sum.volume_ml || 0;
-    const totalPoolWaste = poolWaste._sum.remaining_volume_ml || 0;
-    const totalPasteurizedWaste = pasteurizedWaste._sum.volume_ml || 0;
+    const totalRawWaste = Number(rawWaste._sum.volume_ml) || 0;
+    const totalPoolWaste = Number(poolWaste._sum.remaining_volume_ml) || 0;
+    const totalPasteurizedWaste = Number(pasteurizedWaste._sum.volume_ml) || 0;
     const totalWaste = totalRawWaste + totalPoolWaste + totalPasteurizedWaste;
 
     const programVolumes = {
@@ -132,9 +132,9 @@ export const getDashboardMetrics = async (range) => {
         timeframe: { range, start: startDate, end: endDate },
         participants: { donors: activeDonors, beneficiaries: activeBeneficiaries },
         milk_volumes_ml: {
-            collected: collectedMilk._sum.volume_ml || 0,
-            processed: processedMilk._sum.volume_ml || 0,
-            dispensed: dispensedMilk._sum.volume_ml || 0,
+            collected: Number(collectedMilk._sum.volume_ml) || 0,
+            processed: Number(processedMilk._sum.volume_ml) || 0,
+            dispensed: Number(dispensedMilk._sum.volume_ml) || 0,
         },
         waste_volumes_ml: {
             total_discarded: totalWaste,
@@ -203,13 +203,13 @@ export const getDashboardTrends = async (range) => {
     const trendData = intervals.map((intervalDate) => {
         const collected = collectedData
             .filter((d) => compareFunc(new Date(d.collection_date), intervalDate))
-            .reduce((sum, d) => sum + d.volume_ml, 0);
+            .reduce((sum, d) => sum + (Number(d.volume_ml) || 0), 0);
         const processed = processedData
             .filter((d) => compareFunc(new Date(d.processed_date), intervalDate))
-            .reduce((sum, d) => sum + d.volume_ml, 0);
+            .reduce((sum, d) => sum + (Number(d.volume_ml) || 0), 0);
         const dispensed = dispensedData
             .filter((d) => compareFunc(new Date(d.modified_at), intervalDate))
-            .reduce((sum, d) => sum + d.volume_ml, 0);
+            .reduce((sum, d) => sum + (Number(d.volume_ml) || 0), 0);
 
         return {
             label: format(intervalDate, formatString),
