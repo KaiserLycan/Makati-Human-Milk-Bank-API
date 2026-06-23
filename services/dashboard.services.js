@@ -191,7 +191,7 @@ export const getDashboardTrends = async (range) => {
             .then((records) =>
                 records.map((r) => ({
                     volume_ml: r.volume_ml,
-                    processed_date: r.batch_milk.processed_date,
+                    processed_date: r.batch_milk?.processed_date,
                 })),
             ),
         prisma.pasteurized_milk.findMany({
@@ -202,13 +202,17 @@ export const getDashboardTrends = async (range) => {
 
     const trendData = intervals.map((intervalDate) => {
         const collected = collectedData
-            .filter((d) => compareFunc(new Date(d.collection_date), intervalDate))
+            .filter(
+                (d) => d.collection_date && compareFunc(new Date(d.collection_date), intervalDate),
+            )
             .reduce((sum, d) => sum + (Number(d.volume_ml) || 0), 0);
         const processed = processedData
-            .filter((d) => compareFunc(new Date(d.processed_date), intervalDate))
+            .filter(
+                (d) => d.processed_date && compareFunc(new Date(d.processed_date), intervalDate),
+            )
             .reduce((sum, d) => sum + (Number(d.volume_ml) || 0), 0);
         const dispensed = dispensedData
-            .filter((d) => compareFunc(new Date(d.modified_at), intervalDate))
+            .filter((d) => d.modified_at && compareFunc(new Date(d.modified_at), intervalDate))
             .reduce((sum, d) => sum + (Number(d.volume_ml) || 0), 0);
 
         return {

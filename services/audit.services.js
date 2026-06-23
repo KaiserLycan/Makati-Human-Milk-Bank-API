@@ -62,8 +62,8 @@ const scheduleReconnect = () => {
     }
 };
 
-export const subToAuditLogs = async () => {
-    await connectToPg();
+export const subToAuditLogs = () => {
+    connectToPg();
 };
 
 export const fetchAuditLogs = async (params) => {
