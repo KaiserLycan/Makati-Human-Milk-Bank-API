@@ -9,7 +9,7 @@
         "test": "cross-env NODE_OPTIONS=--no-webstorage jest --ci __test__ --passWithNoTests --verbose",
         "format": "prettier --write .",
         "prepare": "node prepare.js",
-        "postinstall": "prisma generate && npx puppeteer browsers install chrome"
+        "postinstall": "node postinstall.js"
     },
     "keywords": [],
     "author": "",
