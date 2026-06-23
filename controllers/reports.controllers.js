@@ -15,21 +15,36 @@ const sendPdfResponse = (res, pdfBuffer, filename) => {
 };
 
 export const ExportCollectionReport = async (req, res) => {
-    const { range } = req.query;
-    const pdfBuffer = await generateCollectionReport(range);
-    sendPdfResponse(res, pdfBuffer, "MHMB_Collection_Report.pdf");
+    try {
+        const { range } = req.query;
+        const pdfBuffer = await generateCollectionReport(range);
+        sendPdfResponse(res, pdfBuffer, "MHMB_Collection_Report.pdf");
+    } catch (error) {
+        console.error("Error generating collection report PDF:", error);
+        res.status(500).json({ error: "Failed to generate report PDF" });
+    }
 };
 
 export const ExportProcessingReport = async (req, res) => {
-    const { range } = req.query;
-    const pdfBuffer = await generateProcessingReport(range);
-    sendPdfResponse(res, pdfBuffer, "MHMB_Processing_Report.pdf");
+    try {
+        const { range } = req.query;
+        const pdfBuffer = await generateProcessingReport(range);
+        sendPdfResponse(res, pdfBuffer, "MHMB_Processing_Report.pdf");
+    } catch (error) {
+        console.error("Error generating processing report PDF:", error);
+        res.status(500).json({ error: "Failed to generate report PDF" });
+    }
 };
 
 export const ExportDispensingReport = async (req, res) => {
-    const { range } = req.query;
-    const pdfBuffer = await generateDispensingReport(range);
-    sendPdfResponse(res, pdfBuffer, "MHMB_Dispensing_Report.pdf");
+    try {
+        const { range } = req.query;
+        const pdfBuffer = await generateDispensingReport(range);
+        sendPdfResponse(res, pdfBuffer, "MHMB_Dispensing_Report.pdf");
+    } catch (error) {
+        console.error("Error generating dispensing report PDF:", error);
+        res.status(500).json({ error: "Failed to generate report PDF" });
+    }
 };
 
 export const GetCollectionReportData = async (req, res) => {
