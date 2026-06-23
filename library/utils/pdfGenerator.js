@@ -3,6 +3,18 @@ import handlebars from "handlebars";
 import fs from "fs";
 import path from "path";
 
+let browserInstance = null;
+
+const getBrowser = async () => {
+    if (!browserInstance) {
+        browserInstance = await puppeteer.launch({
+            headless: "new",
+            args: ["--no-sandbox", "--disable-setuid-sandbox"], // Critical for server deployments!
+        });
+    }
+    return browserInstance;
+};
+
 export const generatePDF = async (templateName, data) => {
     const templatePath = path.resolve(process.cwd(), `library/templates/${templateName}.hbs`);
     const templateHtml = fs.readFileSync(templatePath, "utf8");
@@ -10,11 +22,7 @@ export const generatePDF = async (templateName, data) => {
     const template = handlebars.compile(templateHtml);
     const finalHtml = template(data);
 
-    const browser = await puppeteer.launch({
-        headless: "new",
-        args: ["--no-sandbox", "--disable-setuid-sandbox"], // Critical for server deployments!
-    });
-
+    const browser = await getBrowser();
     const page = await browser.newPage();
 
     await page.setContent(finalHtml, { waitUntil: "networkidle0" });
@@ -24,6 +32,6 @@ export const generatePDF = async (templateName, data) => {
         margin: { top: "40px", bottom: "40px", left: "40px", right: "40px" },
     });
 
-    await browser.close();
+    await page.close(); // Only close the page, not the browser!
     return pdfBuffer;
 };
