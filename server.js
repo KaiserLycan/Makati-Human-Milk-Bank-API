@@ -38,8 +38,8 @@ const morganFormat = process.env.NODE_ENV === "production" ? "combined" : "dev";
 app.set("trust proxy", 1);
 
 const allowedOrigins = [
-    process.env.CLIENT_URL,
-    "https://makati-human-milk-bank-web.vercel.app",
+    "https://localhost:3000/",
+    "https://makati-human-milk-bank-web.vercel.app/",
 ].filter(Boolean);
 
 const corsOptions = {
