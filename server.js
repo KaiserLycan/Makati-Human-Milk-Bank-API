@@ -47,10 +47,13 @@ const allowedOrigins = [
 const corsOptions = {
     origin: (origin, callback) => {
         if (!origin) return callback(null, true);
-        if (
-            allowedOrigins.includes(origin) ||
-            (process.env.NODE_ENV !== "production" && /^https?:\/\/localhost(:\d+)?$/.test(origin))
-        ) {
+        const cleanOrigin = origin.replace(/\/$/, "");
+        const isAllowed =
+            allowedOrigins.map((o) => o.replace(/\/$/, "")).includes(cleanOrigin) ||
+            /^https?:\/\/localhost(:\d+)?$/.test(cleanOrigin) ||
+            /^https:\/\/makati-human-milk-bank[a-zA-Z0-9.-]*\.vercel\.app$/.test(cleanOrigin);
+
+        if (isAllowed) {
             return callback(null, true);
         }
         callback(new Error("Not allowed by CORS"));
