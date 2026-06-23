@@ -31,7 +31,7 @@ const getDateRange = (range) => {
     };
 };
 
-export const generateCollectionReport = async (range) => {
+export const getCollectionReportData = async (range) => {
     const { startDate, endDate } = getDateRange(range);
     const collections = await prisma.raw_milk.findMany({
         where: { collection_date: { gte: startDate, lte: endDate } },
@@ -44,32 +44,35 @@ export const generateCollectionReport = async (range) => {
     const formattedRecords = collections.map((record) => {
         const isGood = record.milk_status === "good";
         if (isGood) {
-            totalVolume += record.volume_ml;
+            totalVolume += Number(record.volume_ml);
         } else {
-            totalWaste += record.volume_ml;
+            totalWaste += Number(record.volume_ml);
         }
         return {
             date: format(new Date(record.collection_date), "MMM dd, yyyy"),
             dtn: record.dtn,
             program: record.program,
-            volume_ml: record.volume_ml,
+            volume_ml: Number(record.volume_ml),
             status: record.milk_status.toUpperCase(),
             isGood,
         };
     });
 
-    const reportData = {
+    return {
         dateRange: `${format(startDate, "MMM dd, yyyy")} - ${format(endDate, "MMM dd, yyyy")}`,
         generatedDate: format(new Date(), "MMM dd, yyyy HH:mm"),
         totalVolume,
         totalWaste,
         records: formattedRecords,
     };
+};
 
+export const generateCollectionReport = async (range) => {
+    const reportData = await getCollectionReportData(range);
     return generatePDF("collectionReport", reportData);
 };
 
-export const generateProcessingReport = async (range) => {
+export const getProcessingReportData = async (range) => {
     const { startDate, endDate } = getDateRange(range);
     const processedMilk = await prisma.pasteurized_milk.findMany({
         where: { processed_date: { gte: startDate, lte: endDate } },
@@ -79,18 +82,18 @@ export const generateProcessingReport = async (range) => {
     const uniqueBatches = new Set(processedMilk.map((m) => m.batch_number)).size;
     const totalBottles = processedMilk.length;
     const passedBottles = processedMilk.filter((m) => m.mbt_status === "pass").length;
-    const passRate = totalBottles > 0 ? ((passedBottles / totalBottles) * 100).toFixed(1) : 0;
+    const passRate = totalBottles > 0 ? ((passedBottles / totalBottles) * 100).toFixed(1) : "0.0";
 
     const formattedRecords = processedMilk.map((record) => ({
         date: format(new Date(record.processed_date), "MMM dd, yyyy"),
         batch_number: record.batch_number,
         btl_id: record.btl_id,
-        volume_ml: record.volume_ml,
+        volume_ml: Number(record.volume_ml),
         mbt_status: record.mbt_status ? record.mbt_status.toUpperCase() : "PENDING",
         mbt_class: record.mbt_status || "pending",
     }));
 
-    const reportData = {
+    return {
         dateRange: `${format(startDate, "MMM dd, yyyy")} - ${format(endDate, "MMM dd, yyyy")}`,
         generatedDate: format(new Date(), "MMM dd, yyyy HH:mm"),
         totalBatches: uniqueBatches,
@@ -98,11 +101,14 @@ export const generateProcessingReport = async (range) => {
         passRate,
         records: formattedRecords,
     };
+};
 
+export const generateProcessingReport = async (range) => {
+    const reportData = await getProcessingReportData(range);
     return generatePDF("processingReport", reportData);
 };
 
-export const generateDispensingReport = async (range) => {
+export const getDispensingReportData = async (range) => {
     const { startDate, endDate } = getDateRange(range);
     const dispensedMilk = await prisma.pasteurized_milk.findMany({
         where: {
@@ -112,22 +118,25 @@ export const generateDispensingReport = async (range) => {
         orderBy: { modified_at: "desc" },
     });
 
-    const totalVolume = dispensedMilk.reduce((sum, record) => sum + record.volume_ml, 0);
+    const totalVolume = dispensedMilk.reduce((sum, record) => sum + Number(record.volume_ml), 0);
 
     const formattedRecords = dispensedMilk.map((record) => ({
         date: format(new Date(record.modified_at), "MMM dd, yyyy"),
         btl_id: record.btl_id,
         batch_number: record.batch_number,
-        volume_ml: record.volume_ml,
+        volume_ml: Number(record.volume_ml),
     }));
 
-    const reportData = {
+    return {
         dateRange: `${format(startDate, "MMM dd, yyyy")} - ${format(endDate, "MMM dd, yyyy")}`,
         generatedDate: format(new Date(), "MMM dd, yyyy HH:mm"),
         totalBottles: dispensedMilk.length,
         totalVolume,
         records: formattedRecords,
     };
+};
 
+export const generateDispensingReport = async (range) => {
+    const reportData = await getDispensingReportData(range);
     return generatePDF("dispensingReport", reportData);
 };
