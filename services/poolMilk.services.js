@@ -33,13 +33,19 @@ export const markExpiredPoolMilk = async () => {
 };
 
 export const getMilkPools = async (params) => {
-    const { milk_status, page, limit, sortBy, sortOrder } = params;
+    const { milk_status, page, limit, sortBy, sortOrder, search } = params;
     const key = `pools:list:${JSON.stringify(params)}`;
     const cachedData = await fetchCachedData(key);
     if (cachedData) return cachedData;
 
     const where = {
         ...(milk_status && { milk_status }),
+        ...(search && {
+            OR: [
+                ...(!isNaN(Number(search)) ? [{ pid: Number(search) }] : []),
+                { remarks: { contains: search, mode: "insensitive" } },
+            ],
+        }),
     };
 
     const [total, pools] = await prisma.$transaction([
@@ -194,6 +200,13 @@ export const updateMilkPoolStatus = async (pid, milk_status, remarks, modified_b
 
     if (milkPool.milk_status === milk_status) {
         throw new AppError(`Milk pool ${pid} is already marked as ${milk_status}`, 400);
+    }
+
+    if (milkPool.remaining_volume_ml !== null && Number(milkPool.remaining_volume_ml) === 0) {
+        throw new AppError(
+            `Cannot update status of pool ${pid} because it has already been completely pasteurized.`,
+            400,
+        );
     }
 
     if (milk_status !== "discarded" && milkPool.expiration_date < startOfToday()) {

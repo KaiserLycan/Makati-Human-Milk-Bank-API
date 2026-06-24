@@ -19,6 +19,7 @@ export const updatePoolSchema = z.object({
 
 export const milkPoolQuerySchema = listQuerySchema.extend({
     milk_status: z.enum(["good", "contaminated", "discarded", "expired"]).optional(),
+    search: z.string().optional(),
 });
 
 export const updateMilkPoolStatusSchema = z.object({

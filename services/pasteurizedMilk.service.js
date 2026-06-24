@@ -193,7 +193,10 @@ export const createBatchMilk = async (data) => {
             select: { actual_volume_ml: true, remaining_volume_ml: true },
         });
 
-        const currentRemaining = pool.remaining_volume_ml !== null ? Number(pool.remaining_volume_ml) : Number(pool.actual_volume_ml);
+        const currentRemaining =
+            pool.remaining_volume_ml !== null
+                ? Number(pool.remaining_volume_ml)
+                : Number(pool.actual_volume_ml);
         const newRemaining = currentRemaining - totalVolumeToUse;
 
         await tx.pool_milk.update({
@@ -205,6 +208,7 @@ export const createBatchMilk = async (data) => {
     });
 
     await clearCachedData(PASTEURIZED_CACHE_KEY);
+    await clearCachedData("pools:*");
     return result;
 };
 
@@ -234,9 +238,10 @@ export const updatePasteurizedMilk = async (btl_id, data) => {
                 select: { actual_volume_ml: true, remaining_volume_ml: true },
             });
 
-            const remainingVolume = sourcePool.remaining_volume_ml !== null 
-                ? Number(sourcePool.remaining_volume_ml) 
-                : Number(sourcePool.actual_volume_ml);
+            const remainingVolume =
+                sourcePool.remaining_volume_ml !== null
+                    ? Number(sourcePool.remaining_volume_ml)
+                    : Number(sourcePool.actual_volume_ml);
 
             const difference = Number(volume_per_bottle) - Number(bottleToUpdate.volume_ml);
 
@@ -276,6 +281,7 @@ export const updatePasteurizedMilk = async (btl_id, data) => {
         });
 
         await clearCachedData(PASTEURIZED_CACHE_KEY);
+        await clearCachedData("pools:*");
         return updatedRecord;
     });
 };
@@ -302,9 +308,10 @@ export const deletePasteurizedMilk = async (btl_id) => {
             select: { actual_volume_ml: true, remaining_volume_ml: true },
         });
 
-        const currentRemaining = sourcePool.remaining_volume_ml !== null
-            ? Number(sourcePool.remaining_volume_ml)
-            : Number(sourcePool.actual_volume_ml);
+        const currentRemaining =
+            sourcePool.remaining_volume_ml !== null
+                ? Number(sourcePool.remaining_volume_ml)
+                : Number(sourcePool.actual_volume_ml);
 
         await tx.pool_milk.update({
             where: { pid: sourcePoolId },
@@ -315,6 +322,7 @@ export const deletePasteurizedMilk = async (btl_id) => {
     });
 
     await clearCachedData(PASTEURIZED_CACHE_KEY);
+    await clearCachedData("pools:*");
 };
 
 export const updateMBTStatus = async (btl_id, mbt_status, modified_by) => {

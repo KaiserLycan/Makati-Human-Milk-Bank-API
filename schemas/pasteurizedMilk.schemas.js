@@ -4,7 +4,9 @@ import { listQuerySchema } from "./query.schemas.js";
 export const createBatchMilkSchema = z.object({
     pid: z.coerce.number().int().positive(),
     bottle_count: z.coerce.number().int().positive(),
-    volume_per_bottle: z.coerce.number().int().positive(),
+    volume_per_bottle: z.coerce.number().int().min(50, {
+        message: "Volume per bottle must be at least 50 mL.",
+    }),
     bottle_type: z
         .enum(["korea", "ameda", "red_cap"], {
             error: "Invalid bottle type. Only korea, ameda, and red_cap are accepted.",
@@ -15,7 +17,13 @@ export const createBatchMilkSchema = z.object({
 });
 
 export const updatePasteurizedMilkSchema = z.object({
-    volume_per_bottle: z.coerce.number().int().positive().optional(),
+    volume_per_bottle: z.coerce
+        .number()
+        .int()
+        .min(50, {
+            message: "Volume per bottle must be at least 50 mL.",
+        })
+        .optional(),
     pasteurization_date: z.coerce.date().optional(),
 });
 
