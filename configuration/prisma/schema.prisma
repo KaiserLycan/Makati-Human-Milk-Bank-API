@@ -97,22 +97,22 @@ model pasteurized_milk {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model pool_milk {
-  pid                Int          @id @default(autoincrement())
-  pooled_by          String       @db.Uuid
-  pooled_date        DateTime?    @default(dbgenerated("CURRENT_DATE")) @db.Date
-  expiration_date    DateTime     @db.Date
-  expected_volume_ml Decimal      @db.Decimal(7, 2)
-  actual_volume_ml   Decimal      @db.Decimal(7, 2)
+  pid                 Int          @id @default(autoincrement())
+  pooled_by           String       @db.Uuid
+  pooled_date         DateTime?    @default(dbgenerated("CURRENT_DATE")) @db.Date
+  expiration_date     DateTime     @db.Date
+  expected_volume_ml  Decimal      @db.Decimal(7, 2)
+  actual_volume_ml    Decimal      @db.Decimal(7, 2)
+  milk_status         milk_status? @default(good)
+  remarks             String?      @db.VarChar(500)
+  created_at          DateTime?    @default(now()) @db.Timestamp(6)
+  modified_at         DateTime?    @default(now()) @db.Timestamp(6)
+  modified_by         String?      @db.Uuid
   remaining_volume_ml Decimal?     @db.Decimal(7, 2)
-  milk_status        milk_status? @default(good)
-  remarks            String?      @db.VarChar(500)
-  created_at         DateTime?    @default(now()) @db.Timestamp(6)
-  modified_at        DateTime?    @default(now()) @db.Timestamp(6)
-  modified_by        String?      @db.Uuid
-  batch_milk         batch_milk[]
-  modified_by_user   user?        @relation("modified_pool_milk", fields: [modified_by], references: [user_id], onUpdate: NoAction)
-  pooled_by_user     user         @relation("pooled_pool_milk", fields: [pooled_by], references: [user_id], onDelete: SetNull, onUpdate: NoAction)
-  raw_milk           raw_milk[]
+  batch_milk          batch_milk[]
+  modified_by_user    user?        @relation("modified_pool_milk", fields: [modified_by], references: [user_id], onUpdate: NoAction)
+  pooled_by_user      user         @relation("pooled_pool_milk", fields: [pooled_by], references: [user_id], onDelete: SetNull, onUpdate: NoAction)
+  raw_milk            raw_milk[]
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.

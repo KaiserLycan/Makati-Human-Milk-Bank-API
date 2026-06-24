@@ -19,7 +19,7 @@ export const fetchNotificationsByUserId = async (params) => {
         orderBy: {
             created_at: "desc",
         },
-        omit,
+        omit: { ...omit, created_at: false },
     });
 
     await cacheData(key, notifications);
@@ -32,6 +32,19 @@ export const readNotification = async ({ nid, user_id }) => {
         data: {
             is_read: true,
             read_at: new Date(),
+        },
+    });
+
+    await clearCachedData(NOTIFICATION_CACHE_KEY);
+    return updatedNotification;
+};
+
+export const unreadNotification = async ({ nid, user_id }) => {
+    const updatedNotification = prisma.notification.update({
+        where: { nid, recipient_id: user_id },
+        data: {
+            is_read: false,
+            read_at: null,
         },
     });
 
