@@ -3,6 +3,7 @@ import { APIResponse } from "../library/classes/APIResponse.js";
 import {
     fetchNotificationsByUserId,
     readNotification as readNotificationService,
+    unreadNotification as unreadNotificationService,
 } from "../services/notification.services.js";
 
 export const getNotifications = async (req, res) => {
@@ -27,6 +28,15 @@ export const readNotification = async (req, res) => {
     return res
         .status(200)
         .json(new APIResponse(200, notification, `Marked notification (${nid}) as read`));
+};
+
+export const unreadNotification = async (req, res) => {
+    const { nid } = req.params;
+    const { user_id } = req.user;
+    const notification = await unreadNotificationService({ nid, user_id });
+    return res
+        .status(200)
+        .json(new APIResponse(200, notification, `Marked notification (${nid}) as unread`));
 };
 
 export const triggerExpirationCheck = async (req, res) => {

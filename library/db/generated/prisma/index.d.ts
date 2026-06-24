@@ -8377,12 +8377,12 @@ export namespace Prisma {
     expiration_date: Date | null
     expected_volume_ml: Decimal | null
     actual_volume_ml: Decimal | null
-    remaining_volume_ml: Decimal | null
     milk_status: $Enums.milk_status | null
     remarks: string | null
     created_at: Date | null
     modified_at: Date | null
     modified_by: string | null
+    remaining_volume_ml: Decimal | null
   }
 
   export type Pool_milkMaxAggregateOutputType = {
@@ -8392,12 +8392,12 @@ export namespace Prisma {
     expiration_date: Date | null
     expected_volume_ml: Decimal | null
     actual_volume_ml: Decimal | null
-    remaining_volume_ml: Decimal | null
     milk_status: $Enums.milk_status | null
     remarks: string | null
     created_at: Date | null
     modified_at: Date | null
     modified_by: string | null
+    remaining_volume_ml: Decimal | null
   }
 
   export type Pool_milkCountAggregateOutputType = {
@@ -8407,12 +8407,12 @@ export namespace Prisma {
     expiration_date: number
     expected_volume_ml: number
     actual_volume_ml: number
-    remaining_volume_ml: number
     milk_status: number
     remarks: number
     created_at: number
     modified_at: number
     modified_by: number
+    remaining_volume_ml: number
     _all: number
   }
 
@@ -8438,12 +8438,12 @@ export namespace Prisma {
     expiration_date?: true
     expected_volume_ml?: true
     actual_volume_ml?: true
-    remaining_volume_ml?: true
     milk_status?: true
     remarks?: true
     created_at?: true
     modified_at?: true
     modified_by?: true
+    remaining_volume_ml?: true
   }
 
   export type Pool_milkMaxAggregateInputType = {
@@ -8453,12 +8453,12 @@ export namespace Prisma {
     expiration_date?: true
     expected_volume_ml?: true
     actual_volume_ml?: true
-    remaining_volume_ml?: true
     milk_status?: true
     remarks?: true
     created_at?: true
     modified_at?: true
     modified_by?: true
+    remaining_volume_ml?: true
   }
 
   export type Pool_milkCountAggregateInputType = {
@@ -8468,12 +8468,12 @@ export namespace Prisma {
     expiration_date?: true
     expected_volume_ml?: true
     actual_volume_ml?: true
-    remaining_volume_ml?: true
     milk_status?: true
     remarks?: true
     created_at?: true
     modified_at?: true
     modified_by?: true
+    remaining_volume_ml?: true
     _all?: true
   }
 
@@ -8570,12 +8570,12 @@ export namespace Prisma {
     expiration_date: Date
     expected_volume_ml: Decimal
     actual_volume_ml: Decimal
-    remaining_volume_ml: Decimal | null
     milk_status: $Enums.milk_status | null
     remarks: string | null
     created_at: Date | null
     modified_at: Date | null
     modified_by: string | null
+    remaining_volume_ml: Decimal | null
     _count: Pool_milkCountAggregateOutputType | null
     _avg: Pool_milkAvgAggregateOutputType | null
     _sum: Pool_milkSumAggregateOutputType | null
@@ -8604,12 +8604,12 @@ export namespace Prisma {
     expiration_date?: boolean
     expected_volume_ml?: boolean
     actual_volume_ml?: boolean
-    remaining_volume_ml?: boolean
     milk_status?: boolean
     remarks?: boolean
     created_at?: boolean
     modified_at?: boolean
     modified_by?: boolean
+    remaining_volume_ml?: boolean
     batch_milk?: boolean | pool_milk$batch_milkArgs<ExtArgs>
     modified_by_user?: boolean | pool_milk$modified_by_userArgs<ExtArgs>
     pooled_by_user?: boolean | userDefaultArgs<ExtArgs>
@@ -8624,12 +8624,12 @@ export namespace Prisma {
     expiration_date?: boolean
     expected_volume_ml?: boolean
     actual_volume_ml?: boolean
-    remaining_volume_ml?: boolean
     milk_status?: boolean
     remarks?: boolean
     created_at?: boolean
     modified_at?: boolean
     modified_by?: boolean
+    remaining_volume_ml?: boolean
     modified_by_user?: boolean | pool_milk$modified_by_userArgs<ExtArgs>
     pooled_by_user?: boolean | userDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pool_milk"]>
@@ -8641,12 +8641,12 @@ export namespace Prisma {
     expiration_date?: boolean
     expected_volume_ml?: boolean
     actual_volume_ml?: boolean
-    remaining_volume_ml?: boolean
     milk_status?: boolean
     remarks?: boolean
     created_at?: boolean
     modified_at?: boolean
     modified_by?: boolean
+    remaining_volume_ml?: boolean
     modified_by_user?: boolean | pool_milk$modified_by_userArgs<ExtArgs>
     pooled_by_user?: boolean | userDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pool_milk"]>
@@ -8658,15 +8658,15 @@ export namespace Prisma {
     expiration_date?: boolean
     expected_volume_ml?: boolean
     actual_volume_ml?: boolean
-    remaining_volume_ml?: boolean
     milk_status?: boolean
     remarks?: boolean
     created_at?: boolean
     modified_at?: boolean
     modified_by?: boolean
+    remaining_volume_ml?: boolean
   }
 
-  export type pool_milkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"pid" | "pooled_by" | "pooled_date" | "expiration_date" | "expected_volume_ml" | "actual_volume_ml" | "remaining_volume_ml" | "milk_status" | "remarks" | "created_at" | "modified_at" | "modified_by", ExtArgs["result"]["pool_milk"]>
+  export type pool_milkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"pid" | "pooled_by" | "pooled_date" | "expiration_date" | "expected_volume_ml" | "actual_volume_ml" | "milk_status" | "remarks" | "created_at" | "modified_at" | "modified_by" | "remaining_volume_ml", ExtArgs["result"]["pool_milk"]>
   export type pool_milkInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     batch_milk?: boolean | pool_milk$batch_milkArgs<ExtArgs>
     modified_by_user?: boolean | pool_milk$modified_by_userArgs<ExtArgs>
@@ -8698,12 +8698,12 @@ export namespace Prisma {
       expiration_date: Date
       expected_volume_ml: Prisma.Decimal
       actual_volume_ml: Prisma.Decimal
-      remaining_volume_ml: Prisma.Decimal | null
       milk_status: $Enums.milk_status | null
       remarks: string | null
       created_at: Date | null
       modified_at: Date | null
       modified_by: string | null
+      remaining_volume_ml: Prisma.Decimal | null
     }, ExtArgs["result"]["pool_milk"]>
     composites: {}
   }
@@ -9137,12 +9137,12 @@ export namespace Prisma {
     readonly expiration_date: FieldRef<"pool_milk", 'DateTime'>
     readonly expected_volume_ml: FieldRef<"pool_milk", 'Decimal'>
     readonly actual_volume_ml: FieldRef<"pool_milk", 'Decimal'>
-    readonly remaining_volume_ml: FieldRef<"pool_milk", 'Decimal'>
     readonly milk_status: FieldRef<"pool_milk", 'milk_status'>
     readonly remarks: FieldRef<"pool_milk", 'String'>
     readonly created_at: FieldRef<"pool_milk", 'DateTime'>
     readonly modified_at: FieldRef<"pool_milk", 'DateTime'>
     readonly modified_by: FieldRef<"pool_milk", 'String'>
+    readonly remaining_volume_ml: FieldRef<"pool_milk", 'Decimal'>
   }
     
 
@@ -16040,12 +16040,12 @@ export namespace Prisma {
     expiration_date: 'expiration_date',
     expected_volume_ml: 'expected_volume_ml',
     actual_volume_ml: 'actual_volume_ml',
-    remaining_volume_ml: 'remaining_volume_ml',
     milk_status: 'milk_status',
     remarks: 'remarks',
     created_at: 'created_at',
     modified_at: 'modified_at',
-    modified_by: 'modified_by'
+    modified_by: 'modified_by',
+    remaining_volume_ml: 'remaining_volume_ml'
   };
 
   export type Pool_milkScalarFieldEnum = (typeof Pool_milkScalarFieldEnum)[keyof typeof Pool_milkScalarFieldEnum]
@@ -16869,12 +16869,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFilter<"pool_milk"> | Date | string
     expected_volume_ml?: DecimalFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: DecimalNullableFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string | null
     milk_status?: Enummilk_statusNullableFilter<"pool_milk"> | $Enums.milk_status | null
     remarks?: StringNullableFilter<"pool_milk"> | string | null
     created_at?: DateTimeNullableFilter<"pool_milk"> | Date | string | null
     modified_at?: DateTimeNullableFilter<"pool_milk"> | Date | string | null
     modified_by?: UuidNullableFilter<"pool_milk"> | string | null
+    remaining_volume_ml?: DecimalNullableFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string | null
     batch_milk?: Batch_milkListRelationFilter
     modified_by_user?: XOR<UserNullableScalarRelationFilter, userWhereInput> | null
     pooled_by_user?: XOR<UserScalarRelationFilter, userWhereInput>
@@ -16888,12 +16888,12 @@ export namespace Prisma {
     expiration_date?: SortOrder
     expected_volume_ml?: SortOrder
     actual_volume_ml?: SortOrder
-    remaining_volume_ml?: SortOrderInput | SortOrder
     milk_status?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     modified_at?: SortOrderInput | SortOrder
     modified_by?: SortOrderInput | SortOrder
+    remaining_volume_ml?: SortOrderInput | SortOrder
     batch_milk?: batch_milkOrderByRelationAggregateInput
     modified_by_user?: userOrderByWithRelationInput
     pooled_by_user?: userOrderByWithRelationInput
@@ -16910,12 +16910,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFilter<"pool_milk"> | Date | string
     expected_volume_ml?: DecimalFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: DecimalNullableFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string | null
     milk_status?: Enummilk_statusNullableFilter<"pool_milk"> | $Enums.milk_status | null
     remarks?: StringNullableFilter<"pool_milk"> | string | null
     created_at?: DateTimeNullableFilter<"pool_milk"> | Date | string | null
     modified_at?: DateTimeNullableFilter<"pool_milk"> | Date | string | null
     modified_by?: UuidNullableFilter<"pool_milk"> | string | null
+    remaining_volume_ml?: DecimalNullableFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string | null
     batch_milk?: Batch_milkListRelationFilter
     modified_by_user?: XOR<UserNullableScalarRelationFilter, userWhereInput> | null
     pooled_by_user?: XOR<UserScalarRelationFilter, userWhereInput>
@@ -16929,12 +16929,12 @@ export namespace Prisma {
     expiration_date?: SortOrder
     expected_volume_ml?: SortOrder
     actual_volume_ml?: SortOrder
-    remaining_volume_ml?: SortOrderInput | SortOrder
     milk_status?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     modified_at?: SortOrderInput | SortOrder
     modified_by?: SortOrderInput | SortOrder
+    remaining_volume_ml?: SortOrderInput | SortOrder
     _count?: pool_milkCountOrderByAggregateInput
     _avg?: pool_milkAvgOrderByAggregateInput
     _max?: pool_milkMaxOrderByAggregateInput
@@ -16952,12 +16952,12 @@ export namespace Prisma {
     expiration_date?: DateTimeWithAggregatesFilter<"pool_milk"> | Date | string
     expected_volume_ml?: DecimalWithAggregatesFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalWithAggregatesFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: DecimalNullableWithAggregatesFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string | null
     milk_status?: Enummilk_statusNullableWithAggregatesFilter<"pool_milk"> | $Enums.milk_status | null
     remarks?: StringNullableWithAggregatesFilter<"pool_milk"> | string | null
     created_at?: DateTimeNullableWithAggregatesFilter<"pool_milk"> | Date | string | null
     modified_at?: DateTimeNullableWithAggregatesFilter<"pool_milk"> | Date | string | null
     modified_by?: UuidNullableWithAggregatesFilter<"pool_milk"> | string | null
+    remaining_volume_ml?: DecimalNullableWithAggregatesFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type raw_milkWhereInput = {
@@ -17910,11 +17910,11 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkCreateNestedManyWithoutPool_milkInput
     modified_by_user?: userCreateNestedOneWithoutModified_pool_milkInput
     pooled_by_user: userCreateNestedOneWithoutPooled_pool_milkInput
@@ -17928,12 +17928,12 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
     modified_by?: string | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkUncheckedCreateNestedManyWithoutPool_milkInput
     raw_milk?: raw_milkUncheckedCreateNestedManyWithoutPool_milkInput
   }
@@ -17943,11 +17943,11 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkUpdateManyWithoutPool_milkNestedInput
     modified_by_user?: userUpdateOneWithoutModified_pool_milkNestedInput
     pooled_by_user?: userUpdateOneRequiredWithoutPooled_pool_milkNestedInput
@@ -17961,12 +17961,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkUncheckedUpdateManyWithoutPool_milkNestedInput
     raw_milk?: raw_milkUncheckedUpdateManyWithoutPool_milkNestedInput
   }
@@ -17978,12 +17978,12 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
     modified_by?: string | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type pool_milkUpdateManyMutationInput = {
@@ -17991,11 +17991,11 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type pool_milkUncheckedUpdateManyInput = {
@@ -18005,12 +18005,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type raw_milkCreateInput = {
@@ -19267,12 +19267,12 @@ export namespace Prisma {
     expiration_date?: SortOrder
     expected_volume_ml?: SortOrder
     actual_volume_ml?: SortOrder
-    remaining_volume_ml?: SortOrder
     milk_status?: SortOrder
     remarks?: SortOrder
     created_at?: SortOrder
     modified_at?: SortOrder
     modified_by?: SortOrder
+    remaining_volume_ml?: SortOrder
   }
 
   export type pool_milkAvgOrderByAggregateInput = {
@@ -19289,12 +19289,12 @@ export namespace Prisma {
     expiration_date?: SortOrder
     expected_volume_ml?: SortOrder
     actual_volume_ml?: SortOrder
-    remaining_volume_ml?: SortOrder
     milk_status?: SortOrder
     remarks?: SortOrder
     created_at?: SortOrder
     modified_at?: SortOrder
     modified_by?: SortOrder
+    remaining_volume_ml?: SortOrder
   }
 
   export type pool_milkMinOrderByAggregateInput = {
@@ -19304,12 +19304,12 @@ export namespace Prisma {
     expiration_date?: SortOrder
     expected_volume_ml?: SortOrder
     actual_volume_ml?: SortOrder
-    remaining_volume_ml?: SortOrder
     milk_status?: SortOrder
     remarks?: SortOrder
     created_at?: SortOrder
     modified_at?: SortOrder
     modified_by?: SortOrder
+    remaining_volume_ml?: SortOrder
   }
 
   export type pool_milkSumOrderByAggregateInput = {
@@ -22939,11 +22939,11 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkCreateNestedManyWithoutPool_milkInput
     modified_by_user?: userCreateNestedOneWithoutModified_pool_milkInput
     pooled_by_user: userCreateNestedOneWithoutPooled_pool_milkInput
@@ -22956,12 +22956,12 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
     modified_by?: string | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkUncheckedCreateNestedManyWithoutPool_milkInput
   }
 
@@ -23152,11 +23152,11 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkUpdateManyWithoutPool_milkNestedInput
     modified_by_user?: userUpdateOneWithoutModified_pool_milkNestedInput
     pooled_by_user?: userUpdateOneRequiredWithoutPooled_pool_milkNestedInput
@@ -23169,12 +23169,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkUncheckedUpdateManyWithoutPool_milkNestedInput
   }
 
@@ -23574,11 +23574,11 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkCreateNestedManyWithoutPool_milkInput
     pooled_by_user: userCreateNestedOneWithoutPooled_pool_milkInput
     raw_milk?: raw_milkCreateNestedManyWithoutPool_milkInput
@@ -23591,11 +23591,11 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkUncheckedCreateNestedManyWithoutPool_milkInput
     raw_milk?: raw_milkUncheckedCreateNestedManyWithoutPool_milkInput
   }
@@ -23615,11 +23615,11 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkCreateNestedManyWithoutPool_milkInput
     modified_by_user?: userCreateNestedOneWithoutModified_pool_milkInput
     raw_milk?: raw_milkCreateNestedManyWithoutPool_milkInput
@@ -23631,12 +23631,12 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
     modified_by?: string | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkUncheckedCreateNestedManyWithoutPool_milkInput
     raw_milk?: raw_milkUncheckedCreateNestedManyWithoutPool_milkInput
   }
@@ -24124,12 +24124,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFilter<"pool_milk"> | Date | string
     expected_volume_ml?: DecimalFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: DecimalNullableFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string | null
     milk_status?: Enummilk_statusNullableFilter<"pool_milk"> | $Enums.milk_status | null
     remarks?: StringNullableFilter<"pool_milk"> | string | null
     created_at?: DateTimeNullableFilter<"pool_milk"> | Date | string | null
     modified_at?: DateTimeNullableFilter<"pool_milk"> | Date | string | null
     modified_by?: UuidNullableFilter<"pool_milk"> | string | null
+    remaining_volume_ml?: DecimalNullableFilter<"pool_milk"> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type pool_milkUpsertWithWhereUniqueWithoutPooled_by_userInput = {
@@ -24594,11 +24594,11 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     modified_by_user?: userCreateNestedOneWithoutModified_pool_milkInput
     pooled_by_user: userCreateNestedOneWithoutPooled_pool_milkInput
     raw_milk?: raw_milkCreateNestedManyWithoutPool_milkInput
@@ -24611,12 +24611,12 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
     modified_by?: string | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     raw_milk?: raw_milkUncheckedCreateNestedManyWithoutPool_milkInput
   }
 
@@ -24745,11 +24745,11 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     modified_by_user?: userUpdateOneWithoutModified_pool_milkNestedInput
     pooled_by_user?: userUpdateOneRequiredWithoutPooled_pool_milkNestedInput
     raw_milk?: raw_milkUpdateManyWithoutPool_milkNestedInput
@@ -24762,12 +24762,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     raw_milk?: raw_milkUncheckedUpdateManyWithoutPool_milkNestedInput
   }
 
@@ -25140,11 +25140,11 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type pool_milkCreateManyPooled_by_userInput = {
@@ -25153,12 +25153,12 @@ export namespace Prisma {
     expiration_date: Date | string
     expected_volume_ml: Decimal | DecimalJsLike | number | string
     actual_volume_ml: Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
     milk_status?: $Enums.milk_status | null
     remarks?: string | null
     created_at?: Date | string | null
     modified_at?: Date | string | null
     modified_by?: string | null
+    remaining_volume_ml?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type raw_milkCreateManyCollected_by_userInput = {
@@ -25499,11 +25499,11 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkUpdateManyWithoutPool_milkNestedInput
     pooled_by_user?: userUpdateOneRequiredWithoutPooled_pool_milkNestedInput
     raw_milk?: raw_milkUpdateManyWithoutPool_milkNestedInput
@@ -25516,11 +25516,11 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkUncheckedUpdateManyWithoutPool_milkNestedInput
     raw_milk?: raw_milkUncheckedUpdateManyWithoutPool_milkNestedInput
   }
@@ -25532,11 +25532,11 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type pool_milkUpdateWithoutPooled_by_userInput = {
@@ -25544,11 +25544,11 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkUpdateManyWithoutPool_milkNestedInput
     modified_by_user?: userUpdateOneWithoutModified_pool_milkNestedInput
     raw_milk?: raw_milkUpdateManyWithoutPool_milkNestedInput
@@ -25560,12 +25560,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     batch_milk?: batch_milkUncheckedUpdateManyWithoutPool_milkNestedInput
     raw_milk?: raw_milkUncheckedUpdateManyWithoutPool_milkNestedInput
   }
@@ -25576,12 +25576,12 @@ export namespace Prisma {
     expiration_date?: DateTimeFieldUpdateOperationsInput | Date | string
     expected_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actual_volume_ml?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     milk_status?: NullableEnummilk_statusFieldUpdateOperationsInput | $Enums.milk_status | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modified_by?: NullableStringFieldUpdateOperationsInput | string | null
+    remaining_volume_ml?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type raw_milkUpdateWithoutCollected_by_userInput = {
