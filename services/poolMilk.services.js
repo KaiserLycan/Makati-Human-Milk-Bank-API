@@ -7,6 +7,7 @@ import { buildStaffNotifications, notifyStaff } from "./notification.services.js
 import { cacheData, clearCachedData, fetchCachedData } from "./redis.services.js";
 
 const POOL_CACHE_KEY = "pools:*";
+const RAW_MILK_CACHE_KEY = "rawMilk:*";
 
 export const markExpiredPoolMilk = async () => {
     const expiredMilk = await prisma.pool_milk.findMany({
@@ -163,6 +164,7 @@ export const createMilkPool = async (data) => {
 
     await markExpiredPoolMilk();
     await clearCachedData(POOL_CACHE_KEY);
+    await clearCachedData(RAW_MILK_CACHE_KEY);
     return await getMilkPool(pool.pid);
 };
 
@@ -175,12 +177,14 @@ export const updateMilkPool = async (pid, data) => {
 
     await markExpiredPoolMilk();
     await clearCachedData(POOL_CACHE_KEY);
+    await clearCachedData(RAW_MILK_CACHE_KEY);
     return await getMilkPool(pid);
 };
 
 export const deleteMilkPool = async (pid) => {
     await prisma.pool_milk.delete({ where: { pid } });
     await clearCachedData(POOL_CACHE_KEY);
+    await clearCachedData(RAW_MILK_CACHE_KEY);
 };
 
 export const updateMilkPoolStatus = async (pid, milk_status, remarks, modified_by) => {
@@ -211,6 +215,7 @@ export const updateMilkPoolStatus = async (pid, milk_status, remarks, modified_b
         });
 
         await clearCachedData(POOL_CACHE_KEY);
+        await clearCachedData(RAW_MILK_CACHE_KEY);
         return updatedMilkPool;
     });
 };
@@ -227,7 +232,10 @@ export const validatePoolMilkForPasteurizing = async (pid, volume_per_bottle, bo
         where: { pid },
     });
 
-    const remainingVolume = pool.remaining_volume_ml !== null ? Number(pool.remaining_volume_ml) : Number(pool.actual_volume_ml);
+    const remainingVolume =
+        pool.remaining_volume_ml !== null
+            ? Number(pool.remaining_volume_ml)
+            : Number(pool.actual_volume_ml);
 
     if (total_volume > remainingVolume) {
         throw new AppError(

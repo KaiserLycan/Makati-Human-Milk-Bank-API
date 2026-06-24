@@ -11,7 +11,7 @@ export const globalErrorHandler = (err, req, res, next) => {
     }
 
     const statusCode = error.statusCode || 500;
-    const message = statusCode !== 500 ? error.message : "Internal Server Error";
+    const message = error.message || "Internal Server Error";
 
     if (statusCode === 500) {
         logger.error(`Critical server error: ${message}`, { stack: error.stack });

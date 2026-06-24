@@ -5,7 +5,7 @@ export const milkPoolSchema = z.object({
     collections: z
         .array(z.coerce.number().int().positive())
         .min(1, "At least one collection is required"),
-    actual_volume_ml: z.coerce.number().int().positive(),
+    actual_volume_ml: z.coerce.number().positive(),
     remarks: z.string().max(100, "Remarks cannot exceed 100 characters.").optional(),
 });
 
@@ -13,7 +13,7 @@ export const updatePoolSchema = z.object({
     pooled_by: z.uuid().optional(),
     pooled_date: z.coerce.date().optional(),
     expiration_date: z.coerce.date().optional(),
-    actual_volume_ml: z.coerce.number().int().positive().optional(),
+    actual_volume_ml: z.coerce.number().positive().optional(),
     remarks: z.string().max(100, "Remarks cannot exceed 100 characters.").optional(),
 });
 

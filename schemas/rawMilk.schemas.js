@@ -54,6 +54,7 @@ export const collectionQuerySchema = listQuerySchema.extend({
     qat_status: z.enum(["pending", "pass", "fail"]).optional(),
     program: z.enum(["ST", "MA", "MW", "WI"]).optional(),
     dtn: z.coerce.number().int().positive().optional(),
+    pool_status: z.enum(["pooled", "unpooled"]).optional(),
 });
 
 export const updateQATStatusSchema = z.object({

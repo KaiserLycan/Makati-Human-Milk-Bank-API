@@ -23,6 +23,7 @@ export const fetchDonors = async (params) => {
             OR: [
                 { name: { contains: search, mode: "insensitive" } },
                 { email: { contains: search, mode: "insensitive" } },
+                ...(!isNaN(Number(search)) ? [{ dtn: { equals: Number(search) } }] : []),
             ],
         }),
     };

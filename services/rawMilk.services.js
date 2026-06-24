@@ -45,7 +45,7 @@ const checkDailyLimit = async (dtn, program, volume_ml, limit) => {
         },
     });
 
-    const currentTotal = dailyRawMilk._sum.volume_ml || 0;
+    const currentTotal = dailyRawMilk._sum.volume_ml ? Number(dailyRawMilk._sum.volume_ml) : 0;
     if (currentTotal + volume_ml > limit) {
         throw new AppError(
             `Collection exceeds daily limit of ${limit}ml. Current total today is ${currentTotal}ml.`,
@@ -55,12 +55,19 @@ const checkDailyLimit = async (dtn, program, volume_ml, limit) => {
 };
 
 export const getRawMilk = async (params) => {
-    const { milk_status, qat_status, program, page, limit, sortBy, sortOrder, dtn } = params;
+    const { milk_status, qat_status, program, page, limit, sortBy, sortOrder, dtn, pool_status } =
+        params;
     const key = `rawMilk:list:${JSON.stringify(params)}`;
     const cachedData = await fetchCachedData(key);
     if (cachedData) return cachedData;
 
     const where = { milk_status, qat_status, program, dtn };
+
+    if (pool_status === "pooled") {
+        where.pid = { not: null };
+    } else if (pool_status === "unpooled") {
+        where.pid = null;
+    }
 
     const [total, rawMilks] = await prisma.$transaction([
         prisma.raw_milk.count({ where }),
@@ -89,6 +96,7 @@ export const getRawMilk = async (params) => {
                 qat_status: true,
                 milk_status: true,
                 remarks: true,
+                pid: true,
             },
             where,
             orderBy: { [sortBy]: sortOrder },
@@ -141,6 +149,7 @@ export const getRawMilkById = async (ctn) => {
             qat_status: true,
             milk_status: true,
             remarks: true,
+            pid: true,
         },
         where: { ctn },
     });
@@ -268,5 +277,5 @@ export const validateCollectionsForPooling = async (collectionIds) => {
 };
 
 export const getTotalVolume = (rawMilk) => {
-    return rawMilk.reduce((total, milk) => total + milk.volume_ml, 0);
+    return rawMilk.reduce((total, milk) => total + Number(milk.volume_ml), 0);
 };
