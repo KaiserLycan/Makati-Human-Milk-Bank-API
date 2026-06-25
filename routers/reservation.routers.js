@@ -5,6 +5,8 @@ import {
     getRequestById,
     createRequest,
     cancelRequest,
+    updateRequest,
+    deleteRequest,
 } from "../controllers/reservation.controllers.js";
 import { validateRequest } from "../middleware/validate.js";
 import { listQuerySchema } from "../schemas/query.schemas.js";
@@ -139,5 +141,74 @@ router.post("/", protectRoute, createRequest);
  *         description: Not Found.
  */
 router.patch("/:rid/cancel", protectRoute, cancelRequest);
+
+/**
+ * @swagger
+ * /api/reservations/{rid}:
+ *   put:
+ *     tags:
+ *       - Reservation
+ *     summary: Update a waiting reservation
+ *     description: Update a reservation's information. Only 'waiting' requests can be updated.
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: rid
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 12345
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               requested_vol_ml:
+ *                 type: integer
+ *                 example: 250
+ *               hospital:
+ *                 type: string
+ *                 example: "Makati Medical Center"
+ *     responses:
+ *       200:
+ *         description: Reservation updated successfully.
+ *       400:
+ *         description: Bad Request.
+ *       401:
+ *         description: Unauthorized.
+ *       404:
+ *         description: Not Found.
+ */
+router.put("/:rid", protectRoute, updateRequest);
+
+/**
+ * @swagger
+ * /api/reservations/{rid}:
+ *   delete:
+ *     tags:
+ *       - Reservation
+ *     summary: Permanently delete a reservation
+ *     description: Permanently delete a reservation by its ID.
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: rid
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 12345
+ *     responses:
+ *       200:
+ *         description: Reservation permanently deleted.
+ *       401:
+ *         description: Unauthorized.
+ *       404:
+ *         description: Not Found.
+ */
+router.delete("/:rid", protectRoute, deleteRequest);
 
 export default router;

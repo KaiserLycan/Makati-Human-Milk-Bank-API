@@ -3,6 +3,8 @@ import {
     cancelRequestService,
     requestQuery,
     retrieveRequestInformation,
+    updateRequestService,
+    deleteRequestService,
 } from "../services/request.services.js";
 import { APIResponse } from "../library/classes/APIResponse.js";
 
@@ -40,5 +42,32 @@ export const cancelRequest = async (req, res) => {
         rid: parseInt(rid),
         modified_by,
     });
-    return res.status(200).json(new APIResponse(200, updatedRequest, "Request canceled successfully"));
+    return res
+        .status(200)
+        .json(new APIResponse(200, updatedRequest, "Request canceled successfully"));
+};
+
+// Add these imports at the top:
+// updateRequestService, deleteRequestService
+
+export const updateRequest = async (req, res) => {
+    const { rid } = req.params;
+    const { requested_vol_ml, hospital } = req.body;
+    const modified_by = req.user.user_id;
+
+    const updatedRequest = await updateRequestService({
+        rid: parseInt(rid),
+        requested_vol_ml,
+        hospital,
+        modified_by,
+    });
+    return res
+        .status(200)
+        .json(new APIResponse(200, updatedRequest, "Request updated successfully"));
+};
+
+export const deleteRequest = async (req, res) => {
+    const { rid } = req.params;
+    await deleteRequestService(parseInt(rid));
+    return res.status(200).json(new APIResponse(200, null, "Request permanently deleted"));
 };
