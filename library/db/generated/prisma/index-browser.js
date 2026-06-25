@@ -198,12 +198,12 @@ exports.Prisma.Pool_milkScalarFieldEnum = {
   expiration_date: 'expiration_date',
   expected_volume_ml: 'expected_volume_ml',
   actual_volume_ml: 'actual_volume_ml',
-  remaining_volume_ml: 'remaining_volume_ml',
   milk_status: 'milk_status',
   remarks: 'remarks',
   created_at: 'created_at',
   modified_at: 'modified_at',
-  modified_by: 'modified_by'
+  modified_by: 'modified_by',
+  remaining_volume_ml: 'remaining_volume_ml'
 };
 
 exports.Prisma.Raw_milkScalarFieldEnum = {
