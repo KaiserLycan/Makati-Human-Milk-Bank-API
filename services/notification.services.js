@@ -88,6 +88,13 @@ export const CreateNotification = async (
         await clearCachedData(NOTIFICATION_CACHE_KEY);
         return notification;
     } catch (error) {
+        if (error.code === "P2003") {
+            console.warn(
+                "Skipping notification creation due to foreign key constraint (P2003):",
+                error.message,
+            );
+            return null;
+        }
         console.error("Error creating notification:", error);
         throw error;
     }
