@@ -62,6 +62,7 @@ export const processRequestWithExpiredMilk = async () => {
             console.log(
                 `[EMAIL ALERT] Sending reallocation status to ${req.beneficiary.caregiver_email} for Request ID: ${req.rid}`,
             );
+            // eslint-disable-next-line no-undef
             return sendStatusUpdateEmail(req.beneficiary);
         });
 
@@ -201,6 +202,20 @@ export const createRequest = async ({ bid, requested_vol_ml, hospital, modified_
         application_status: "approved",
     });
 
+    const existingActiveRequest = await prisma.request.findFirst({
+        where: {
+            bid: parseInt(bid),
+            request_status: { in: ["waiting", "allocated"] },
+        },
+    });
+
+    if (existingActiveRequest) {
+        throw new AppError(
+            "This beneficiary already has an active (waiting or allocated) request. Please fulfill or cancel it before creating a new one.",
+            400,
+        );
+    }
+
     const data = {
         bid: parseInt(bid),
         requested_vol_ml: requested_vol_ml,
@@ -328,4 +343,39 @@ export const dispenseMilkService = async ({ rid, modified_by }) => {
 
     await clearCachedData(REQUEST_CACHE_KEY_ALL);
     return completedRequest;
+};
+
+export const updateRequestService = async ({ rid, requested_vol_ml, hospital, modified_by }) => {
+    const request = await prisma.request.findUniqueOrThrow({
+        where: { rid: parseInt(rid) },
+    });
+
+    // Only allow editing if it hasn't been processed yet
+    if (request.request_status !== "waiting") {
+        throw new AppError("You can only edit requests that are currently waiting.", 400);
+    }
+
+    const updatedRequest = await prisma.request.update({
+        where: { rid: parseInt(rid) },
+        data: {
+            ...(requested_vol_ml && { requested_vol_ml }),
+            ...(hospital !== undefined && { hospital }), // Allow clearing hospital
+            modified_by,
+        },
+    });
+
+    await clearCachedData(REQUEST_CACHE_KEY_ALL);
+    await clearCachedData(REQUEST_CACHE_KEY + rid);
+    return updatedRequest;
+};
+
+export const deleteRequestService = async (rid) => {
+    // Note: Due to cascading deletes set up in schema.prisma,
+    // this will automatically delete the related request_bottles rows!
+    await prisma.request.delete({
+        where: { rid: parseInt(rid) },
+    });
+
+    await clearCachedData(REQUEST_CACHE_KEY_ALL);
+    await clearCachedData(REQUEST_CACHE_KEY + rid);
 };

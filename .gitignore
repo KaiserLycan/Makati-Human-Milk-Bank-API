@@ -7,3 +7,5 @@ library/db/generated/prisma
 
 # Puppeteer
 .cache/
+
+db/generated/
