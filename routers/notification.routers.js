@@ -3,6 +3,7 @@ import { protectRoute } from "../middleware/protectRoute.js";
 import {
     getNotifications,
     readNotification,
+    unreadNotification,
     triggerExpirationCheck,
 } from "../controllers/notification.controllers.js";
 import { validateRequest } from "../middleware/validate.js";
@@ -60,6 +61,40 @@ router.patch(
         params: IdSchema,
     }),
     readNotification,
+);
+
+/**
+ * @swagger
+ * /api/notifications/{nid}/unread:
+ *   patch:
+ *     tags:
+ *       - Notifications
+ *     summary: Mark notification as unread
+ *     description: Mark a specific notification as unread.
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: nid
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 12345
+ *     responses:
+ *       200:
+ *         description: Notification marked as unread successfully.
+ *       401:
+ *         description: Unauthorized.
+ *       404:
+ *         description: Not Found.
+ */
+router.patch(
+    "/:nid/unread",
+    protectRoute,
+    validateRequest({
+        params: IdSchema,
+    }),
+    unreadNotification,
 );
 
 /**
