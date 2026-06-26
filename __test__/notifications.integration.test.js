@@ -22,12 +22,12 @@ describe("Notifications API Integration Tests", () => {
         app = express();
         app.use(cookieParser());
         app.use(express.json());
-        
+
         app.use("/api/notifications", NotificationRouter);
         app.use(globalErrorHandler);
 
         testUser = await prisma.user.findFirst({
-            where: { status: "active" }
+            where: { status: "active" },
         });
         if (!testUser) {
             testUser = await prisma.user.create({
@@ -38,12 +38,12 @@ describe("Notifications API Integration Tests", () => {
                     password: "password123",
                     role: "staff",
                     status: "active",
-                }
+                },
             });
         }
 
         const token = jwt.sign({ user_id: testUser.user_id }, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: "1h"
+            expiresIn: "1h",
         });
         authCookie = `access_token=${token}`;
 
@@ -57,7 +57,7 @@ describe("Notifications API Integration Tests", () => {
                 title: "Test Notification",
                 message: "This is a test notification message",
                 is_read: false,
-            }
+            },
         });
     });
 
@@ -65,20 +65,22 @@ describe("Notifications API Integration Tests", () => {
         if (testNotification) {
             try {
                 await prisma.notification.delete({ where: { nid: testNotification.nid } });
-            } catch (e) {}
+            } catch {
+                // ignore
+            }
         }
         if (testUser && testUser.email.startsWith("notif_int_")) {
             try {
                 await prisma.user.delete({ where: { user_id: testUser.user_id } });
-            } catch (e) {}
+            } catch {
+                // ignore
+            }
         }
         await prisma.$disconnect();
     });
 
     it("should successfully fetch a list of notifications for the authenticated user", async () => {
-        const res = await request(app)
-            .get("/api/notifications")
-            .set("Cookie", [authCookie]);
+        const res = await request(app).get("/api/notifications").set("Cookie", [authCookie]);
 
         expect(res.status).toBe(200);
         expect(res.body.success).toBe(true);
@@ -88,6 +90,15 @@ describe("Notifications API Integration Tests", () => {
     it("should successfully mark a notification as read", async () => {
         const res = await request(app)
             .patch(`/api/notifications/${testNotification.nid}/read`)
+            .set("Cookie", [authCookie]);
+
+        expect(res.status).toBe(200);
+        expect(res.body.success).toBe(true);
+    });
+
+    it("should successfully mark a notification as unread", async () => {
+        const res = await request(app)
+            .patch(`/api/notifications/${testNotification.nid}/unread`)
             .set("Cookie", [authCookie]);
 
         expect(res.status).toBe(200);
