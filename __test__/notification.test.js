@@ -8,6 +8,9 @@ const mockGetNotifications = jest.fn((req, res) =>
 const mockMarkNotificationRead = jest.fn((req, res) =>
     res.status(200).json({ success: true, message: "Notification marked as read." }),
 );
+const mockUnreadNotification = jest.fn((req, res) =>
+    res.status(200).json({ success: true, message: "Notification marked as unread." }),
+);
 const mockTriggerExpiration = jest.fn((req, res) =>
     res.status(200).json({ success: true, message: "Expiration check triggered" }),
 );
@@ -15,6 +18,7 @@ const mockTriggerExpiration = jest.fn((req, res) =>
 jest.mock("../controllers/notification.controllers.js", () => ({
     getNotifications: (req, res) => mockGetNotifications(req, res),
     readNotification: (req, res) => mockMarkNotificationRead(req, res),
+    unreadNotification: (req, res) => mockUnreadNotification(req, res),
     triggerExpirationCheck: (req, res) => mockTriggerExpiration(req, res),
 }));
 
@@ -60,6 +64,22 @@ describe("Notification Router", () => {
                 res.status(404).json({ success: false, message: "Not Found" });
             });
             const response = await request(app).patch("/notifications/999/read");
+            expect(response.status).toBe(404);
+        });
+    });
+
+    describe("PATCH /:nid/unread", () => {
+        it("should mark a notification as unread", async () => {
+            const response = await request(app).patch("/notifications/1/unread");
+            expect(response.status).toBe(200);
+            expect(response.body.success).toBe(true);
+        });
+
+        it("should return 404 for a non-existent notification", async () => {
+            mockUnreadNotification.mockImplementationOnce((req, res) => {
+                res.status(404).json({ success: false, message: "Not Found" });
+            });
+            const response = await request(app).patch("/notifications/999/unread");
             expect(response.status).toBe(404);
         });
     });
