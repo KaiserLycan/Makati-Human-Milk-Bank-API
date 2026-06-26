@@ -347,6 +347,9 @@ export const updateMBTStatus = async (btl_id, mbt_status, modified_by) => {
         throw new AppError(`Record ${btl_id} is already ${mbt_status}`, 400);
     }
 
+    await clearCachedData(PASTEURIZED_CACHE_KEY);
+    await clearCachedData("pools:*");
+
     return prisma.pasteurized_milk.update({
         where: { btl_id },
         data: { mbt_status, modified_by },
@@ -363,6 +366,9 @@ export const updateMilkStatus = async (btl_id, milk_status, remarks, modified_by
     if (record.milk_status === milk_status) {
         throw new AppError(`Record ${btl_id} is already marked as ${milk_status}`, 400);
     }
+
+    await clearCachedData(PASTEURIZED_CACHE_KEY);
+    await clearCachedData("pools:*");
 
     return prisma.pasteurized_milk.update({
         where: { btl_id },
