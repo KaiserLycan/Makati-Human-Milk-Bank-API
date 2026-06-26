@@ -2,6 +2,7 @@ import { prisma } from "../library/db/db.ts";
 import { createPgClient } from "../library/db/pgClient.js";
 import { cacheData, clearCachedData, fetchCachedData } from "./redis.services.js";
 import { logger } from "../library/utils/logger.js";
+import { table } from "node:console";
 
 const clearCachedLogs = async () => {
     const key = "auditLogs:*";
@@ -66,6 +67,7 @@ export const subToAuditLogs = () => {
 
 export const fetchAuditLogs = async (params) => {
     const {
+        search,
         modified_by,
         action_performed,
         table_name,
@@ -90,6 +92,14 @@ export const fetchAuditLogs = async (params) => {
                 ...(start_date && { gte: new Date(start_date) }),
                 ...(end_date && { lte: new Date(end_date) }),
             },
+        }),
+
+        ...(search && {
+            OR: [
+                { action_performed: { contains: search, mode: "insensitive" } },
+                { table_name: { contains: search, mode: "insensitive" } },
+                { user: { name: { contains: search, mode: "insensitive" } } },
+            ],
         }),
     };
 
