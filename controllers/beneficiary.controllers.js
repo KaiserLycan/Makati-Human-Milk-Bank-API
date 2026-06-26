@@ -85,3 +85,26 @@ export const removeBeneficiary = async (req, res) => {
         .status(200)
         .json(new APIResponse(200, null, "Beneficiary has been successfully deleted"));
 };
+
+/* Add this to your beneficiary.controllers.js file */
+
+export const revertBeneficiary = async (req, res) => {
+    const { bid } = req.params;
+    const modified_by = req.user.user_id;
+
+    const updatedBeneficiary = await updateBeneficiaryApplicationStatus({
+        bid,
+        application_status: "pending", // This is the key change
+        modified_by,
+    });
+
+    return res
+        .status(200)
+        .json(
+            new APIResponse(
+                200,
+                updatedBeneficiary,
+                "Beneficiary application has been reverted to pending.",
+            ),
+        );
+};
