@@ -71,13 +71,26 @@ export const processRequestWithExpiredMilk = async () => {
 };
 
 export const requestQuery = async (params) => {
-    const { request_status, page, limit, sortBy, sortOrder } = params;
+    const { search, request_status, page, limit, sortBy, sortOrder } = params;
+
     const key = REQUEST_CACHE_KEY + JSON.stringify(params);
     const cachedData = await fetchCachedData(key);
     if (cachedData) return cachedData;
 
-    const where = { request_status };
+    // 2. Clean up undefined values
+    const where = {};
+    if (request_status) where.request_status = request_status;
 
+    // 3. Add the search logic for Hospital (String) and Request ID (Number)
+    if (search) {
+        where.OR = [{ hospital: { contains: search, mode: "insensitive" } }];
+
+        // If they typed a valid number, also search the Request ID (rid)
+        const searchNumber = parseInt(search);
+        if (!isNaN(searchNumber)) {
+            where.OR.push({ rid: searchNumber });
+        }
+    }
     const [total, requests] = await prisma.$transaction([
         prisma.request.count({ where }),
         prisma.request.findMany({
