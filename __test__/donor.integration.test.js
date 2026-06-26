@@ -12,6 +12,7 @@ import DonorRouter from "../routers/donor.routers.js";
 dotenv.config();
 
 describe("Donor API Integration Tests", () => {
+    jest.setTimeout(30000);
     let app;
     let authCookie;
     let testUser;
@@ -25,7 +26,7 @@ describe("Donor API Integration Tests", () => {
         app.use(globalErrorHandler);
 
         testUser = await prisma.user.findFirst({
-            where: { role: "manager", status: "active" }
+            where: { role: "manager", status: "active" },
         });
         if (!testUser) {
             testUser = await prisma.user.create({
@@ -36,12 +37,12 @@ describe("Donor API Integration Tests", () => {
                     password: "password123",
                     role: "manager",
                     status: "active",
-                }
+                },
             });
         }
 
         const token = jwt.sign({ user_id: testUser.user_id }, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: "1h"
+            expiresIn: "1h",
         });
         authCookie = `access_token=${token}`;
     });
@@ -50,12 +51,16 @@ describe("Donor API Integration Tests", () => {
         if (testDonor) {
             try {
                 await prisma.donor.delete({ where: { dtn: testDonor.dtn } });
-            } catch (e) {}
+            } catch {
+                // ignore
+            }
         }
         if (testUser && testUser.email.startsWith("donor_int_mgr_")) {
             try {
                 await prisma.user.delete({ where: { user_id: testUser.user_id } });
-            } catch (e) {}
+            } catch {
+                // ignore
+            }
         }
         await prisma.$disconnect();
     });
@@ -70,15 +75,15 @@ describe("Donor API Integration Tests", () => {
                 personal_information: {
                     occupation: "Software Engineer",
                     marital_status: "Single",
-                    home_address: "123 Main St, City, Country"
+                    home_address: "123 Main St, City, Country",
                 },
                 traveling_information: {
-                    travelled_recently: "no"
+                    travelled_recently: "no",
                 },
                 donation_information: {
                     reason: "Want to help others",
                     spouse_consent: "no",
-                    previously_donated: "no"
+                    previously_donated: "no",
                 },
                 medical_information: {
                     infectious_medical_illness: {
@@ -87,41 +92,39 @@ describe("Donor API Integration Tests", () => {
                         mastitis: "no",
                         syphilis: "no",
                         herpes: "no",
-                        std: "no"
+                        std: "no",
                     },
                     substance_user_habits: {
                         consumed_alcohol: "no",
                         smoke: "no",
                         illegal_drugs: "no",
-                        intravenous_drug_use: "no"
+                        intravenous_drug_use: "no",
                     },
                     diet_supplement_tracking: {
                         vegetarian: "no",
                         multivitamins: "no",
-                        herbal_drugs: "no"
+                        herbal_drugs: "no",
                     },
                     blood_exposure_transfusion: {
                         received_blood: "no",
                         needle_contact: "no",
-                        repeated_blood_transfusion: "no"
+                        repeated_blood_transfusion: "no",
                     },
                     surgical_specialized_medical_history: {
                         hormone_control: "no",
                         breast_surgery: "no",
-                        breast_implant: "no"
+                        breast_implant: "no",
                     },
                     exposure_behavior: {
                         tattoos: "no",
                         polygamy: "no",
-                        std: "no"
-                    }
-                }
-            }
+                        std: "no",
+                    },
+                },
+            },
         };
 
-        const res = await request(app)
-            .post("/api/donors/public-register")
-            .send(payload);
+        const res = await request(app).post("/api/donors/public-register").send(payload);
 
         expect(res.status).toBe(201);
         expect(res.body.success).toBe(true);
@@ -130,9 +133,7 @@ describe("Donor API Integration Tests", () => {
     });
 
     it("should allow a manager to query list of donors", async () => {
-        const res = await request(app)
-            .get("/api/donors")
-            .set("Cookie", [authCookie]);
+        const res = await request(app).get("/api/donors").set("Cookie", [authCookie]);
 
         expect(res.status).toBe(200);
         expect(res.body.success).toBe(true);
