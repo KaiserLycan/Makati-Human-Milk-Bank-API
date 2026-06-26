@@ -32,12 +32,24 @@ export const markExpiredPasteurizedMilk = async () => {
 };
 
 export const getPasteurizedMilkRecords = async (params) => {
-    const { milk_status, mbt_status, dispense_status, page, limit, sortBy, sortOrder } = params;
+    const { search, milk_status, mbt_status, dispense_status, page, limit, sortBy, sortOrder } =
+        params;
     const key = `pasteurized:list:${JSON.stringify(params)}`;
     const cachedData = await fetchCachedData(key);
     if (cachedData) return cachedData;
 
-    const where = { milk_status, mbt_status, dispense_status };
+    const where = {};
+    if (milk_status) where.milk_status = milk_status;
+    if (mbt_status) where.mbt_status = mbt_status;
+    if (dispense_status) where.dispense_status = dispense_status;
+    if (search) {
+        const searchNumber = parseInt(search);
+
+        // Only apply the ID search if the user typed a valid number
+        if (!isNaN(searchNumber)) {
+            where.OR = [{ btl_id: searchNumber }, { batch_number: searchNumber }];
+        }
+    }
 
     const [total, records] = await prisma.$transaction([
         prisma.pasteurized_milk.count({ where }),
@@ -335,6 +347,9 @@ export const updateMBTStatus = async (btl_id, mbt_status, modified_by) => {
         throw new AppError(`Record ${btl_id} is already ${mbt_status}`, 400);
     }
 
+    await clearCachedData(PASTEURIZED_CACHE_KEY);
+    await clearCachedData("pools:*");
+
     return prisma.pasteurized_milk.update({
         where: { btl_id },
         data: { mbt_status, modified_by },
@@ -351,6 +366,9 @@ export const updateMilkStatus = async (btl_id, milk_status, remarks, modified_by
     if (record.milk_status === milk_status) {
         throw new AppError(`Record ${btl_id} is already marked as ${milk_status}`, 400);
     }
+
+    await clearCachedData(PASTEURIZED_CACHE_KEY);
+    await clearCachedData("pools:*");
 
     return prisma.pasteurized_milk.update({
         where: { btl_id },

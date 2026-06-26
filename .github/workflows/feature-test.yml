@@ -20,6 +20,9 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
+        # Added the dummy URL here to satisfy the postinstall script!
+        env:
+          DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy_db"
         run: npm install
 
       - name: Generate Prisma Client
