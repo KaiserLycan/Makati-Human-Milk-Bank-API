@@ -7,6 +7,7 @@ import {
     updateBeneficiaryInformation,
     approveBeneficiary,
     rejectBeneficiary,
+    revertBeneficiary,
     toggleBeneficiaryStatus,
     removeBeneficiary,
 } from "../controllers/beneficiary.controllers.js";
@@ -459,5 +460,12 @@ router.patch(
  *         description: Not Found.
  */
 router.delete("/:bid", protectRoute, validateRequest({ params: IdSchema }), removeBeneficiary);
+
+router.patch(
+    "/revert/:bid",
+    protectRoute,
+    validateRequest({ params: IdSchema }),
+    revertBeneficiary, // You'll need to create this controller
+);
 
 export default router;
