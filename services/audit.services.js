@@ -18,9 +18,7 @@ const connectToPg = async () => {
         logger.info("Successfully connected pgClient for notifications.");
 
         pgClient.on("notification", async (msg) => {
-            logger.info(`Received notification on channel: ${msg.channel}`);
             if (msg.channel === "audit_channel") {
-                logger.info("Notification is for audit_channel. Payload:", msg.payload);
                 try {
                     await clearCachedLogs();
                 } catch (error) {
