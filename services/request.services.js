@@ -62,6 +62,7 @@ export const processRequestWithExpiredMilk = async () => {
             console.log(
                 `[EMAIL ALERT] Sending reallocation status to ${req.beneficiary.caregiver_email} for Request ID: ${req.rid}`,
             );
+            // eslint-disable-next-line no-undef
             return sendStatusUpdateEmail(req.beneficiary);
         });
 
@@ -70,13 +71,26 @@ export const processRequestWithExpiredMilk = async () => {
 };
 
 export const requestQuery = async (params) => {
-    const { request_status, page, limit, sortBy, sortOrder } = params;
+    const { search, request_status, page, limit, sortBy, sortOrder } = params;
+
     const key = REQUEST_CACHE_KEY + JSON.stringify(params);
     const cachedData = await fetchCachedData(key);
     if (cachedData) return cachedData;
 
-    const where = { request_status };
+    // 2. Clean up undefined values
+    const where = {};
+    if (request_status) where.request_status = request_status;
 
+    // 3. Add the search logic for Hospital (String) and Request ID (Number)
+    if (search) {
+        where.OR = [{ hospital: { contains: search, mode: "insensitive" } }];
+
+        // If they typed a valid number, also search the Request ID (rid)
+        const searchNumber = parseInt(search);
+        if (!isNaN(searchNumber)) {
+            where.OR.push({ rid: searchNumber });
+        }
+    }
     const [total, requests] = await prisma.$transaction([
         prisma.request.count({ where }),
         prisma.request.findMany({
@@ -200,6 +214,20 @@ export const createRequest = async ({ bid, requested_vol_ml, hospital, modified_
         account_status: "active",
         application_status: "approved",
     });
+
+    const existingActiveRequest = await prisma.request.findFirst({
+        where: {
+            bid: parseInt(bid),
+            request_status: { in: ["waiting", "allocated"] },
+        },
+    });
+
+    if (existingActiveRequest) {
+        throw new AppError(
+            "This beneficiary already has an active (waiting or allocated) request. Please fulfill or cancel it before creating a new one.",
+            400,
+        );
+    }
 
     const data = {
         bid: parseInt(bid),
@@ -328,4 +356,39 @@ export const dispenseMilkService = async ({ rid, modified_by }) => {
 
     await clearCachedData(REQUEST_CACHE_KEY_ALL);
     return completedRequest;
+};
+
+export const updateRequestService = async ({ rid, requested_vol_ml, hospital, modified_by }) => {
+    const request = await prisma.request.findUniqueOrThrow({
+        where: { rid: parseInt(rid) },
+    });
+
+    // Only allow editing if it hasn't been processed yet
+    if (request.request_status !== "waiting") {
+        throw new AppError("You can only edit requests that are currently waiting.", 400);
+    }
+
+    const updatedRequest = await prisma.request.update({
+        where: { rid: parseInt(rid) },
+        data: {
+            ...(requested_vol_ml && { requested_vol_ml }),
+            ...(hospital !== undefined && { hospital }), // Allow clearing hospital
+            modified_by,
+        },
+    });
+
+    await clearCachedData(REQUEST_CACHE_KEY_ALL);
+    await clearCachedData(REQUEST_CACHE_KEY + rid);
+    return updatedRequest;
+};
+
+export const deleteRequestService = async (rid) => {
+    // Note: Due to cascading deletes set up in schema.prisma,
+    // this will automatically delete the related request_bottles rows!
+    await prisma.request.delete({
+        where: { rid: parseInt(rid) },
+    });
+
+    await clearCachedData(REQUEST_CACHE_KEY_ALL);
+    await clearCachedData(REQUEST_CACHE_KEY + rid);
 };
