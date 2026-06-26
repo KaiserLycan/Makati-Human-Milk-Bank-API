@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const queryAuditSchemas = z.object({
+    search: z.string().optional(),
     modified_by: z.string().optional(),
     action_performed: z.string().toUpperCase().optional(),
     table_name: z.string().optional(),
