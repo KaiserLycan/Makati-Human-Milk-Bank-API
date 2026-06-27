@@ -187,4 +187,14 @@ describe("Donor API Integration Tests", () => {
         expect(res.status).toBe(200);
         expect(res.body.success).toBe(true);
     });
+
+    it("should allow a manager to revert a donor to pending", async () => {
+        const res = await request(app)
+            .patch(`/api/donors/revert/${testDonor.dtn}`)
+            .set("Cookie", [authCookie]);
+
+        expect(res.status).toBe(200);
+        expect(res.body.success).toBe(true);
+        expect(res.body.data.application_status).toBe("pending");
+    });
 });

@@ -11,6 +11,7 @@ jest.mock("../controllers/donor.controllers.js", () => ({
     ),
     approveDonor: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
     rejectDonor: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
+    revertDonor: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
     toggleDonorStatus: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
     removeDonor: jest.fn((req, res) =>
         res.status(200).json({ success: true, message: "Donor deleted" }),
@@ -22,7 +23,7 @@ jest.mock("../middleware/protectRoute.js", () => ({
 }));
 
 jest.mock("../middleware/authorize.js", () => ({
-    authorize: (roles) => (req, res, next) => next(),
+    authorize: (_roles) => (req, res, next) => next(),
 }));
 
 jest.mock("../middleware/upload.js", () => ({
@@ -34,7 +35,11 @@ jest.mock("../middleware/parseFormatData.js", () => ({
 }));
 
 jest.mock("../middleware/validate.js", () => ({
-    validateRequest: (schema) => (req, res, next) => next(),
+    validateRequest: (_schema) => (req, res, next) => next(),
+}));
+
+jest.mock("../middleware/rateLimiter.js", () => ({
+    strictLimiter: (req, res, next) => next(),
 }));
 
 describe("Donor Router", () => {
@@ -127,6 +132,14 @@ describe("Donor Router", () => {
     describe("DELETE /:dtn", () => {
         it("should delete a donor", async () => {
             const response = await request(app).delete("/donors/1");
+            expect(response.status).toBe(200);
+            expect(response.body.success).toBe(true);
+        });
+    });
+
+    describe("PATCH /revert/:dtn", () => {
+        it("should revert a donor application to pending", async () => {
+            const response = await request(app).patch("/donors/revert/1");
             expect(response.status).toBe(200);
             expect(response.body.success).toBe(true);
         });
