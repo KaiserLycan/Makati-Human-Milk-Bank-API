@@ -84,3 +84,22 @@ export const removeDonor = async (req, res) => {
 
     return res.status(200).json(new APIResponse(200, null, "Donor has been successfully deleted"));
 };
+
+/* Add this to your donor.controllers.js file */
+
+export const revertDonor = async (req, res) => {
+    const { dtn } = req.params;
+    const modified_by = req.user?.user_id;
+
+    const updatedDonor = await updateDonorApplicationStatus({
+        dtn,
+        application_status: "pending",
+        modified_by,
+    });
+
+    return res
+        .status(200)
+        .json(
+            new APIResponse(200, updatedDonor, "Donor application has been reverted to pending."),
+        );
+};
