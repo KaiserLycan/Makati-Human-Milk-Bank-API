@@ -25,7 +25,7 @@ describe("Beneficiary API Integration Tests", () => {
         app.use(globalErrorHandler);
 
         testUser = await prisma.user.findFirst({
-            where: { role: "manager", status: "active" }
+            where: { role: "manager", status: "active" },
         });
         if (!testUser) {
             testUser = await prisma.user.create({
@@ -36,12 +36,12 @@ describe("Beneficiary API Integration Tests", () => {
                     password: "password123",
                     role: "manager",
                     status: "active",
-                }
+                },
             });
         }
 
         const token = jwt.sign({ user_id: testUser.user_id }, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: "1h"
+            expiresIn: "1h",
         });
         authCookie = `access_token=${token}`;
     });
@@ -50,12 +50,16 @@ describe("Beneficiary API Integration Tests", () => {
         if (testBeneficiary) {
             try {
                 await prisma.beneficiary.delete({ where: { bid: testBeneficiary.bid } });
-            } catch (e) {}
+            } catch (_e) {
+                // ignore
+            }
         }
         if (testUser && testUser.email.startsWith("bene_int_mgr_")) {
             try {
                 await prisma.user.delete({ where: { user_id: testUser.user_id } });
-            } catch (e) {}
+            } catch (_e) {
+                // ignore
+            }
         }
         await prisma.$disconnect();
     });
@@ -72,13 +76,11 @@ describe("Beneficiary API Integration Tests", () => {
             profile: {
                 profile_image_url: "http://example.com/image.jpg",
                 prescription_details: "http://example.com/presc.jpg",
-                clinical_abstract: "http://example.com/abstract.jpg"
-            }
+                clinical_abstract: "http://example.com/abstract.jpg",
+            },
         };
 
-        const res = await request(app)
-            .post("/api/beneficiaries/public-register")
-            .send(payload);
+        const res = await request(app).post("/api/beneficiaries/public-register").send(payload);
 
         expect(res.status).toBe(201);
         expect(res.body.success).toBe(true);
@@ -87,9 +89,7 @@ describe("Beneficiary API Integration Tests", () => {
     });
 
     it("should allow a manager to query list of beneficiaries", async () => {
-        const res = await request(app)
-            .get("/api/beneficiaries")
-            .set("Cookie", [authCookie]);
+        const res = await request(app).get("/api/beneficiaries").set("Cookie", [authCookie]);
 
         expect(res.status).toBe(200);
         expect(res.body.success).toBe(true);
@@ -146,5 +146,15 @@ describe("Beneficiary API Integration Tests", () => {
 
         expect(res.status).toBe(200);
         expect(res.body.success).toBe(true);
+    });
+
+    it("should allow a manager to revert a beneficiary to pending", async () => {
+        const res = await request(app)
+            .patch(`/api/beneficiaries/revert/${testBeneficiary.bid}`)
+            .set("Cookie", [authCookie]);
+
+        expect(res.status).toBe(200);
+        expect(res.body.success).toBe(true);
+        expect(res.body.data.application_status).toBe("pending");
     });
 });
