@@ -6,6 +6,7 @@ import {
     queryDonors,
     registerDonor,
     updateDonorInformation,
+    revertDonor,
     approveDonor,
     rejectDonor,
     toggleDonorStatus,
@@ -467,5 +468,7 @@ router.patch(
  *         description: Not Found.
  */
 router.delete("/:dtn", protectRoute, validateRequest({ params: IdSchema }), removeDonor);
+
+router.patch("/revert/:dtn", protectRoute, validateRequest({ params: IdSchema }), revertDonor);
 
 export default router;
