@@ -13,6 +13,7 @@ jest.mock("../controllers/beneficiary.controllers.js", () => ({
     ),
     approveBeneficiary: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
     rejectBeneficiary: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
+    revertBeneficiary: jest.fn((req, res) => res.status(200).json({ success: true, data: {} })),
     toggleBeneficiaryStatus: jest.fn((req, res) =>
         res.status(200).json({ success: true, data: {} }),
     ),
@@ -26,7 +27,7 @@ jest.mock("../middleware/protectRoute.js", () => ({
 }));
 
 jest.mock("../middleware/authorize.js", () => ({
-    authorize: (roles) => (req, res, next) => next(),
+    authorize: (_roles) => (req, res, next) => next(),
 }));
 
 jest.mock("../middleware/upload.js", () => ({
@@ -35,6 +36,14 @@ jest.mock("../middleware/upload.js", () => ({
 
 jest.mock("../middleware/parseFormatData.js", () => ({
     parseFormDataJson: (req, res, next) => next(),
+}));
+
+jest.mock("../middleware/validate.js", () => ({
+    validateRequest: (_schema) => (req, res, next) => next(),
+}));
+
+jest.mock("../middleware/rateLimiter.js", () => ({
+    strictLimiter: (req, res, next) => next(),
 }));
 
 describe("Beneficiary Router", () => {
@@ -121,6 +130,14 @@ describe("Beneficiary Router", () => {
     describe("DELETE /:bid", () => {
         it("should delete a beneficiary", async () => {
             const response = await request(app).delete("/beneficiaries/1");
+            expect(response.status).toBe(200);
+            expect(response.body.success).toBe(true);
+        });
+    });
+
+    describe("PATCH /revert/:bid", () => {
+        it("should revert a beneficiary application to pending", async () => {
+            const response = await request(app).patch("/beneficiaries/revert/1");
             expect(response.status).toBe(200);
             expect(response.body.success).toBe(true);
         });
