@@ -17,7 +17,7 @@ export const fetchBeneficiaries = async (params) => {
     if (cachedData) return cachedData;
 
     const where = {
-        ...(status && { status }),
+        ...(status && { account_status: status }),
         ...(application_status && { application_status }),
         ...(search && {
             OR: [
