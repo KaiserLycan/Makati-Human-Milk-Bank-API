@@ -11,11 +11,15 @@ export const mailer =
             },
         }
         : nodemailer.createTransport({
-            service: "gmail",
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false, // use STARTTLS
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_APP_PASSWORD,
             },
+            connectionTimeout: 15000,
+            socketTimeout: 15000,
         });
 
 if (process.argv[1] === import.meta.filename) {
@@ -23,11 +27,15 @@ if (process.argv[1] === import.meta.filename) {
     dotenv.config();
 
     const testMailer = nodemailer.createTransport({
-        service: "gmail",
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // use STARTTLS
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_APP_PASSWORD,
         },
+        connectionTimeout: 15000,
+        socketTimeout: 15000,
     });
 
     console.log("Verifying SMTP connection details...");
