@@ -39,12 +39,33 @@ export const fetchDonors = async (params) => {
             orderBy: { [sortBy]: sortOrder },
             skip: (page - 1) * limit,
             take: limit,
+            include: {
+                raw_milk: {
+                    select: {
+                        collection_date: true,
+                    },
+                    orderBy: {
+                        collection_date: "desc",
+                    },
+                    take: 1,
+                },
+            },
             omit: donorOmit,
         }),
     ]);
 
+    const mappedDonors = donors.map((d) => {
+        const lastRawMilk = d.raw_milk?.[0];
+        const lastDonationDate = lastRawMilk ? lastRawMilk.collection_date : null;
+        const { raw_milk, ...rest } = d;
+        return {
+            ...rest,
+            last_system_donation: lastDonationDate,
+        };
+    });
+
     const results = {
-        data: donors,
+        data: mappedDonors,
         meta: {
             total,
             page,
@@ -64,11 +85,31 @@ export const fetchDonorDetails = async (dtn) => {
 
     const donor = await prisma.donor.findUniqueOrThrow({
         where: { dtn },
+        include: {
+            raw_milk: {
+                select: {
+                    collection_date: true,
+                },
+                orderBy: {
+                    collection_date: "desc",
+                },
+                take: 1,
+            },
+        },
         omit: donorOmit,
     });
 
-    await cacheData(key, donor);
-    return donor;
+    const lastRawMilk = donor.raw_milk?.[0];
+    const lastDonationDate = lastRawMilk ? lastRawMilk.collection_date : null;
+    const { raw_milk, ...rest } = donor;
+
+    const result = {
+        ...rest,
+        last_system_donation: lastDonationDate,
+    };
+
+    await cacheData(key, result);
+    return result;
 };
 
 export const registerDonor = async (req) => {
