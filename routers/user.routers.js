@@ -13,6 +13,7 @@ import {
 import { protectRoute } from "../middleware/protectRoute.js";
 import { authorize } from "../middleware/authorize.js";
 import { validateRequest } from "../middleware/validate.js";
+import { AppError } from "../library/classes/AppError.js";
 import {
     changePasswordSchemas,
     userSchema,
@@ -300,10 +301,21 @@ router.post(
  *       404:
  *         description: Not Found.
  */
+const authorizeSelfOrManager = (req, res, next) => {
+    if (req.user && (req.user.role === "manager" || req.user.user_id === req.params.user_id)) {
+        if (req.user.role !== "manager" && req.body) {
+            delete req.body.role;
+            delete req.body.status;
+        }
+        return next();
+    }
+    throw new AppError("You don't have permission to use this action.", 403);
+};
+
 router.put(
     "/:user_id",
     protectRoute,
-    authorize,
+    authorizeSelfOrManager,
     uploadSingleImage,
     validateRequest({ body: updateUserSchemas, params: userIDSchema }),
     updateUser,
