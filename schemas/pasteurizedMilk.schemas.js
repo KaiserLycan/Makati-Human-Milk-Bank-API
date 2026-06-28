@@ -4,8 +4,8 @@ import { listQuerySchema } from "./query.schemas.js";
 export const createBatchMilkSchema = z.object({
     pid: z.coerce.number().int().positive(),
     bottle_count: z.coerce.number().int().positive(),
-    volume_per_bottle: z.coerce.number().int().min(50, {
-        message: "Volume per bottle must be at least 50 mL.",
+    volume_per_bottle: z.coerce.number().int().min(1, {
+        message: "Volume per bottle must be at least 1 mL.",
     }),
     bottle_type: z
         .enum(["korea", "ameda", "red_cap"], {
@@ -20,8 +20,8 @@ export const updatePasteurizedMilkSchema = z.object({
     volume_per_bottle: z.coerce
         .number()
         .int()
-        .min(50, {
-            message: "Volume per bottle must be at least 50 mL.",
+        .min(1, {
+            message: "Volume per bottle must be at least 1 mL.",
         })
         .optional(),
     pasteurization_date: z.coerce.date().optional(),
