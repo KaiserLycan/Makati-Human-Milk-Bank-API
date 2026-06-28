@@ -1,6 +1,5 @@
 import { prisma } from "../library/db/db.ts";
 import { AppError } from "../library/classes/AppError.js";
-import { omit } from "../configuration/constants.js";
 import { cacheData, clearCachedData, fetchCachedData } from "./redis.services.js";
 import {
     deleteImageFromCloudinary,
@@ -9,6 +8,11 @@ import {
 import { deepmerge } from "deepmerge-ts";
 
 const DONOR_CACHE_KEY = "donors:*";
+
+const donorOmit = {
+    modified_at: true,
+    modified_by: true,
+};
 
 export const fetchDonors = async (params) => {
     const { application_status, status, search, page, limit, sortBy, sortOrder } = params;
@@ -35,7 +39,7 @@ export const fetchDonors = async (params) => {
             orderBy: { [sortBy]: sortOrder },
             skip: (page - 1) * limit,
             take: limit,
-            omit,
+            omit: donorOmit,
         }),
     ]);
 
@@ -60,7 +64,7 @@ export const fetchDonorDetails = async (dtn) => {
 
     const donor = await prisma.donor.findUniqueOrThrow({
         where: { dtn },
-        omit,
+        omit: donorOmit,
     });
 
     await cacheData(key, donor);
@@ -70,6 +74,15 @@ export const fetchDonorDetails = async (dtn) => {
 export const registerDonor = async (req) => {
     const { name, email, phone, birth_date, profile } = req.body;
     const modified_by = req.user?.user_id;
+
+    // Check for duplicate email
+    const existingDonor = await prisma.donor.findUnique({
+        where: { email },
+    });
+    if (existingDonor) {
+        throw new AppError("Email is already in use by another donor.", 400);
+    }
+
     let updatedProfile;
 
     try {
@@ -84,7 +97,7 @@ export const registerDonor = async (req) => {
                 profile: updatedProfile,
                 modified_by,
             },
-            omit,
+            omit: donorOmit,
         });
 
         await clearCachedData(DONOR_CACHE_KEY);
@@ -96,7 +109,6 @@ export const registerDonor = async (req) => {
         throw error;
     }
 };
-
 export const updateDonor = async (req) => {
     const { dtn } = req.params;
     const modified_by = req.user?.user_id;
@@ -130,7 +142,7 @@ export const updateDonor = async (req) => {
         const updatedDonor = await prisma.donor.update({
             where: { dtn },
             data: donorData,
-            omit,
+            omit: donorOmit,
         });
 
         await clearCachedData(DONOR_CACHE_KEY);
@@ -162,7 +174,7 @@ export const updateDonorApplicationStatus = async ({ dtn, application_status, mo
             account_status: application_status === "approved" ? "active" : "inactive",
             modified_by,
         },
-        omit,
+        omit: donorOmit,
     });
 
     await clearCachedData(DONOR_CACHE_KEY);
@@ -187,7 +199,7 @@ export const updateDonorStatus = async ({ dtn, modified_by }) => {
             account_status: newStatus,
             modified_by,
         },
-        omit,
+        omit: donorOmit,
     });
 
     await clearCachedData(DONOR_CACHE_KEY);
