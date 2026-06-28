@@ -28,7 +28,7 @@ export const fetchBeneficiaries = async (params) => {
         }),
     };
 
-    const [total, beneficiaries] = await prisma.$transaction([
+    const [total, beneficiaries] = await Promise.all([
         prisma.beneficiary.count({ where }),
         prisma.beneficiary.findMany({
             where,

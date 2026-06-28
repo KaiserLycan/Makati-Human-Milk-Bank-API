@@ -7,8 +7,7 @@ export const updateUserSchemas = z.object({
         .enum(["manager", "staff"], {
             error: "Invalid role. User can only be a manager or staff.",
         })
-        .optional()
-        .default("staff"),
+        .optional(),
     email: z.email({
         error: (issue) => (issue.input === undefined ? "Email is required" : "Invalid email"),
     }),
@@ -21,7 +20,24 @@ export const updateUserSchemas = z.object({
     profile_image_url: z.url().optional(),
 });
 
-export const userSchema = updateUserSchemas.extend({
+export const userSchema = z.object({
+    name: z.string({ error: "Name is required" }).min(2, "Name must be at least 2 characters"),
+    role: z
+        .enum(["manager", "staff"], {
+            error: "Invalid role. User can only be a manager or staff.",
+        })
+        .optional()
+        .default("staff"),
+    email: z.email({
+        error: (issue) => (issue.input === undefined ? "Email is required" : "Invalid email"),
+    }),
+    phone: z.e164({
+        error: (issue) =>
+            issue.input === undefined
+                ? "Phone is required"
+                : "Invalid phone format please use E164 formatting.",
+    }),
+    profile_image_url: z.url().optional(),
     password: z
         .string({
             error: "Password is required ",

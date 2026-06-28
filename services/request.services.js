@@ -91,7 +91,7 @@ export const requestQuery = async (params) => {
             where.OR.push({ rid: searchNumber });
         }
     }
-    const [total, requests] = await prisma.$transaction([
+    const [total, requests] = await Promise.all([
         prisma.request.count({ where }),
         prisma.request.findMany({
             select: {

@@ -48,7 +48,7 @@ export const getMilkPools = async (params) => {
         }),
     };
 
-    const [total, pools] = await prisma.$transaction([
+    const [total, pools] = await Promise.all([
         prisma.pool_milk.count({ where }),
         prisma.pool_milk.findMany({
             select: {

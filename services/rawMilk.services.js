@@ -69,7 +69,7 @@ export const getRawMilk = async (params) => {
         where.pid = null;
     }
 
-    const [total, rawMilks] = await prisma.$transaction([
+    const [total, rawMilks] = await Promise.all([
         prisma.raw_milk.count({ where }),
         prisma.raw_milk.findMany({
             select: {

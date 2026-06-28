@@ -105,7 +105,7 @@ export const fetchAuditLogs = async (params) => {
 
     const orderBy = sortBy === "user" ? { user: { name: sortOrder } } : { [sortBy]: sortOrder };
 
-    const [total, logs] = await prisma.$transaction([
+    const [total, logs] = await Promise.all([
         prisma.audit_log.count({ where }),
         prisma.audit_log.findMany({
             where,

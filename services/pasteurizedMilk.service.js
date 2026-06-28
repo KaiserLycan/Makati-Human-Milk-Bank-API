@@ -51,7 +51,7 @@ export const getPasteurizedMilkRecords = async (params) => {
         }
     }
 
-    const [total, records] = await prisma.$transaction([
+    const [total, records] = await Promise.all([
         prisma.pasteurized_milk.count({ where }),
         prisma.pasteurized_milk.findMany({
             select: {

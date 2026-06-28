@@ -33,7 +33,7 @@ export const queryUsers = async (params) => {
         }),
     };
 
-    const [total, users] = await prisma.$transaction([
+    const [total, users] = await Promise.all([
         prisma.user.count({ where }),
         prisma.user.findMany({
             where,
@@ -118,7 +118,11 @@ export const updateUser = async (req) => {
             imageUrl = image.secure_url;
         }
 
-        const data = { ...req.body, profile_image_url: imageUrl, modified_by };
+        const data = {
+            ...req.body,
+            ...(imageUrl !== undefined && { profile_image_url: imageUrl }),
+            modified_by,
+        };
         if (data.name) data.name = capitalizeName(data.name);
         if (data.email) data.email = data.email.toLowerCase();
 

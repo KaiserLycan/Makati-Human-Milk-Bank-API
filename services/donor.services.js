@@ -33,7 +33,7 @@ export const fetchDonors = async (params) => {
         }),
     };
 
-    const [total, donors] = await prisma.$transaction([
+    const [total, donors] = await Promise.all([
         prisma.donor.count({ where }),
         prisma.donor.findMany({
             where,
