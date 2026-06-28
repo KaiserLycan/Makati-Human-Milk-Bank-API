@@ -180,9 +180,27 @@ export const createCollection = async (data) => {
     return await getRawMilkById(collection.ctn);
 };
 
+export const deletePoolIfEmpty = async (pid) => {
+    if (!pid) return;
+    const collectionsCount = await prisma.raw_milk.count({
+        where: { pid: parseInt(pid) },
+    });
+    if (collectionsCount === 0) {
+        await prisma.pool_milk.delete({
+            where: { pid: parseInt(pid) },
+        });
+        await clearCachedData("pools:*");
+    }
+};
+
 export const updateCollection = async (ctn, data) => {
     const { dtn, program, volume_ml, limit, ...restData } = data;
     if (limit) await checkDailyLimit(dtn, program, volume_ml, limit);
+
+    const oldCollection = await prisma.raw_milk.findUnique({
+        where: { ctn },
+        select: { pid: true },
+    });
 
     await prisma.raw_milk.update({
         where: { ctn },
@@ -192,12 +210,26 @@ export const updateCollection = async (ctn, data) => {
 
     await markExpiredRawMilk();
     await clearCachedData(RAW_MILK_CACHE_KEY);
+
+    if (oldCollection && oldCollection.pid && oldCollection.pid !== data.pid) {
+        await deletePoolIfEmpty(oldCollection.pid);
+    }
+
     return await getRawMilkById(ctn);
 };
 
 export const deleteCollection = async (ctn) => {
+    const collection = await prisma.raw_milk.findUnique({
+        where: { ctn },
+        select: { pid: true },
+    });
+
     await prisma.raw_milk.delete({ where: { ctn } });
     await clearCachedData(RAW_MILK_CACHE_KEY);
+
+    if (collection && collection.pid) {
+        await deletePoolIfEmpty(collection.pid);
+    }
 };
 
 export const updateMilkStatus = async (ctn, milk_status, modified_by) => {
