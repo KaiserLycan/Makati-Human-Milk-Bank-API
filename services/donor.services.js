@@ -39,17 +39,6 @@ export const fetchDonors = async (params) => {
             orderBy: { [sortBy]: sortOrder },
             skip: (page - 1) * limit,
             take: limit,
-            include: {
-                raw_milk: {
-                    select: {
-                        collection_date: true,
-                    },
-                    orderBy: {
-                        collection_date: "desc",
-                    },
-                    take: 1,
-                },
-            },
             omit: donorOmit,
         }),
     ]);
@@ -85,17 +74,6 @@ export const fetchDonorDetails = async (dtn) => {
 
     const donor = await prisma.donor.findUniqueOrThrow({
         where: { dtn },
-        include: {
-            raw_milk: {
-                select: {
-                    collection_date: true,
-                },
-                orderBy: {
-                    collection_date: "desc",
-                },
-                take: 1,
-            },
-        },
         omit: donorOmit,
     });
 
