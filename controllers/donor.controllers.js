@@ -45,7 +45,9 @@ export const approveDonor = async (req, res) => {
         modified_by,
     });
 
-    await sendDonorApproval(updatedDonor.email, updatedDonor.name);
+    sendDonorApproval(updatedDonor.email, updatedDonor.name).catch((err) => {
+        console.error("Failed to send donor approval email:", err);
+    });
 
     return res.status(200).json(new APIResponse(200, updatedDonor, "Donor has been approved"));
 };
@@ -60,7 +62,9 @@ export const rejectDonor = async (req, res) => {
         modified_by,
     });
 
-    await sendDonorRejection(updatedDonor.email, updatedDonor.name);
+    sendDonorRejection(updatedDonor.email, updatedDonor.name).catch((err) => {
+        console.error("Failed to send donor rejection email:", err);
+    });
 
     return res.status(200).json(new APIResponse(200, updatedDonor, "Donor has been rejected"));
 };

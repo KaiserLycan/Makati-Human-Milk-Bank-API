@@ -48,7 +48,11 @@ export const approveBeneficiary = async (req, res) => {
         application_status: "approved",
         modified_by,
     });
-    await sendBeneficiaryApproval(updatedBeneficiary.caregiver_email, updatedBeneficiary.name);
+    sendBeneficiaryApproval(updatedBeneficiary.caregiver_email, updatedBeneficiary.name).catch(
+        (err) => {
+            console.error("Failed to send beneficiary approval email:", err);
+        },
+    );
     return res
         .status(200)
         .json(new APIResponse(200, updatedBeneficiary, "Beneficiary has been approved"));
@@ -62,7 +66,11 @@ export const rejectBeneficiary = async (req, res) => {
         application_status: "rejected",
         modified_by,
     });
-    await sendBeneficiaryRejection(updatedBeneficiary.caregiver_email, updatedBeneficiary.name);
+    sendBeneficiaryRejection(updatedBeneficiary.caregiver_email, updatedBeneficiary.name).catch(
+        (err) => {
+            console.error("Failed to send beneficiary rejection email:", err);
+        },
+    );
     return res
         .status(200)
         .json(new APIResponse(200, updatedBeneficiary, "Beneficiary has been rejected"));
