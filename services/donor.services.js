@@ -113,7 +113,8 @@ export const fetchDonorDetails = async (dtn) => {
 };
 
 export const registerDonor = async (req) => {
-    const { name, email, phone, birth_date, profile } = req.body;
+    let { name, email, phone, birth_date, profile } = req.body;
+    if (email) email = email.toLowerCase();
     const modified_by = req.user?.user_id;
 
     // Check for duplicate email
@@ -157,6 +158,10 @@ export const updateDonor = async (req) => {
 
     try {
         const existingDonor = await fetchDonorDetails(dtn);
+
+        if (req.body.email) {
+            req.body.email = req.body.email.toLowerCase();
+        }
 
         if (req.body.email && req.body.email !== existingDonor.email) {
             const anotherDonorWithSameEmail = await prisma.donor.findFirst({
