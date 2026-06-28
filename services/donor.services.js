@@ -74,10 +74,11 @@ export const registerDonor = async (req) => {
     try {
         updatedProfile = await uploadDonorProfileToCloudinary(req, profile);
 
+        const normalizedEmail = email ? email.toLowerCase() : undefined;
         const donor = await prisma.donor.create({
             data: {
                 name,
-                email,
+                email: normalizedEmail,
                 phone,
                 birth_date,
                 profile: updatedProfile,
@@ -103,6 +104,10 @@ export const updateDonor = async (req) => {
 
     try {
         const existingDonor = await fetchDonorDetails(dtn);
+
+        if (req.body.email) {
+            req.body.email = req.body.email.toLowerCase();
+        }
 
         if (req.body.email && req.body.email !== existingDonor.email) {
             const anotherDonorWithSameEmail = await prisma.donor.findFirst({

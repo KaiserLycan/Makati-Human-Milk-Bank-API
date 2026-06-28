@@ -82,6 +82,7 @@ export const registerNewUser = async (req) => {
         }
 
         const data = { ...req.body, profile_image_url: imageUrl, modified_by };
+        if (data.email) data.email = data.email.toLowerCase();
         data.password = await hasPassword(data.password);
 
         const newUser = await prisma.user.create({
@@ -116,6 +117,7 @@ export const updateUser = async (req) => {
         }
 
         const data = { ...req.body, profile_image_url: imageUrl, modified_by };
+        if (data.email) data.email = data.email.toLowerCase();
 
         const updatedUser = await prisma.user.update({
             where: { user_id },
@@ -165,9 +167,10 @@ export const deleteUser = async (user_id) => {
 };
 
 export const validateCredentials = async ({ email, user_id, password }) => {
+    const normalizedEmail = email ? email.toLowerCase() : undefined;
     const user = await prisma.user.findFirst({
         where: {
-            OR: [{ email }, { user_id }],
+            OR: [{ email: normalizedEmail }, { user_id }],
             status: "active",
         },
         omit,
