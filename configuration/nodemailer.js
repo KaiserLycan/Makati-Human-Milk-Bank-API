@@ -1,4 +1,7 @@
 import nodemailer from "nodemailer";
+import dns from "dns";
+
+dns.setDefaultResultOrder("ipv4first");
 
 export const mailer =
     process.env.NODE_ENV === "test"
