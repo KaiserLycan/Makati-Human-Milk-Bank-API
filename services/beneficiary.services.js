@@ -71,6 +71,9 @@ export const createBeneficiary = async (req) => {
     let profile;
 
     try {
+        if (req.body.caregiver_email) {
+            req.body.caregiver_email = req.body.caregiver_email.toLowerCase();
+        }
         profile = await uploadBeneficiaryProfileToCloudinary(req, req.body.profile);
         const beneficiary = await prisma.beneficiary.create({
             data: { ...req.body, profile, modified_by },
@@ -99,6 +102,9 @@ export const updateBeneficiary = async (req) => {
 
     try {
         const existingBeneficiary = await fetchBeneficiaryDetails(bid);
+        if (req.body.caregiver_email) {
+            req.body.caregiver_email = req.body.caregiver_email.toLowerCase();
+        }
         const updatedProfile = deepmerge(existingBeneficiary.profile, req.body.profile);
         beneficiaryData = { ...req.body, profile: updatedProfile, modified_by };
 

@@ -43,8 +43,18 @@ export const fetchDonors = async (params) => {
         }),
     ]);
 
+    const mappedDonors = donors.map((d) => {
+        const lastRawMilk = d.raw_milk?.[0];
+        const lastDonationDate = lastRawMilk ? lastRawMilk.collection_date : null;
+        const { raw_milk, ...rest } = d;
+        return {
+            ...rest,
+            last_system_donation: lastDonationDate,
+        };
+    });
+
     const results = {
-        data: donors,
+        data: mappedDonors,
         meta: {
             total,
             page,
@@ -67,12 +77,22 @@ export const fetchDonorDetails = async (dtn) => {
         omit: donorOmit,
     });
 
-    await cacheData(key, donor);
-    return donor;
+    const lastRawMilk = donor.raw_milk?.[0];
+    const lastDonationDate = lastRawMilk ? lastRawMilk.collection_date : null;
+    const { raw_milk, ...rest } = donor;
+
+    const result = {
+        ...rest,
+        last_system_donation: lastDonationDate,
+    };
+
+    await cacheData(key, result);
+    return result;
 };
 
 export const registerDonor = async (req) => {
-    const { name, email, phone, birth_date, profile } = req.body;
+    let { name, email, phone, birth_date, profile } = req.body;
+    if (email) email = email.toLowerCase();
     const modified_by = req.user?.user_id;
 
     // Check for duplicate email
@@ -116,6 +136,10 @@ export const updateDonor = async (req) => {
 
     try {
         const existingDonor = await fetchDonorDetails(dtn);
+
+        if (req.body.email) {
+            req.body.email = req.body.email.toLowerCase();
+        }
 
         if (req.body.email && req.body.email !== existingDonor.email) {
             const anotherDonorWithSameEmail = await prisma.donor.findFirst({
