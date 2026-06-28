@@ -4,6 +4,7 @@ import { AppError } from "../library/classes/AppError.js";
 import { omit, system_id } from "../configuration/constants.js";
 import { cacheData, clearCachedData, fetchCachedData } from "./redis.services.js";
 import { deleteImageFromCloudinary, uploadImageToCloudinary } from "./cloudinary.services.js";
+import { capitalizeName } from "../library/utils/name.js";
 
 const USER_CACHE_KEY = "users:*";
 const OMIT_PASSWORD = { ...omit, password: true };
@@ -82,6 +83,7 @@ export const registerNewUser = async (req) => {
         }
 
         const data = { ...req.body, profile_image_url: imageUrl, modified_by };
+        if (data.name) data.name = capitalizeName(data.name);
         if (data.email) data.email = data.email.toLowerCase();
         data.password = await hasPassword(data.password);
 
@@ -117,6 +119,7 @@ export const updateUser = async (req) => {
         }
 
         const data = { ...req.body, profile_image_url: imageUrl, modified_by };
+        if (data.name) data.name = capitalizeName(data.name);
         if (data.email) data.email = data.email.toLowerCase();
 
         const updatedUser = await prisma.user.update({

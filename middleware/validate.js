@@ -34,8 +34,25 @@ export const validateRequest = (schemas) => {
                 const validationIssues = error.issues || error.errors || [];
                 const errorMessage = validationIssues
                     .map((err) => {
-                        const path = err.path && err.path.length > 0 ? err.path.join(".") : "";
-                        return path ? `${path}: ${err.message}` : err.message;
+                        let msg = err.message;
+                        if (msg.toLowerCase() === "required" || msg.toLowerCase() === "invalid") {
+                            const fieldName =
+                                err.path && err.path.length > 0
+                                    ? err.path[err.path.length - 1]
+                                    : "";
+                            if (fieldName) {
+                                const cleanFieldName = String(fieldName)
+                                    .replace(/_/g, " ")
+                                    .replace(/-/g, " ");
+                                const capitalized =
+                                    cleanFieldName.charAt(0).toUpperCase() +
+                                    cleanFieldName.slice(1);
+                                msg = `${capitalized} is ${msg.toLowerCase()}`;
+                            }
+                        } else {
+                            msg = msg.charAt(0).toUpperCase() + msg.slice(1);
+                        }
+                        return msg;
                     })
                     .join(", ");
 

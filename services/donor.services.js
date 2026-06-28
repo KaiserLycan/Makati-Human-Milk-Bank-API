@@ -6,6 +6,7 @@ import {
     uploadDonorProfileToCloudinary,
 } from "./cloudinary.services.js";
 import { deepmerge } from "deepmerge-ts";
+import { capitalizeName } from "../library/utils/name.js";
 
 const DONOR_CACHE_KEY = "donors:*";
 
@@ -92,6 +93,7 @@ export const fetchDonorDetails = async (dtn) => {
 
 export const registerDonor = async (req) => {
     let { name, email, phone, birth_date, profile } = req.body;
+    if (name) name = capitalizeName(name);
     if (email) email = email.toLowerCase();
     const modified_by = req.user?.user_id;
 
@@ -136,6 +138,10 @@ export const updateDonor = async (req) => {
 
     try {
         const existingDonor = await fetchDonorDetails(dtn);
+
+        if (req.body.name) {
+            req.body.name = capitalizeName(req.body.name);
+        }
 
         if (req.body.email) {
             req.body.email = req.body.email.toLowerCase();

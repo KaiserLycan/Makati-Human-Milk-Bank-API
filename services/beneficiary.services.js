@@ -7,6 +7,7 @@ import {
     uploadBeneficiaryProfileToCloudinary,
 } from "./cloudinary.services.js";
 import { deepmerge } from "deepmerge-ts";
+import { capitalizeName } from "../library/utils/name.js";
 
 const BENEFICIARY_CACHE_KEY = "beneficiaries:*";
 
@@ -74,6 +75,12 @@ export const createBeneficiary = async (req) => {
         if (req.body.caregiver_email) {
             req.body.caregiver_email = req.body.caregiver_email.toLowerCase();
         }
+        if (req.body.name) {
+            req.body.name = capitalizeName(req.body.name);
+        }
+        if (req.body.caregiver) {
+            req.body.caregiver = capitalizeName(req.body.caregiver);
+        }
         profile = await uploadBeneficiaryProfileToCloudinary(req, req.body.profile);
         const beneficiary = await prisma.beneficiary.create({
             data: { ...req.body, profile, modified_by },
@@ -104,6 +111,12 @@ export const updateBeneficiary = async (req) => {
         const existingBeneficiary = await fetchBeneficiaryDetails(bid);
         if (req.body.caregiver_email) {
             req.body.caregiver_email = req.body.caregiver_email.toLowerCase();
+        }
+        if (req.body.name) {
+            req.body.name = capitalizeName(req.body.name);
+        }
+        if (req.body.caregiver) {
+            req.body.caregiver = capitalizeName(req.body.caregiver);
         }
         const updatedProfile = deepmerge(existingBeneficiary.profile, req.body.profile);
         beneficiaryData = { ...req.body, profile: updatedProfile, modified_by };
